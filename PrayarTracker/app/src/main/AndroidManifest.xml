@@ -26,7 +26,7 @@
             android:value="true" />
 
         <activity
-            android:name=".data.HomeScreenActivity"
+            android:name=".HomeScreenActivity"
             android:label="@string/title_activity_home_screen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".data.MainActivity"
+           android:name=".MainActivity"
             android:label="@string/title_activity_main2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
