@@ -1,14 +1,55 @@
 package com.example.prayartracker;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Intent;
 import android.os.Bundle;
-
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
-
+    EditText email, username, password, repassword;
+    Button signup;
+    DataBase DB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        email = (EditText) findViewById(R.id.email);
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+        repassword = (EditText) findViewById(R.id.repassword);
+        signup = (Button) findViewById(R.id.btnsignup);
+        DB = new DataBase(this);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String Email = email.getText().toString();
+                String Username = username.getText().toString();
+                String Pass = password.getText().toString();
+                String Repass = repassword.getText().toString();
+                if(Email.equals("")||Username.equals("")||Pass.equals("")||Repass.equals(""))
+                    Toast.makeText(MainActivity.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
+                else{
+                    if(Pass.equals(Repass)){
+                        Boolean checkuserEmail = DB.checkemail(Email);
+                        if(checkuserEmail==false){
+                            Boolean insert = DB.insertData(Email, Username, Pass);
+                            if(insert==true){
+                                Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(getApplicationContext(),HomeScreenActivity.class);
+                                startActivity(intent);
+                            }else{
+                                Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, "User already exists! please sign in", Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(MainActivity.this, "Passwords not matching", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 }

@@ -9,10 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.login.RegisterActivity"></activity>
-        <activity
-            android:name=".ui.login.PrayerLoginActivity"
-            android:label="@string/title_activity_prayer_login" />
+        <activity android:name=".HomeScreenActivity"></activity>
+<!--        <activity android:name=".ui.login.RegisterActivity" />-->
+<!--        <activity-->
+<!--            android:name=".ui.login.PrayerLoginActivity"-->
+<!--            android:label="@string/title_activity_prayer_login" />-->
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
