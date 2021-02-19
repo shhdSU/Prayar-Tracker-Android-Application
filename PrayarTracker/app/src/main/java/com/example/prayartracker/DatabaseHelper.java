@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DBNAME = "PrayerDB.db";
@@ -47,7 +49,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     public boolean validateLogin(String email, String password){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cr = db.rawQuery("Select email password from users where email = ? and password = ?", new String[] {email,password});
+        Cursor cr = db.rawQuery("Select email, password from users where email = ? and password = ?", new String[] {email,password});
+        Log.d("a", ""+cr.getCount());
         if(cr.getCount()>0){
             return true;
         }
