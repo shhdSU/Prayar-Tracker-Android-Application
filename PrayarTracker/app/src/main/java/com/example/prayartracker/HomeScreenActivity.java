@@ -1,5 +1,4 @@
 package com.example.prayartracker;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,10 +17,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.example.prayartracker.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.equest;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,7 +34,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     // Initializing other items
     // from layout file
-    TextView latitudeTextView, longitudeTextView;
+    TextView latitudeTextView, longitTextView;
     int PERMISSION_ID = 44;
 
     @Override
@@ -45,10 +43,10 @@ public class HomeScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_screen);
 
         latitudeTextView = findViewById(R.id.latTextView);
-        longitudeTextView = findViewById(R.id.lonTextView);
+        longitTextView = findViewById(R.id.lonTextView);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        startLocationUpdates();
+
         // method to get the location
         getLastLocation();
     }
@@ -73,7 +71,8 @@ public class HomeScreenActivity extends AppCompatActivity {
                             requestNewLocationData();
                         } else {
                             latitudeTextView.setText(location.getLatitude() + "");
-                            longitudeTextView.setText(location.getLongitude() + "");
+                            longitTextView.setText(location.getLongitude() + "");
+                            Log.d("check location",  location.getLatitude()+ "/" + location.getLongitude());
                         }
                     }
                 });
@@ -95,7 +94,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         // Initializing LocationRequest
         // object with appropriate methods
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_LOW_POWER);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(5);
         mLocationRequest.setFastestInterval(0);
         mLocationRequest.setNumUpdates(1);
@@ -112,15 +111,13 @@ public class HomeScreenActivity extends AppCompatActivity {
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
             latitudeTextView.setText("Latitude: " + mLastLocation.getLatitude() + "");
-            longitudeTextView.setText("Longitude: " + mLastLocation.getLongitude() + "");
-            Log.d("Latitude: " , mLastLocation.getLatitude() + "");
-            Log.d("Longitude: ",mLastLocation.getLongitude()+"");
+            longitTextView.setText("Longitude: " + mLastLocation.getLongitude() + "");
         }
     };
 
     // method to check for permissions
     private boolean checkPermissions() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
 
         // If we want background location
         // on Android 10.0 and higher,
@@ -132,7 +129,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                }, PERMISSION_ID);
+                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
     }
 
     // method to check
@@ -154,18 +151,6 @@ public class HomeScreenActivity extends AppCompatActivity {
             }
         }
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-            startLocationUpdates();
-    }
-
-    @SuppressLint("MissingPermission")
-    private void startLocationUpdates() {
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest,
-                mLocationCallback,
-                Looper.getMainLooper());
-    }
 
     @Override
     public void onResume() {
@@ -175,3 +160,4 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
     }
 }
+
