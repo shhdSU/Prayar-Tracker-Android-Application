@@ -40,4 +40,11 @@
         android:text="Register"
         android:layout_marginTop="50dp"
         android:layout_below="@+id/repassword"/>
+    <Button
+        android:id="@+id/signin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Already have an account?"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/btnsignup"/>
 </RelativeLayout>

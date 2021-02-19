@@ -8,9 +8,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.prayartracker.R;
+
 public class MainActivity extends AppCompatActivity {
     EditText email, username, password, repassword;
-    Button signup;
+    Button signup, signin;
     DatabaseHelper DB;
 
     @Override
@@ -22,8 +23,9 @@ public class MainActivity extends AppCompatActivity {
         password = (EditText) findViewById(R.id.password);
         repassword = (EditText) findViewById(R.id.repassword);
         signup = (Button) findViewById(R.id.btnsignup);
+        signin = (Button) findViewById(R.id.signin);
         DB = new DatabaseHelper(this);
-        signup.setOnClickListener(new View.OnClickListener(){
+        signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String Email = email.getText().toString();
@@ -34,12 +36,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
                 else {
                     if (Pass.equals(Repass)) {
-          ​Boolean checkuserEmail = DB.checkemail(Email);
+
+                        Boolean checkuserEmail = DB.checkemail(Email);
                         if (checkuserEmail == false) {
                             Boolean insert = DB.insertData(Email, Username, Pass);
                             if (insert == true) {
                                 Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                 startActivity(intent);
                             } else {
                                 Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
@@ -51,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Passwords not matching", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+        });
+        signin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
             }
         });
     }
