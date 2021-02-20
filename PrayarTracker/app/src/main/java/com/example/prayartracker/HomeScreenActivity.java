@@ -6,17 +6,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import java.util.ArrayList;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -24,6 +25,10 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class HomeScreenActivity extends AppCompatActivity {
 
@@ -64,6 +69,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                 // FusedLocationClient
                 // object
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         Location location = task.getResult();
@@ -73,6 +79,29 @@ public class HomeScreenActivity extends AppCompatActivity {
                             latitudeTextView.setText(location.getLatitude() + "");
                             longitTextView.setText(location.getLongitude() + "");
                             Log.d("check location",  location.getLatitude()+ "/" + location.getLongitude());
+                            PrayTime prayTime = new PrayTime();
+                            TimeZone timeZone = TimeZone.getDefault();
+                            String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
+                                    TimeZone.SHORT);
+                            zone = zone.substring(4);
+                            zone = zone.replaceAll(":",".");
+                            Double tz = Double.parseDouble(zone);
+                            prayTime.setTimeFormat(prayTime.Time12);
+                            prayTime.setCalcMethod(prayTime.Makkah);
+                            prayTime.setAsrJuristic(prayTime.Shafii);
+                            prayTime.setAdjustHighLats(prayTime.AngleBased);
+                            int[] offsets = {0, 0, 0, 0, 0, 0, 0};
+                            prayTime.tune(offsets);
+                            Date now = new Date();
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(now);
+                            ArrayList<String> prayerNames = prayTime.getTimeNames();
+                            ArrayList<String> prayerTimes = prayTime.getPrayerTimes(cal,
+                                    location.getLatitude(), location.getLongitude(), 3);
+                            for (String prayer: prayerTimes
+                                 ) {
+                                    Log.d(" ","prayer" + prayer);
+                            }
                         }
                     }
                 });
