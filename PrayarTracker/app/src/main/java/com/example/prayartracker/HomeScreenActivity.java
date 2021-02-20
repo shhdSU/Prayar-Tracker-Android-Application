@@ -39,7 +39,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
     // Initializing other items
     // from layout file
-    TextView latitudeTextView, longitTextView;
+    TextView latitudeTextView, longitTextView,fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
     int PERMISSION_ID = 44;
 
     @Override
@@ -49,6 +49,11 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         latitudeTextView = findViewById(R.id.latTextView);
         longitTextView = findViewById(R.id.lonTextView);
+        fajerTextView = findViewById(R.id.fajerTextView);
+        dhuhrTextView = findViewById(R.id.dhuhrTextView);
+        asrTextView = findViewById(R.id.asrTextView);
+        maghribTextView = findViewById(R.id.maghribTextView);
+        IshaTextView = findViewById(R.id.IshaTextView);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -98,9 +103,16 @@ public class HomeScreenActivity extends AppCompatActivity {
                             ArrayList<String> prayerNames = prayTime.getTimeNames();
                             ArrayList<String> prayerTimes = prayTime.getPrayerTimes(cal,
                                     location.getLatitude(), location.getLongitude(), 3);
+
                             for (String prayer: prayerTimes
                                  ) {
                                     Log.d(" ","prayer" + prayer);
+                                fajerTextView.setText(prayerTimes.get(0));
+                                dhuhrTextView.setText(prayerTimes.get(2));
+                                asrTextView.setText(prayerTimes.get(3));
+                                maghribTextView.setText(prayerTimes.get(5));
+                                IshaTextView.setText(prayerTimes.get(6));
+
                             }
                         }
                     }
