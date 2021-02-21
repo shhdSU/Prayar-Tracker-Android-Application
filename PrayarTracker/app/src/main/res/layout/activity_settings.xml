@@ -22,14 +22,19 @@
         android:layout_height="wrap_content"
         android:text="Allow notifications"
         android:layout_below="@+id/Settings"/>
-
+    <Switch
+        android:id="@+id/Time24HFormat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="24-Hour Format"
+        android:layout_below="@+id/allowNotif"/>
     <Switch
         android:id="@+id/silentModeSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Silent mode"
 
-        android:layout_below="@+id/allowNotif"
+        android:layout_below="@+id/Time24HFormat"
         />
 
     <LinearLayout

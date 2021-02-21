@@ -1,11 +1,14 @@
 package com.example.prayartracker;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -13,6 +16,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -29,6 +34,8 @@ import com.google.android.gms.tasks.Task;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HomeScreenActivity extends AppCompatActivity {
 
@@ -36,12 +43,13 @@ public class HomeScreenActivity extends AppCompatActivity {
     // FusedLocationProviderClient
     // object
     FusedLocationProviderClient mFusedLocationClient;
-
+    public static ArrayList<String> prayerTimes;
+    static PrayTime prayTime;
     // Initializing other items
     // from layout file
     TextView latitudeTextView, longitTextView;
     int PERMISSION_ID = 44;
-
+    static Timer silentModeTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +72,6 @@ public class HomeScreenActivity extends AppCompatActivity {
             // check if location is enabled
             if (isLocationEnabled()) {
 
-                // getting last
-                // location from
-                // FusedLocationClient
-                // object
                 mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
@@ -79,29 +83,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                             latitudeTextView.setText(location.getLatitude() + "");
                             longitTextView.setText(location.getLongitude() + "");
                             Log.d("check location",  location.getLatitude()+ "/" + location.getLongitude());
-                            PrayTime prayTime = new PrayTime();
-                            TimeZone timeZone = TimeZone.getDefault();
-                            String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
-                                    TimeZone.SHORT);
-                            zone = zone.substring(4);
-                            zone = zone.replaceAll(":",".");
-                            Double tz = Double.parseDouble(zone);
-                            prayTime.setTimeFormat(prayTime.Time12);
-                            prayTime.setCalcMethod(prayTime.Makkah);
-                            prayTime.setAsrJuristic(prayTime.Shafii);
-                            prayTime.setAdjustHighLats(prayTime.AngleBased);
-                            int[] offsets = {0, 0, 0, 0, 0, 0, 0};
-                            prayTime.tune(offsets);
-                            Date now = new Date();
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(now);
-                            ArrayList<String> prayerNames = prayTime.getTimeNames();
-                            ArrayList<String> prayerTimes = prayTime.getPrayerTimes(cal,
-                                    location.getLatitude(), location.getLongitude(), 3);
-                            for (String prayer: prayerTimes
-                                 ) {
-                                    Log.d(" ","prayer" + prayer);
-                            }
+                            schedulePrayersDaily(location);
                         }
                     }
                 });
@@ -116,7 +98,71 @@ public class HomeScreenActivity extends AppCompatActivity {
             requestPermissions();
         }
     }
+    private void schedulePrayersDaily(Location location){
+        Calendar cal = Calendar.getInstance();
+        int today = cal.get(Calendar.DAY_OF_MONTH);
+        SharedPreferences settings = getSharedPreferences("PREFS",0);
+        int yesterday = settings.getInt("day",0);
+        if(yesterday!=today){
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt("day",today);
+            editor.commit();
+            calculatePrayerTimes(location);
+            if(SettingsActivity.isSilentMode){
+                int numMinutes = SettingsActivity.interval;
+                for (String prayer: prayerTimes
+                     ) {
 
+
+                    String[] time = prayer.split ( ":" );
+                    int hrs = Integer.parseInt ( time[0].trim() );
+                    int min = Integer.parseInt ( time[1].trim() );
+                    silentModeTimer = new Timer();
+
+                    silentModeTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                        }
+
+                    }, new Date(cal.getTime().getYear(),cal.getTime().getMonth(),cal.getTime().getDay(),hrs,min,0));
+                    silentModeTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                        }
+
+                    }, new Date(cal.getTime().getYear(),cal.getTime().getMonth(),cal.getTime().getDay(),hrs,min+numMinutes,0));
+                }
+            }
+        }
+    }
+private void calculatePrayerTimes(Location location){ prayTime = new PrayTime();
+    TimeZone timeZone = TimeZone.getDefault();
+    String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
+            TimeZone.SHORT);
+    zone = zone.substring(4);
+    zone = zone.replaceAll(":",".");
+    Double tz = Double.parseDouble(zone);
+    prayTime.setTimeFormat(prayTime.Time24);
+    prayTime.setCalcMethod(prayTime.Makkah);
+    prayTime.setAsrJuristic(prayTime.Shafii);
+    prayTime.setAdjustHighLats(prayTime.AngleBased);
+    int[] offsets = {0, 0, 0, 0, 0, 0, 0};
+    prayTime.tune(offsets);
+    Date now = new Date();
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(now);
+    ArrayList<String> prayerNames = prayTime.getTimeNames();
+    prayerTimes = prayTime.getPrayerTimes(cal,
+            location.getLatitude(), location.getLongitude(), 3);
+    for (String prayer: prayerTimes
+    ) {
+        Log.d(" ","prayer" + prayer);
+    }
+}
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
 
