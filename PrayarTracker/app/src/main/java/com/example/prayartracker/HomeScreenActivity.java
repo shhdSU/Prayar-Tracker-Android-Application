@@ -1,6 +1,8 @@
 package com.example.prayartracker;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -114,6 +116,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                                 IshaTextView.setText(prayerTimes.get(6));
 
                             }
+                            setPrayersNotifications(location);//ONLY if the notification permission is granted
                         }
                     }
                 });
@@ -129,6 +132,39 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
     }
 
+    public void setPrayersNotifications(Location location){
+        PrayTime prayTime24Format = new PrayTime();
+        //prayTime24Format.setTimeFormat(prayTime24Format.Time24);
+        prayTime24Format.setCalcMethod(prayTime24Format.Makkah);
+        prayTime24Format.setAsrJuristic(prayTime24Format.Shafii);
+        prayTime24Format.setAdjustHighLats(prayTime24Format.AngleBased);
+        int[] offsets = {0, 0, 0, 0, 0, 0, 0};
+        prayTime24Format.tune(offsets);
+        Calendar cal = Calendar.getInstance();
+        ArrayList<String> prayerTimes = prayTime24Format.getPrayerTimes(cal,location.getLatitude(), location.getLongitude(), 3);
+        int alarmsCounter = 0;
+        for (String prayer: prayerTimes){
+            if(!prayer.equalsIgnoreCase(prayerTimes.get(1))){
+                alarmsCounter++;
+                cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(prayer.substring(0,2)));
+                cal.set(Calendar.MINUTE,Integer.parseInt(prayer.substring(3,5)));
+                cal.set(Calendar.SECOND,0);
+                cal.set(Calendar.MILLISECOND,0);
+                scheduleAlarms(cal,alarmsCounter);
+            }
+        }
+
+
+
+    }
+    public void scheduleAlarms(Calendar calendar, int alarmsCounter){
+        //Prepare the intents to be used to set the alarm
+        Intent reminderIntent = new Intent(this, NotificationManager.class);
+        PendingIntent intent = PendingIntent.getBroadcast(this,alarmsCounter, reminderIntent.putExtra("id",alarmsCounter), PendingIntent.FLAG_UPDATE_CURRENT);
+        //Create the alarm manager to schedule the prayer notification
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);
+    }
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
 
