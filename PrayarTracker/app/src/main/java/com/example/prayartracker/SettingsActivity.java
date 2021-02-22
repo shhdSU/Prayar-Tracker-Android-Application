@@ -24,12 +24,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.example.prayartracker.HomeScreenActivity.prayTime;
-import static com.example.prayartracker.HomeScreenActivity.prayerTimes;
+import static com.example.prayartracker.HomeScreenActivity.prayerTimes24;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static boolean isSilentMode;
-    public static int interval;
+    public static boolean isSilentMode = false;
+    public static int interval = 0;
+    public static boolean is24Hour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -49,10 +50,10 @@ public class SettingsActivity extends AppCompatActivity {
             Time24HFormat.setChecked(true);
         }
 //        if(){ notifications are allowed
-//
+//          allowNotification.setEnabled(true);
 //        }
 //        else{
-//
+//           allowNotification.setEnabled(false);
 //        }
         silentModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -71,21 +72,9 @@ public class SettingsActivity extends AppCompatActivity {
                     int numMinutes = Integer.parseInt(minutesInput.getText().toString());
                     interval = numMinutes;
                     isSilentMode = true;
-                    for (String prayer: prayerTimes) {
-                        String time24FormatPrayer = "";
-                        if(prayTime.getTimeFormat()==prayTime.Time12) {
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                               time24FormatPrayer  = LocalTime.parse(prayer,
-                                                DateTimeFormatter.ofPattern(
-                                                        "hh:mm a" ,
-                                                        Locale.ENGLISH)).format( DateTimeFormatter.ofPattern("HH:mm") )
-                                        ;
-                            }
-                        }
-                        else {
-                            time24FormatPrayer = prayer;
-                        }
-                        String[] time = time24FormatPrayer.split ( ":" );
+                    for (String prayer: prayerTimes24) {
+
+                        String[] time = prayer.split ( ":" );
                         int hrs = Integer.parseInt ( time[0].trim() );
                         int min = Integer.parseInt ( time[1].trim() );
                         Date currentDate = Calendar.getInstance().getTime();
@@ -116,13 +105,14 @@ public class SettingsActivity extends AppCompatActivity {
 //                if(allowNotifications.isChecked()){
 //                }
 //                else{
-//
 //                }
                 if(Time24HFormat.isChecked()){
                     prayTime.setTimeFormat(prayTime.Time24);
+                    is24Hour = true;
                 }
                 else{
                     prayTime.setTimeFormat(prayTime.Time12);
+                    is24Hour = false;
 
                 }
                 Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);

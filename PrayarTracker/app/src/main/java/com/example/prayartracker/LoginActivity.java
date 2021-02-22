@@ -41,9 +41,9 @@ public class LoginActivity extends AppCompatActivity {
         final EditText EmailEditText = findViewById(R.id.Email);
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
+        final Button registerButton = findViewById(R.id.GoToRegister);
 
          db = new DatabaseHelper(this);
-
 
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -57,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         };
         EmailEditText.addTextChangedListener(afterTextChangedListener);
@@ -77,7 +76,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
             });
-    }
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+    });
+}
+
     private boolean validateInputs(String email, String pass){
             String emailRegex = "^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,4}$";
             Pattern pattern = Pattern.compile(emailRegex);

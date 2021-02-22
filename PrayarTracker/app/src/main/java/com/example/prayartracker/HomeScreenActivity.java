@@ -18,6 +18,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import androidx.annotation.NonNull;
@@ -44,8 +45,12 @@ public class HomeScreenActivity extends AppCompatActivity {
     // FusedLocationProviderClient
     // object
     FusedLocationProviderClient mFusedLocationClient;
-    public static ArrayList<String> prayerTimes;
+    public static ArrayList<String> prayerTimes12;
+    public static ArrayList<String> prayerTimes24;
+    public static boolean isSilentMode = false;
+    public static int interval = 0;
     static PrayTime prayTime;
+
     // Initializing other items
     // from layout file
     TextView latitudeTextView, longitTextView,fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
@@ -86,43 +91,24 @@ public class HomeScreenActivity extends AppCompatActivity {
                         if (location == null) {
                             requestNewLocationData();
                         } else {
-                            latitudeTextView.setText(location.getLatitude() + "");
-                            longitTextView.setText(location.getLongitude() + "");
-                            Log.d("check location",  location.getLatitude()+ "/" + location.getLongitude());
+                            calculatePrayerTimes(location);
                             schedulePrayersDaily(location);
-                            PrayTime prayTime = new PrayTime();
-                            TimeZone timeZone = TimeZone.getDefault();
-                            String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
-                                    TimeZone.SHORT);
-                            zone = zone.substring(4);
-                            zone = zone.replaceAll(":",".");
-                            Double tz = Double.parseDouble(zone);
-                            prayTime.setTimeFormat(prayTime.Time12);
-                            prayTime.setCalcMethod(prayTime.Makkah);
-                            prayTime.setAsrJuristic(prayTime.Shafii);
-                            prayTime.setAdjustHighLats(prayTime.AngleBased);
-                            int[] offsets = {0, 0, 0, 0, 0, 0, 0};
-                            prayTime.tune(offsets);
-                            Date now = new Date();
-                            Calendar cal = Calendar.getInstance();
-                            cal.setTime(now);
-                            ArrayList<String> prayerNames = prayTime.getTimeNames();
-                            ArrayList<String> prayerTimes = prayTime.getPrayerTimes(cal,
-                                    location.getLatitude(), location.getLongitude(), 3);
-
-                            for (String prayer: prayerTimes
-                                 ) {
-                                    Log.d(" ","prayer" + prayer);
-                                fajerTextView.setText(prayerTimes.get(0));
-                                dhuhrTextView.setText(prayerTimes.get(2));
-                                asrTextView.setText(prayerTimes.get(3));
-                                maghribTextView.setText(prayerTimes.get(5));
-                                IshaTextView.setText(prayerTimes.get(6));
-
+                            ArrayList<String> prayerTimes = prayerTimes12;
+                            if (SettingsActivity.is24Hour) {
+                                prayerTimes = prayerTimes24;
                             }
-                            setPrayersNotifications(location);//ONLY if the notification permission is granted
+                                for (String prayer : prayerTimes) {
+                                    Log.d(" ", "prayer" + prayer);
+                                    fajerTextView.setText(prayerTimes.get(0));
+                                    dhuhrTextView.setText(prayerTimes.get(2));
+                                    asrTextView.setText(prayerTimes.get(3));
+                                    maghribTextView.setText(prayerTimes.get(5));
+                                    IshaTextView.setText(prayerTimes.get(6));
+
+                                }
+                            }
                         }
-                    }
+
                 });
             } else {
                 Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
@@ -141,16 +127,14 @@ public class HomeScreenActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences("PREFS",0);
         int yesterday = settings.getInt("day",0);
         if(yesterday!=today){
+            Log.d("","first time today");
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt("day",today);
             editor.commit();
             calculatePrayerTimes(location);
             if(SettingsActivity.isSilentMode){
                 int numMinutes = SettingsActivity.interval;
-                for (String prayer: prayerTimes
-                     ) {
-
-
+                for (String prayer: prayerTimes24) {
                     String[] time = prayer.split ( ":" );
                     int hrs = Integer.parseInt ( time[0].trim() );
                     int min = Integer.parseInt ( time[1].trim() );
@@ -174,45 +158,39 @@ public class HomeScreenActivity extends AppCompatActivity {
                     }, new Date(cal.getTime().getYear(),cal.getTime().getMonth(),cal.getTime().getDay(),hrs,min+numMinutes,0));
                 }
             }
+            setPrayersNotifications(location);//ONLY if the notification permission is granted
         }
     }
-private void calculatePrayerTimes(Location location){ prayTime = new PrayTime();
+private void calculatePrayerTimes(Location location){
+        prayTime = new PrayTime();
     TimeZone timeZone = TimeZone.getDefault();
     String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
             TimeZone.SHORT);
     zone = zone.substring(4);
     zone = zone.replaceAll(":",".");
     Double tz = Double.parseDouble(zone);
-    prayTime.setTimeFormat(prayTime.Time24);
     prayTime.setCalcMethod(prayTime.Makkah);
-    prayTime.setAsrJuristic(prayTime.Shafii);
     prayTime.setAdjustHighLats(prayTime.AngleBased);
     int[] offsets = {0, 0, 0, 0, 0, 0, 0};
     prayTime.tune(offsets);
     Date now = new Date();
     Calendar cal = Calendar.getInstance();
     cal.setTime(now);
-    ArrayList<String> prayerNames = prayTime.getTimeNames();
-    prayerTimes = prayTime.getPrayerTimes(cal,
+    prayerTimes24 = prayTime.getPrayerTimes(cal,
             location.getLatitude(), location.getLongitude(), 3);
-    for (String prayer: prayerTimes
+    prayTime.setTimeFormat(prayTime.Time12);
+    prayerTimes12 = prayTime.getPrayerTimes(cal,
+            location.getLatitude(), location.getLongitude(), 3);
+    for (String prayer: prayerTimes12
     ) {
         Log.d(" ","prayer" + prayer);
     }
 }
     public void setPrayersNotifications(Location location){
-        PrayTime prayTime24Format = new PrayTime();
-        //prayTime24Format.setTimeFormat(prayTime24Format.Time24);
-        prayTime24Format.setCalcMethod(prayTime24Format.Makkah);
-        prayTime24Format.setAsrJuristic(prayTime24Format.Shafii);
-        prayTime24Format.setAdjustHighLats(prayTime24Format.AngleBased);
-        int[] offsets = {0, 0, 0, 0, 0, 0, 0};
-        prayTime24Format.tune(offsets);
         Calendar cal = Calendar.getInstance();
-        ArrayList<String> prayerTimes = prayTime24Format.getPrayerTimes(cal,location.getLatitude(), location.getLongitude(), 3);
         int alarmsCounter = 0;
-        for (String prayer: prayerTimes){
-            if(!prayer.equalsIgnoreCase(prayerTimes.get(1))){
+        for (String prayer: prayerTimes24){
+            if(!prayer.equalsIgnoreCase(prayerTimes24.get(1))){
                 alarmsCounter++;
                 cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(prayer.substring(0,2)));
                 cal.set(Calendar.MINUTE,Integer.parseInt(prayer.substring(3,5)));
@@ -221,9 +199,6 @@ private void calculatePrayerTimes(Location location){ prayTime = new PrayTime();
                 scheduleAlarms(cal,alarmsCounter);
             }
         }
-
-
-
     }
     public void scheduleAlarms(Calendar calendar, int alarmsCounter){
         //Prepare the intents to be used to set the alarm
@@ -233,6 +208,7 @@ private void calculatePrayerTimes(Location location){ prayTime = new PrayTime();
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);
     }
+
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
 
