@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 
 import androidx.core.app.NotificationCompat;
@@ -12,6 +13,10 @@ import androidx.core.app.NotificationManagerCompat;
 public class NotificationManager extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
+        SharedPreferences settings = context.getSharedPreferences("PREFS",0);
+        boolean isNotificationAllowed = settings.getBoolean("isNotificationAllowed",true);
+        if(!isNotificationAllowed)
+            return;
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         Intent prayNowIntent = new Intent(context, HomeScreenActivity.class);//on tap go to home
         String prayer = "=================================================";

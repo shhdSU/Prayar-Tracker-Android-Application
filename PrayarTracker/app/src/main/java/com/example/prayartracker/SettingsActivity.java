@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
@@ -36,10 +37,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-         final Switch allowNotifications = findViewById(R.id.allowNotif);
+         final Switch allowNotification = findViewById(R.id.allowNotif);
          final Switch silentModeSwitch = findViewById(R.id.silentModeSwitch);
          final Switch Time24HFormat = findViewById(R.id.Time24HFormat);
-
+         SharedPreferences settings = getSharedPreferences("PREFS",0);
+        boolean isNotificationAllowed = settings.getBoolean("isNotificationAllowed",true);
+        final SharedPreferences.Editor editor = settings.edit();
         final LinearLayout linearLayout = (LinearLayout) findViewById((R.id.linearLayout));
         final EditText minutesInput = (EditText) findViewById((R.id.editTextNumber2));
         Button saveBtn = (Button) findViewById((R.id.SaveBtn));
@@ -49,12 +52,24 @@ public class SettingsActivity extends AppCompatActivity {
         else{
             Time24HFormat.setChecked(true);
         }
-//        if(){ notifications are allowed
-//          allowNotification.setEnabled(true);
-//        }
-//        else{
-//           allowNotification.setEnabled(false);
-//        }
+       if(isNotificationAllowed){ //notifications are allowed
+         allowNotification.setChecked(true);
+       }
+    else{
+       allowNotification.setEnabled(false);
+    }
+        allowNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled
+                    editor.putBoolean("isNotificationAllowed",true);
+                } else {
+                    editor.putBoolean("isNotificationAllowed",false);
+                }
+                editor.commit();
+
+            }
+        });
         silentModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
