@@ -1,6 +1,10 @@
 package com.example.prayartracker;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        createNotificationChannel();
         email = (EditText) findViewById(R.id.email);
         username = (EditText) findViewById(R.id.username);
         password = (EditText) findViewById(R.id.password);
@@ -63,5 +68,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    public void createNotificationChannel(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            //create High Important Channel with id = high_important_channel
+            NotificationChannel highImportantChannel = new NotificationChannel("high_important_channel",
+                    "High Important Reminder Notification", android.app.NotificationManager.IMPORTANCE_HIGH);
+            //create notification manager
+            android.app.NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(highImportantChannel);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.example.prayartracker;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -47,7 +48,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     static PrayTime prayTime;
     // Initializing other items
     // from layout file
-    TextView latitudeTextView, longitTextView;
+    TextView latitudeTextView, longitTextView,fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
     int PERMISSION_ID = 44;
     static Timer silentModeTimer;
     @Override
@@ -57,6 +58,11 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         latitudeTextView = findViewById(R.id.latTextView);
         longitTextView = findViewById(R.id.lonTextView);
+        fajerTextView = findViewById(R.id.fajerTextView);
+        dhuhrTextView = findViewById(R.id.dhuhrTextView);
+        asrTextView = findViewById(R.id.asrTextView);
+        maghribTextView = findViewById(R.id.maghribTextView);
+        IshaTextView = findViewById(R.id.IshaTextView);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -84,6 +90,37 @@ public class HomeScreenActivity extends AppCompatActivity {
                             longitTextView.setText(location.getLongitude() + "");
                             Log.d("check location",  location.getLatitude()+ "/" + location.getLongitude());
                             schedulePrayersDaily(location);
+                            PrayTime prayTime = new PrayTime();
+                            TimeZone timeZone = TimeZone.getDefault();
+                            String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
+                                    TimeZone.SHORT);
+                            zone = zone.substring(4);
+                            zone = zone.replaceAll(":",".");
+                            Double tz = Double.parseDouble(zone);
+                            prayTime.setTimeFormat(prayTime.Time12);
+                            prayTime.setCalcMethod(prayTime.Makkah);
+                            prayTime.setAsrJuristic(prayTime.Shafii);
+                            prayTime.setAdjustHighLats(prayTime.AngleBased);
+                            int[] offsets = {0, 0, 0, 0, 0, 0, 0};
+                            prayTime.tune(offsets);
+                            Date now = new Date();
+                            Calendar cal = Calendar.getInstance();
+                            cal.setTime(now);
+                            ArrayList<String> prayerNames = prayTime.getTimeNames();
+                            ArrayList<String> prayerTimes = prayTime.getPrayerTimes(cal,
+                                    location.getLatitude(), location.getLongitude(), 3);
+
+                            for (String prayer: prayerTimes
+                                 ) {
+                                    Log.d(" ","prayer" + prayer);
+                                fajerTextView.setText(prayerTimes.get(0));
+                                dhuhrTextView.setText(prayerTimes.get(2));
+                                asrTextView.setText(prayerTimes.get(3));
+                                maghribTextView.setText(prayerTimes.get(5));
+                                IshaTextView.setText(prayerTimes.get(6));
+
+                            }
+                            setPrayersNotifications(location);//ONLY if the notification permission is granted
                         }
                     }
                 });
@@ -163,6 +200,39 @@ private void calculatePrayerTimes(Location location){ prayTime = new PrayTime();
         Log.d(" ","prayer" + prayer);
     }
 }
+    public void setPrayersNotifications(Location location){
+        PrayTime prayTime24Format = new PrayTime();
+        //prayTime24Format.setTimeFormat(prayTime24Format.Time24);
+        prayTime24Format.setCalcMethod(prayTime24Format.Makkah);
+        prayTime24Format.setAsrJuristic(prayTime24Format.Shafii);
+        prayTime24Format.setAdjustHighLats(prayTime24Format.AngleBased);
+        int[] offsets = {0, 0, 0, 0, 0, 0, 0};
+        prayTime24Format.tune(offsets);
+        Calendar cal = Calendar.getInstance();
+        ArrayList<String> prayerTimes = prayTime24Format.getPrayerTimes(cal,location.getLatitude(), location.getLongitude(), 3);
+        int alarmsCounter = 0;
+        for (String prayer: prayerTimes){
+            if(!prayer.equalsIgnoreCase(prayerTimes.get(1))){
+                alarmsCounter++;
+                cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(prayer.substring(0,2)));
+                cal.set(Calendar.MINUTE,Integer.parseInt(prayer.substring(3,5)));
+                cal.set(Calendar.SECOND,0);
+                cal.set(Calendar.MILLISECOND,0);
+                scheduleAlarms(cal,alarmsCounter);
+            }
+        }
+
+
+
+    }
+    public void scheduleAlarms(Calendar calendar, int alarmsCounter){
+        //Prepare the intents to be used to set the alarm
+        Intent reminderIntent = new Intent(this, NotificationManager.class);
+        PendingIntent intent = PendingIntent.getBroadcast(this,alarmsCounter, reminderIntent.putExtra("id",alarmsCounter), PendingIntent.FLAG_UPDATE_CURRENT);
+        //Create the alarm manager to schedule the prayer notification
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);
+    }
     @SuppressLint("MissingPermission")
     private void requestNewLocationData() {
 

@@ -1,12 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f5f5f5"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    android:padding="10dp">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="fajer:"
+        />
+
+    <TextView
+        android:id="@+id/fajerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="fajer time will be here! "
+        android:textColor="#181818" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="dhuhr:" />
+    <TextView
+        android:id="@+id/dhuhrTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dhuhr time will be here! "
+        android:textColor="#181818" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="asr:" />
+
+    <TextView
+        android:id="@+id/asrTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="asr time will be here! "
+        android:textColor="#181818" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="maghrib:" />
+
+    <TextView
+        android:id="@+id/maghribTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="maghrib time will be here! "
+        android:textColor="#181818" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="Isha:" />
+    <TextView
+        android:id="@+id/IshaTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Isha time will be here! "
+        android:textColor="#181818" />
 
 
     <TextView
