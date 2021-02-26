@@ -20,6 +20,11 @@ import android.widget.Toast;
 
 import java.lang.reflect.Array;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalTime;//
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -38,9 +43,13 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
+import android.os.CountDownTimer;
+
 
 public class HomeScreenActivity extends AppCompatActivity {
-
+    TextView TimerTextView;
     // initializing
     // FusedLocationProviderClient
     // object
@@ -68,6 +77,8 @@ public class HomeScreenActivity extends AppCompatActivity {
         asrTextView = findViewById(R.id.asrTextView);
         maghribTextView = findViewById(R.id.maghribTextView);
         IshaTextView = findViewById(R.id.IshaTextView);
+        TimerTextView = findViewById(R.id.CountDownTextView);
+
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -106,6 +117,74 @@ public class HomeScreenActivity extends AppCompatActivity {
                                     IshaTextView.setText(prayerTimes.get(6));
 
                                 }
+
+                            // Create an array for the difference between prayer time and the current time in ms.
+                            long [] PrayerDiff = new long[7];
+
+                                // loop to fill the PrayerDiff array
+                            for (int i = 0; i < 7; i++) {
+                                DateFormat df = new SimpleDateFormat("HH:mm:ss"); // current time format
+                                Calendar calobj = Calendar.getInstance(); // to get current time
+                                String time = prayerTimes.get(i)+ ":00"; //  convert the prayer time format to HH:mm:ss format // if the time format 12 hours we use .replaceAll(" am","")
+                                LocalTime localTime = LocalTime.parse(time); // convert from String to LocalTime
+                                LocalTime CurrentTime = LocalTime.parse(df.format(calobj.getTime()));// convert from String to LocalTime
+                                if(Math.abs(localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000) >= 53940000){ // if the difference is grater or equal 8(20:00:00) then
+                                long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000)+ 86400000; // add 24 hours to get the correct time.
+                                long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ; // convert to ms
+                                PrayerDiff[i] = diffSeconds;} //assign
+                                else{
+                                    long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000); // without adding 24 hours
+                                    long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ;// convert to ms
+                                    PrayerDiff[i] = diffSeconds;//assign
+                                }
+                                Log.d("MY CUURENT TIME 2", String.valueOf(CurrentTime.toSecondOfDay()*1000));
+
+                            }
+                            // loop to ensure from the result (only print)
+                            for (int j = 0; j < 7; j++) {
+                                String time = prayerTimes.get(j)+ ":00"; // if the time format 12 hours we use .replaceAll(" am","")
+                                LocalTime localTime = LocalTime.parse(time);
+                                Log.d("Before sub", String.valueOf(localTime.toSecondOfDay()*1000));
+                            }
+                            for (int j = 0; j < 7; j++) {
+                                Log.d("Aftar sub",Long.toString(PrayerDiff[j]));
+                            }
+
+
+                            // loop to find the minimum positive value ( the nearest prayer time == the smallest difference )
+                            long minValue = Integer.MAX_VALUE;
+                            for(int i=0;i<7;i++) {
+                                if(PrayerDiff[i] > 0 && minValue > PrayerDiff[i])
+                                {
+                                    minValue = PrayerDiff[i];
+                                }
+                            }
+                                Log.d("Minemum",Long.toString(minValue));
+
+                            //method to Count Down the time 
+                            new CountDownTimer(minValue, 1000) {
+                                public void onTick(long millisUntilFinished) {
+                                    long secondsInMilli = 1000;
+                                    long minutesInMilli = secondsInMilli * 60;
+                                    long hoursInMilli = minutesInMilli * 60;
+
+                                    long elapsedHours = millisUntilFinished / hoursInMilli;
+                                    millisUntilFinished = millisUntilFinished % hoursInMilli;
+
+                                    long elapsedMinutes = millisUntilFinished / minutesInMilli;
+                                    millisUntilFinished = millisUntilFinished % minutesInMilli;
+
+                                    long elapsedSeconds = millisUntilFinished / secondsInMilli;
+
+                                    String yy = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes,elapsedSeconds);
+                                    TimerTextView.setText(yy);
+                                }
+
+                                public void onFinish() {
+
+                                    TimerTextView.setText("00:00:00"); // here i prefer to set the notification "حان موعد صلاة ال... حسب توقيت مكة المكرمة"
+                                }
+                            }.start();
                             }
                         }
 
@@ -178,7 +257,7 @@ private void calculatePrayerTimes(Location location){
     cal.setTime(now);
     prayerTimes24 = prayTime.getPrayerTimes(cal,
             location.getLatitude(), location.getLongitude(), 3);
-    prayTime.setTimeFormat(prayTime.Time12);
+    prayTime.setTimeFormat(prayTime.Time24);
     prayerTimes12 = prayTime.getPrayerTimes(cal,
             location.getLatitude(), location.getLongitude(), 3);
     for (String prayer: prayerTimes12

@@ -98,5 +98,22 @@
         android:text="Longitude will be here! "
         android:textColor="#181818" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:text="Timer:" />
+
+    <TextView
+        android:id="@+id/CountDownTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/lonTextView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="63dp"
+        android:text="timer will be here! "
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="40sp" />
+
 </LinearLayout>
 

@@ -29,10 +29,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 public class LoginActivity extends AppCompatActivity {
 
+
     DatabaseHelper db;
-    private TextView textView;
     private FusedLocationProviderClient fusedLocationProviderClient;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         final Button loginButton = findViewById(R.id.login);
         final Button registerButton = findViewById(R.id.GoToRegister);
 
-         db = new DatabaseHelper(this);
+
+        db = new DatabaseHelper(this);
 
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
