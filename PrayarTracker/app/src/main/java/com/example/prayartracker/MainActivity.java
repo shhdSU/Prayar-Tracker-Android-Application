@@ -13,6 +13,9 @@ import android.widget.Toast;
 
 import com.example.prayartracker.R;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MainActivity extends AppCompatActivity {
     EditText email, username, password, repassword;
     Button signup, signin;
@@ -40,23 +43,37 @@ public class MainActivity extends AppCompatActivity {
                 if (Email.equals("") || Username.equals("") || Pass.equals("") || Repass.equals(""))
                     Toast.makeText(MainActivity.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
                 else {
-                    if (Pass.equals(Repass)) {
+
+                    if (Pass.length() >= 8) {
+                        if (Pass.equals(Repass)) {
 
                         Boolean checkuserEmail = DB.checkemail(Email);
-                        if (checkuserEmail == false) {
-                            Boolean insert = DB.insertData(Email, Username, Pass);
-                            if (insert == true) {
-                                Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                                startActivity(intent);
+                        String emailRegex = "^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,4}$";
+                        Pattern pattern = Pattern.compile(emailRegex);
+                        Matcher matcher = pattern.matcher(Email);
+                        if (matcher.find()) {
+                            if (checkuserEmail == false) {
+                                Boolean insert = DB.insertData(Email, Username, Pass);
+                                if (insert == true) {
+                                    Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "User already exists! please sign in", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, "User already exists! please sign in", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
+
                         }
                     } else {
                         Toast.makeText(MainActivity.this, "Passwords not matching", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                     else {
+                        Toast.makeText(MainActivity.this, "Your password should be of length 8 or greater", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
