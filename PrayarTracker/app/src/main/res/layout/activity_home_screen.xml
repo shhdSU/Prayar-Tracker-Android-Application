@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:background="@drawable/background"
-    android:padding="10dp">
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/settingbutton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_settings"
+        android:translationX="140dp"
+        android:onClick="goToSetting"
+        android:layout_marginTop="30dp"
+        android:translationY="-40dp" />
+
 
     <RelativeLayout
         android:id="@+id/timerParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:padding="10dp">
 
 
@@ -24,7 +33,7 @@
             android:fontFamily="@font/changa"
             android:text="متبقي على الصلاة القادمة:"
             android:textAlignment="center"
-            android:textFontWeight="600"
+            android:textFontWeight="900"
             android:textSize="15sp" />
 
         <TextView
@@ -32,8 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/timerText"
-            android:fontFamily="@font/changa"
             android:layout_centerInParent="true"
+            android:fontFamily="@font/changa"
             android:text="00:00:00"
             android:textColor="#8EACD0"
             android:textFontWeight="600"
@@ -62,10 +71,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="28dp"
+            android:fontFamily="@font/changa"
             android:text="00:00"
             android:textColor="#8EACD0"
             android:textFontWeight="600"
-            android:fontFamily="@font/changa"
             android:textSize="25sp" />
 
         <ImageView
@@ -84,25 +93,26 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/dhuhrTextView"
-        android:fontFamily="@font/changa"
-        android:text="الظهر:"
-        android:textFontWeight="600"
-        android:textSize="25sp" />
-    <TextView
-        android:id="@+id/dhuhrTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:text="00:00"
-        android:textColor="#8EACD0"
-        android:textFontWeight="600"
-        android:fontFamily="@font/changa"
-        android:textSize="25sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/dhuhrTextView"
+            android:fontFamily="@font/changa"
+            android:text="الظهر:"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/dhuhrTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:fontFamily="@font/changa"
+            android:text="00:00"
+            android:textColor="#8EACD0"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
 
         <ImageView
             android:id="@+id/dhuhrimageView"
@@ -121,26 +131,26 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/asrTextView"
-        android:fontFamily="@font/changa"
-        android:text="العصر:"
-        android:textFontWeight="600"
-        android:textSize="25sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/asrTextView"
+            android:fontFamily="@font/changa"
+            android:text="العصر:"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/asrTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:text="00:00"
-        android:textColor="#8EACD0"
-        android:textFontWeight="600"
-        android:fontFamily="@font/changa"
-        android:textSize="25sp" />
+        <TextView
+            android:id="@+id/asrTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:fontFamily="@font/changa"
+            android:text="00:00"
+            android:textColor="#8EACD0"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
 
         <ImageView
             android:id="@+id/asrimageView"
@@ -168,16 +178,16 @@
             android:textFontWeight="600"
             android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/maghribTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:text="00:00"
-        android:textColor="#8EACD0"
-        android:textFontWeight="600"
-        android:fontFamily="@font/changa"
-        android:textSize="25sp" />
+        <TextView
+            android:id="@+id/maghribTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:fontFamily="@font/changa"
+            android:text="00:00"
+            android:textColor="#8EACD0"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
 
         <ImageView
             android:id="@+id/maghribimageView"
@@ -197,26 +207,26 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@+id/IshaTextView"
-        android:fontFamily="@font/changa"
-        android:text="العشاء:"
-        android:textFontWeight="600"
-        android:textSize="25sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/IshaTextView"
+            android:fontFamily="@font/changa"
+            android:text="العشاء:"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
 
-    <TextView
-        android:id="@+id/IshaTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="28dp"
-        android:text="00:00"
-        android:textColor="#8EACD0"
-        android:textFontWeight="600"
-        android:fontFamily="@font/changa"
-        android:textSize="25sp" />
+        <TextView
+            android:id="@+id/IshaTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:fontFamily="@font/changa"
+            android:text="00:00"
+            android:textColor="#8EACD0"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
 
 
         <ImageView
@@ -230,35 +240,37 @@
     </RelativeLayout>
 
 
-<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:fontFamily="sans-serif-black"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:text="Latitude:"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:visibility="invisible"/>&ndash;&gt;-->
+    <!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+    <!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+    <!--&lt;!&ndash;        android:fontFamily="sans-serif-black"&ndash;&gt;-->
+    <!--&lt;!&ndash;        android:text="Latitude:"&ndash;&gt;-->
+    <!--&lt;!&ndash;        android:visibility="invisible"/>&ndash;&gt;-->
 
-    <TextView
-        android:id="@+id/latTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Latitude will be here! "
-        android:textColor="#181818"
-        android:visibility="invisible"/>
 
-<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:fontFamily="sans-serif-black"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:text="Longitude:"&ndash;&gt;-->
-<!--&lt;!&ndash;        android:visibility="invisible"/>&ndash;&gt;-->
 
-    <TextView
-        android:id="@+id/lonTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Longitude will be here! "
-        android:textColor="#181818"
-        android:visibility="invisible"/>
+    <!--    <TextView-->
+    <!--        android:id="@+id/latTextView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Latitude will be here! "-->
+    <!--        android:textColor="#181818"-->
+    <!--        android:visibility="invisible"/>-->
+
+    <!--&lt;!&ndash;&lt;!&ndash;    <TextView&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;        android:fontFamily="sans-serif-black"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;        android:text="Longitude:"&ndash;&gt;&ndash;&gt;-->
+    <!--&lt;!&ndash;&lt;!&ndash;        android:visibility="invisible"/>&ndash;&gt;&ndash;&gt;-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/lonTextView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="Longitude will be here! "-->
+    <!--        android:textColor="#181818"-->
+    <!--        android:visibility="invisible"/>-->
 
 
 </LinearLayout>

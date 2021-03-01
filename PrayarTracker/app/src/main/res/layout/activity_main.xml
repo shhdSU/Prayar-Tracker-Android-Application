@@ -5,46 +5,115 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:background="@color/cardview_light_background"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/logoimageView"
+        android:layout_width="192dp"
+        android:layout_height="168dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="-1dp"
+        android:background="@drawable/emad_logo"
+        android:translationX="80dp" />
+
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/logoimageView"
+        android:layout_height="wrap_content"
+        android:hint="الأسم"
+        android:fontFamily="@font/changa"
+        android:layout_marginTop="10dp"
+        />
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="User Email"
-        android:layout_marginTop="50dp"/>
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="User Name"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/email"/>
+        android:hint="البريد الإلكتروني"
+        android:fontFamily="@font/changa"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/username"/>
+
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/username"/>
+        android:hint="كلمة المرور"
+        android:textAlignment="viewEnd"
+        android:fontFamily="@font/changa"
+        android:inputType="textPassword"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/email"/>
     <EditText
         android:id="@+id/repassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Retype Password"
-        android:layout_marginTop="50dp"
+        android:textAlignment="viewEnd"
+        android:hint="إعادة كلمة المرور"
+        android:inputType="textPassword"
+        android:fontFamily="@font/changa"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/password"/>
+
+<!--    <Button-->
+<!--        android:id="@+id/btnsignup"-->
+<!--        android:layout_width="159dp"-->
+<!--        android:layout_height="130dp"-->
+<!--        android:layout_below="@+id/repassword"-->
+<!--        android:layout_marginTop="45dp"-->
+<!--        android:background="@drawable/ic_button"-->
+<!--        android:text="Register"-->
+<!--        android:translationX="100dp" />-->
+
+    <TextView
+        android:layout_width="165dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/repassword"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="95dp"
+        android:layout_marginEnd="90dp"
+        android:fontFamily="@font/changa"
+        android:text="تسجيل الحساب"
+        android:textFontWeight="900"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:translationZ="3dp" />
+
+
     <Button
         android:id="@+id/btnsignup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Register"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/repassword"/>
+        android:layout_width="179dp"
+        android:layout_height="133dp"
+        android:layout_below="@+id/repassword"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="87dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="84dp"
+        android:background="@drawable/ic_button"
+        android:fontFamily="@font/changa"
+        android:textFontWeight="600" />
+
     <Button
         android:id="@+id/signin"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already have an account?"
-        android:layout_marginTop="50dp"
-        android:layout_below="@+id/btnsignup"/>
+        android:layout_below="@+id/btnsignup"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/common_google_signin_btn_text_light_normal_background"
+        android:fontFamily="@font/changa"
+        android:text="لديك حساب مسبقًا؟ ،قم بتسجيل الدخول"
+        android:textAlignment="center"
+        android:textColor="#8EACD0"
+        android:textFontWeight="600"
+        android:textSize="13dp" />
+
+
 </RelativeLayout>

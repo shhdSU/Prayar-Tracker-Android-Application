@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,8 +71,8 @@ public class HomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        latitudeTextView = findViewById(R.id.latTextView);
-        longitTextView = findViewById(R.id.lonTextView);
+        //latitudeTextView = findViewById(R.id.latTextView);
+        //longitTextView = findViewById(R.id.lonTextView);
         fajerTextView = findViewById(R.id.fajerTextView);
         dhuhrTextView = findViewById(R.id.dhuhrTextView);
         asrTextView = findViewById(R.id.asrTextView);
@@ -310,8 +311,8 @@ private void calculatePrayerTimes(Location location){
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location mLastLocation = locationResult.getLastLocation();
-            latitudeTextView.setText("Latitude: " + mLastLocation.getLatitude() + "");
-            longitTextView.setText("Longitude: " + mLastLocation.getLongitude() + "");
+            //latitudeTextView.setText("Latitude: " + mLastLocation.getLatitude() + "");
+           // longitTextView.setText("Longitude: " + mLastLocation.getLongitude() + "");
         }
     };
 
@@ -358,6 +359,11 @@ private void calculatePrayerTimes(Location location){
         if (checkPermissions()) {
             getLastLocation();
         }
+    }
+
+    public void goToSetting(View view) {
+        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+        startActivity(intent);
     }
 }
 
