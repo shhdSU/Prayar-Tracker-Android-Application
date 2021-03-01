@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center"
@@ -8,112 +9,257 @@
     android:background="@drawable/background"
     android:padding="10dp">
 
-    <TextView
+    <RelativeLayout
+        android:id="@+id/timerParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="fajer:"
-        />
+        android:layout_marginTop="150dp"
+        android:padding="10dp">
+
+
+        <TextView
+            android:id="@+id/timerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/changa"
+            android:text="متبقي على الصلاة القادمة:"
+            android:textAlignment="center"
+            android:textFontWeight="600"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/CountDownTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/timerText"
+            android:fontFamily="@font/changa"
+            android:layout_centerInParent="true"
+            android:text="00:00:00"
+            android:textColor="#8EACD0"
+            android:textFontWeight="600"
+            android:textSize="45sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/fajerParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/fajerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/fajerTextView"
+            android:fontFamily="@font/changa"
+            android:text="الفجر:"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/fajerTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:text="00:00"
+            android:textColor="#8EACD0"
+            android:textFontWeight="600"
+            android:fontFamily="@font/changa"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/fajerimageView"
+            android:layout_width="71dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/fajerTextView"
+            app:srcCompat="@drawable/ic_fajuricon" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/dhuhrParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
     <TextView
-        android:id="@+id/fajerTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fajer time will be here! "
-        android:textColor="#181818" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="dhuhr:" />
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/dhuhrTextView"
+        android:fontFamily="@font/changa"
+        android:text="الظهر:"
+        android:textFontWeight="600"
+        android:textSize="25sp" />
     <TextView
         android:id="@+id/dhuhrTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="dhuhr time will be here! "
-        android:textColor="#181818" />
+        android:layout_marginEnd="28dp"
+        android:text="00:00"
+        android:textColor="#8EACD0"
+        android:textFontWeight="600"
+        android:fontFamily="@font/changa"
+        android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/dhuhrimageView"
+            android:layout_width="71dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/dhuhrTextView"
+            app:srcCompat="@drawable/ic_dhohur" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/asrParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="asr:" />
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/asrTextView"
+        android:fontFamily="@font/changa"
+        android:text="العصر:"
+        android:textFontWeight="600"
+        android:textSize="25sp" />
 
     <TextView
         android:id="@+id/asrTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="asr time will be here! "
-        android:textColor="#181818" />
+        android:layout_marginEnd="28dp"
+        android:text="00:00"
+        android:textColor="#8EACD0"
+        android:textFontWeight="600"
+        android:fontFamily="@font/changa"
+        android:textSize="25sp" />
 
-    <TextView
+        <ImageView
+            android:id="@+id/asrimageView"
+            android:layout_width="71dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/asrTextView"
+            app:srcCompat="@drawable/ic_asur" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/maghribParent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="maghrib:" />
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_toRightOf="@+id/maghribTextView"
+            android:fontFamily="@font/changa"
+            android:text="المغرب:"
+            android:textFontWeight="600"
+            android:textSize="25sp" />
 
     <TextView
         android:id="@+id/maghribTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="maghrib time will be here! "
-        android:textColor="#181818" />
+        android:layout_marginEnd="28dp"
+        android:text="00:00"
+        android:textColor="#8EACD0"
+        android:textFontWeight="600"
+        android:fontFamily="@font/changa"
+        android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/maghribimageView"
+            android:layout_width="71dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/maghribTextView"
+            app:srcCompat="@drawable/ic_maghreb" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/IshaParent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="Isha:" />
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/IshaTextView"
+        android:fontFamily="@font/changa"
+        android:text="العشاء:"
+        android:textFontWeight="600"
+        android:textSize="25sp" />
+
     <TextView
         android:id="@+id/IshaTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Isha time will be here! "
-        android:textColor="#181818" />
+        android:layout_marginEnd="28dp"
+        android:text="00:00"
+        android:textColor="#8EACD0"
+        android:textFontWeight="600"
+        android:fontFamily="@font/changa"
+        android:textSize="25sp" />
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="Latitude:" />
+        <ImageView
+            android:id="@+id/IshaimageView"
+            android:layout_width="71dp"
+            android:layout_height="43dp"
+            android:layout_marginLeft="50dp"
+            android:layout_toRightOf="@+id/IshaTextView"
+            app:srcCompat="@drawable/ic_isha" />
 
-    <TextView
-        android:id="@+id/latTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Latitude will be here! "
-        android:textColor="#181818" />
+    </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="Longitude:" />
 
-    <TextView
-        android:id="@+id/lonTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Longitude will be here! "
-        android:textColor="#181818" />
+<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:fontFamily="sans-serif-black"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:text="Latitude:"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:visibility="invisible"/>&ndash;&gt;-->
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:text="Timer:" />
+<!--    <TextView-->
+<!--        android:id="@+id/latTextView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Latitude will be here! "-->
+<!--        android:textColor="#181818"-->
+<!--        android:visibility="invisible"/>-->
 
-    <TextView
-        android:id="@+id/CountDownTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/lonTextView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="63dp"
-        android:text="timer will be here! "
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="40sp" />
+<!--&lt;!&ndash;    <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:fontFamily="sans-serif-black"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:text="Longitude:"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:visibility="invisible"/>&ndash;&gt;-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/lonTextView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Longitude will be here! "-->
+<!--        android:textColor="#181818"-->
+<!--        android:visibility="invisible"/>-->
+
 
 </LinearLayout>
 

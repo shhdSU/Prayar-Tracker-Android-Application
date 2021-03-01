@@ -11,37 +11,121 @@
         android:id="@+id/Settings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Settings"
+        android:fontFamily="@font/changa"
+        android:text="الاعدادات"
         android:textAlignment="center"
-         />
+        android:textColor="#8EACD0"
+        android:textFontWeight="600"
+        android:textSize="36sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Settings"
+        android:id="@+id/allowNotifParent"
+        android:paddingTop="30dp"
+       >
+
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="28dp"
+        android:layout_toRightOf="@+id/allowNotif"
+        android:checked="false"
+        android:fontFamily="@font/changa"
+        android:textFontWeight="600"
+        android:textSize="20sp"
+        android:text="السماح بالاشعارات" />
 
     <Switch
         android:id="@+id/allowNotif"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Allow notifications"
-        android:layout_below="@+id/Settings"/>
-    <Switch
-        android:id="@+id/Time24HFormat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="24-Hour Format"
-        android:layout_below="@+id/allowNotif"/>
-    <Switch
-        android:id="@+id/silentModeSwitch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Silent mode"
-
-        android:layout_below="@+id/Time24HFormat"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="28dp"
+        android:checked="false"
+        app:thumbTint="@drawable/switchcolor"
+        app:trackTint="@drawable/switch_track"
         />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/allowNotifParent"
+        android:paddingTop="30dp"
+        android:id="@+id/Time24HFormatParent"
+        >
+
+            <Switch
+                android:id="@+id/Time24HFormat"
+                android:layout_width="wrap_content"
+                android:layout_height="39dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="28dp"
+                android:checked="false"
+                app:thumbTint="@drawable/switchcolor"
+                app:trackTint="@drawable/switch_track"
+               />
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="28dp"
+            android:layout_toRightOf="@+id/Time24HFormat"
+            android:checked="false"
+            android:fontFamily="@font/changa"
+            android:textFontWeight="600"
+            android:textSize="20sp"
+            android:text="استخدام نظام ٢٤ ساعة" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Time24HFormatParent"
+        android:paddingTop="30dp"
+        android:id="@+id/silentModeParent"
+        >
+
+            <Switch
+                android:id="@+id/silentModeSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="39dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="28dp"
+                android:checked="false"
+                app:thumbTint="@drawable/switchcolor"
+                app:trackTint="@drawable/switch_track"
+                />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="28dp"
+            android:layout_toRightOf="@+id/silentModeSwitch"
+            android:fontFamily="@font/changa"
+            android:textFontWeight="600"
+            android:textSize="20sp"
+            android:text="وضع الصامت" />
+
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/silentModeSwitch"
         android:layout_marginTop="10dp"
         android:visibility="invisible">
 
@@ -52,17 +136,6 @@
             android:text="Set silent for"
             android:visibility="visible" />
 
-        <EditText
-            android:id="@+id/editTextNumber2"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/silentModeSwitch"
-            android:ems="10"
-            android:inputType="number"
-            android:visibility="visible"
-            tools:layout_editor_absoluteX="148dp"
-            tools:layout_editor_absoluteY="327dp" />
-
 
         <TextView
             android:id="@+id/Minutes"
@@ -72,10 +145,45 @@
             android:visibility="visible" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/SaveBtn"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout"
-        android:text="Save" />
+        android:layout_below="@+id/silentModeParent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="123dp"
+        android:layout_marginTop="123dp"
+        android:layout_marginEnd="123dp"
+        android:checked="false"
+        android:fontFamily="@font/changa"
+        android:text="حــفــظ الاعدادات"
+        android:textFontWeight="900"
+        android:textSize="20sp"
+        android:translationZ="3dp" />
+
+    <Button
+        android:id="@+id/SaveBtn"
+        android:layout_height="112.5dp"
+        android:layout_below="@+id/silentModeParent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="110dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="110dp"
+        android:background="@drawable/ic_button"
+        android:fontFamily="@font/changa"
+        android:textFontWeight="600"
+        android:layout_width="150dp" />
+
+
+        <EditText
+        android:id="@+id/editTextNumber2"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="327dp" />
 </RelativeLayout>

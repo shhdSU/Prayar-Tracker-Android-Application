@@ -37,6 +37,10 @@
             android:name=".HomeScreenActivity"
             android:label="@string/title_activity_home_screen"></activity>
         <activity android:name=".LoginActivity"></activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
