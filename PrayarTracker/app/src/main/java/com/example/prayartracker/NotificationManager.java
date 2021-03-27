@@ -26,7 +26,7 @@ public class NotificationManager extends BroadcastReceiver {
 
             NotificationCompat.Builder notifyBuilder =
                     new NotificationCompat.Builder(context, "high_important_channel")
-                            .setContentTitle("صلاتي")
+                            .setContentTitle("عماد")
                             .setContentText("حان الآن موعد صلاة "+prayer)
                             //.setSmallIcon(R.drawable.================)
                             //.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.======))

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                 String Pass = password.getText().toString();
                 String Repass = repassword.getText().toString();
                 if (Email.equals("") || Username.equals("") || Pass.equals("") || Repass.equals(""))
-                    Toast.makeText(MainActivity.this, "Please enter all the fields", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "لطفا قم بتعبئة جميع الحقول", Toast.LENGTH_SHORT).show();
                 else {
 
                     if (Pass.length() >= 8) {
@@ -55,25 +55,25 @@ public class MainActivity extends AppCompatActivity {
                             if (checkuserEmail == false) {
                                 Boolean insert = DB.insertData(Email, Username, Pass);
                                 if (insert == true) {
-                                    Toast.makeText(MainActivity.this, "Registered successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "تم تسجيل الحساب بنجاح", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                     startActivity(intent);
                                 } else {
-                                    Toast.makeText(MainActivity.this, "Registration failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "فشل تسجيل الحساب", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(MainActivity.this, "User already exists! please sign in", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "البريد الإلكتروني مسجل بالفعل. لطفًا قم بتسجيل الدخول", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "لطفًا قم بإدخال البريد إلكتروني بشكل صحيح", Toast.LENGTH_SHORT).show();
 
                         }
                     } else {
-                        Toast.makeText(MainActivity.this, "Passwords not matching", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "كلمتي السر غير متطابقة", Toast.LENGTH_SHORT).show();
                     }
                 }
                      else {
-                        Toast.makeText(MainActivity.this, "Your password should be of length 8 or greater", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "لطفًا تأكد أن كلمة السر طولها ٨ أحرف على الأقل", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

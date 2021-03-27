@@ -191,7 +191,7 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                 });
             } else {
-                Toast.makeText(this, "Please turn on" + " your location...", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "لطفًا قم بتفعيل خاصية الموقع لهذا التطبيق", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                 startActivity(intent);
             }
