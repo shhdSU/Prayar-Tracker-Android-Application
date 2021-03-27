@@ -69,11 +69,29 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String email = EmailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
+                if(email.equals("") || password.equals("")){
+                    Toast.makeText(LoginActivity.this, "لطفًا قم بتعبئة جميع الحقول", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String emailRegex = "^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,4}$";
+                Pattern pattern = Pattern.compile(emailRegex);
+                Matcher matcher = pattern.matcher(email);
+                if (!matcher.find()) {
+                    Toast.makeText(LoginActivity.this, "لطفًا قم بإدخال البريد إلكتروني بشكل صحيح", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(password.length()<8){
+                    Toast.makeText(LoginActivity.this, "لطفًا تأكد أن كلمة السر طولها ٨ أحرف على الأقل", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Log.d("email/password", email + "/" + password);
                 if (db.validateLogin(email, password)) {
                     Log.d("a", "inside if");
                     Intent intent = new Intent(LoginActivity.this,HomeScreenActivity.class);
                     startActivity(intent);
+                }
+                else{
+                    Toast.makeText(LoginActivity.this, "لا يوجد حساب مسجل بالبريد الالكتروني وكلمة السر المدخلة", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -86,25 +104,6 @@ public class LoginActivity extends AppCompatActivity {
             }
     });
 }
-
-    private boolean validateInputs(String email, String pass){
-            String emailRegex = "^[A-Za-z0-9._%+\\-]+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,4}$";
-            Pattern pattern = Pattern.compile(emailRegex);
-            Matcher matcher = pattern.matcher(email);
-            if (!matcher.find()) {
-                Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
-                return false;
-            } else if (!pass.matches(".*\\d.*")) {
-                Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
-                return false;
-
-            } else if (!pass.matches("[a-zA-Z0-9]*")) {
-                Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
-                return false;
-
-            } else
-                return true;
-        }
 
 }
 
