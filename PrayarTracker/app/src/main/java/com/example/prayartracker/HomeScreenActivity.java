@@ -2,6 +2,7 @@ package com.example.prayartracker;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -31,6 +34,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -57,13 +63,11 @@ public class HomeScreenActivity extends AppCompatActivity {
     FusedLocationProviderClient mFusedLocationClient;
     public static ArrayList<String> prayerTimes12;
     public static ArrayList<String> prayerTimes24;
-    public static boolean isSilentMode = false;
-    public static int interval = 0;
     static PrayTime prayTime;
-
+    static String upcomingPrayer;
     // Initializing other items
     // from layout file
-    TextView latitudeTextView, longitTextView,fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
+    TextView fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
     int PERMISSION_ID = 44;
     static Timer silentModeTimer;
     @Override
@@ -71,8 +75,6 @@ public class HomeScreenActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
 
-        //latitudeTextView = findViewById(R.id.latTextView);
-        //longitTextView = findViewById(R.id.lonTextView);
         fajerTextView = findViewById(R.id.fajerTextView);
         dhuhrTextView = findViewById(R.id.dhuhrTextView);
         asrTextView = findViewById(R.id.asrTextView);
@@ -85,7 +87,9 @@ public class HomeScreenActivity extends AppCompatActivity {
 
         // method to get the location
         getLastLocation();
+
     }
+
 
     @SuppressLint("MissingPermission")
     private void getLastLocation() {
@@ -105,19 +109,24 @@ public class HomeScreenActivity extends AppCompatActivity {
                         } else {
                             calculatePrayerTimes(location);
                             schedulePrayersDaily(location);
-                            ArrayList<String> prayerTimes = prayerTimes12;
-                            if (SettingsActivity.is24Hour) {
+                            ArrayList<String> prayerTimes;
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            Log.d("pref",""+preferences.getBoolean("is24Hour",true));
+                            if(!preferences.getBoolean("is24Hour",true)){
+                                prayerTimes = prayerTimes12;
+                            }
+                           else {
                                 prayerTimes = prayerTimes24;
                             }
+                            ArrayList<String> prayerTimesForCount24H = prayerTimes24;
                                 for (String prayer : prayerTimes) {
                                     Log.d(" ", "prayer" + prayer);
+                                }
                                     fajerTextView.setText(prayerTimes.get(0));
                                     dhuhrTextView.setText(prayerTimes.get(2));
                                     asrTextView.setText(prayerTimes.get(3));
                                     maghribTextView.setText(prayerTimes.get(5));
                                     IshaTextView.setText(prayerTimes.get(6));
-
-                                }
 
                             // Create an array for the difference between prayer time and the current time in ms.
                             long [] PrayerDiff = new long[7];
@@ -126,7 +135,8 @@ public class HomeScreenActivity extends AppCompatActivity {
                             for (int i = 0; i < 7; i++) {
                                 DateFormat df = new SimpleDateFormat("HH:mm:ss"); // current time format
                                 Calendar calobj = Calendar.getInstance(); // to get current time
-                                String time = prayerTimes.get(i)+ ":00"; //  convert the prayer time format to HH:mm:ss format // if the time format 12 hours we use .replaceAll(" am","")
+                                String time;
+                                time = prayerTimesForCount24H.get(i)+ ":00"; //  convert the prayer time format to HH:mm:ss format // if the time format 12 hours we use .replaceAll(" am","")
                                 LocalTime localTime = LocalTime.parse(time); // convert from String to LocalTime
                                 LocalTime CurrentTime = LocalTime.parse(df.format(calobj.getTime()));// convert from String to LocalTime
                                 if(Math.abs(localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000) >= 53940000){ // if the difference is grater or equal 8(20:00:00) then
@@ -143,7 +153,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                             }
                             // loop to ensure from the result (only print)
                             for (int j = 0; j < 7; j++) {
-                                String time = prayerTimes.get(j)+ ":00"; // if the time format 12 hours we use .replaceAll(" am","")
+                                String time = prayerTimesForCount24H.get(j)+ ":00"; // if the time format 12 hours we use .replaceAll(" am","")
                                 LocalTime localTime = LocalTime.parse(time);
                                 Log.d("Before sub", String.valueOf(localTime.toSecondOfDay()*1000));
                             }
@@ -159,6 +169,35 @@ public class HomeScreenActivity extends AppCompatActivity {
                                 {
                                     minValue = PrayerDiff[i];
                                 }
+                            }
+                            SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                            for(int i=0;i<7;i++) {
+                                if(PrayerDiff[i] == minValue) {
+                                    switch (i){
+                                        case 0:
+                                            upcomingPrayer = "الفجر";
+                                            break;
+                                        case 2:
+                                            upcomingPrayer = "الظهر";
+
+                                            break;
+
+                                        case 3:
+                                            upcomingPrayer = "العصر";
+                                            break;
+
+                                        case 5:
+                                            upcomingPrayer = "المغرب";
+                                            break;
+
+                                        case 6:
+                                            upcomingPrayer = "العشاء";
+                                            break;
+
+                                    }
+                                }
+                                pref.putString("upcomingPrayer",upcomingPrayer);
+                                pref.commit();
                             }
                                 Log.d("Minemum",Long.toString(minValue));
 
@@ -177,8 +216,8 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                                     long elapsedSeconds = millisUntilFinished / secondsInMilli;
 
-                                    String yy = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes,elapsedSeconds);
-                                    TimerTextView.setText(yy);
+                                    String text = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes,elapsedSeconds);
+                                    TimerTextView.setText(text);
                                 }
 
                                 public void onFinish() {
@@ -206,41 +245,51 @@ public class HomeScreenActivity extends AppCompatActivity {
         int today = cal.get(Calendar.DAY_OF_MONTH);
         SharedPreferences settings = getSharedPreferences("PREFS",0);
         int yesterday = settings.getInt("day",0);
-        if(yesterday!=today){
+      //  if(yesterday!=today){
             Log.d("","first time today");
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt("day",today);
             editor.commit();
             calculatePrayerTimes(location);
-            if(SettingsActivity.isSilentMode){
-                int numMinutes = SettingsActivity.interval;
-                for (String prayer: prayerTimes24) {
-                    String[] time = prayer.split ( ":" );
-                    int hrs = Integer.parseInt ( time[0].trim() );
-                    int min = Integer.parseInt ( time[1].trim() );
-                    silentModeTimer = new Timer();
-
-                    silentModeTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            if(preferences.getBoolean("SilentMode",false)){
+                if(preferences.getInt("Interval",0) != 0) {
+                    int numMinutes = preferences.getInt("Interval", 0);
+                    for (String prayer : prayerTimes24) {
+                        String[] time = prayer.split(":");
+                        int hrs = Integer.parseInt(time[0].trim());
+                        int min = Integer.parseInt(time[1].trim());
+                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                        android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+                        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                            Intent in = new Intent();
+                            in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            startActivityForResult(in, 1);
                         }
+                        silentModeTimer = new Timer();
 
-                    }, new Date(cal.getTime().getYear(),cal.getTime().getMonth(),cal.getTime().getDay(),hrs,min,0));
-                    silentModeTimer.schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                        }
+                        silentModeTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                            }
 
-                    }, new Date(cal.getTime().getYear(),cal.getTime().getMonth(),cal.getTime().getDay(),hrs,min+numMinutes,0));
+                        }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDay(), hrs, min, 0));
+                        silentModeTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                            }
+
+                        }, (hrs * 60 * 60 * 1000)  + (min * 60 * 1000) + (numMinutes * 60 * 1000));
+                    }
                 }
             }
             setPrayersNotifications(location);//ONLY if the notification permission is granted
         }
-    }
+  //  }
 private void calculatePrayerTimes(Location location){
         prayTime = new PrayTime();
     TimeZone timeZone = TimeZone.getDefault();
@@ -256,9 +305,12 @@ private void calculatePrayerTimes(Location location){
     Date now = new Date();
     Calendar cal = Calendar.getInstance();
     cal.setTime(now);
+    Log.d("S",""+location.getLatitude());
+    Log.d("S",""+location.getLongitude());
+    prayTime.setTimeFormat(prayTime.Time24);
     prayerTimes24 = prayTime.getPrayerTimes(cal,
             location.getLatitude(), location.getLongitude(), 3);
-    prayTime.setTimeFormat(prayTime.Time24);
+    prayTime.setTimeFormat(prayTime.Time12);
     prayerTimes12 = prayTime.getPrayerTimes(cal,
             location.getLatitude(), location.getLongitude(), 3);
     for (String prayer: prayerTimes12
@@ -287,6 +339,7 @@ private void calculatePrayerTimes(Location location){
         //Create the alarm manager to schedule the prayer notification
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);
+
     }
 
     @SuppressLint("MissingPermission")
@@ -340,25 +393,11 @@ private void calculatePrayerTimes(Location location){
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
-    // If everything is alright then
-    @Override
-    public void
-    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getLastLocation();
-            }
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
-        if (checkPermissions()) {
             getLastLocation();
-        }
+
     }
 
     public void goToSetting(View view) {

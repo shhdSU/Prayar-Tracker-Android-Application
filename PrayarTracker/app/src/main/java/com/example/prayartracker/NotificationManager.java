@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 public class NotificationManager extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
         SharedPreferences settings = context.getSharedPreferences("PREFS",0);
@@ -19,7 +21,8 @@ public class NotificationManager extends BroadcastReceiver {
             return;
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         Intent prayNowIntent = new Intent(context, HomeScreenActivity.class);//on tap go to home
-        String prayer = "=================================================";
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        String prayer =  pref.getString("upcomingPrayer","ERROR CHECK UPCOMING PRAYER");
         prayNowIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context,1,prayNowIntent,0);
@@ -28,7 +31,7 @@ public class NotificationManager extends BroadcastReceiver {
                     new NotificationCompat.Builder(context, "high_important_channel")
                             .setContentTitle("عماد")
                             .setContentText("حان الآن موعد صلاة "+prayer)
-                            //.setSmallIcon(R.drawable.================)
+                            .setSmallIcon(R.drawable.ic_logo)
                             //.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.======))
                             .setContentIntent(pendingIntent)
                             .setAutoCancel(true)

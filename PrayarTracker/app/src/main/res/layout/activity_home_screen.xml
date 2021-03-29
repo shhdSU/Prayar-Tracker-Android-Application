@@ -11,10 +11,10 @@
         android:id="@+id/settingbutton"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_settings"
-        android:translationX="140dp"
-        android:onClick="goToSetting"
         android:layout_marginTop="30dp"
+        android:background="@drawable/ic_settings"
+        android:onClick="goToSetting"
+        android:translationX="140dp"
         android:translationY="-40dp" />
 
 

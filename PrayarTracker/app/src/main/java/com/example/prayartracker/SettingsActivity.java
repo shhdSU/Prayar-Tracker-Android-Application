@@ -7,12 +7,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.sql.Time;
@@ -21,16 +25,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.example.prayartracker.HomeScreenActivity.prayTime;
 import static com.example.prayartracker.HomeScreenActivity.prayerTimes24;
+import static com.example.prayartracker.HomeScreenActivity.silentModeTimer;
 
 public class SettingsActivity extends AppCompatActivity {
 
     public static boolean isSilentMode = false;
-    public static int interval = 0;
     public static boolean is24Hour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,18 @@ public class SettingsActivity extends AppCompatActivity {
         final LinearLayout linearLayout = (LinearLayout) findViewById((R.id.linearLayout));
         final EditText minutesInput = (EditText) findViewById((R.id.editTextNumber2));
         Button saveBtn = (Button) findViewById((R.id.SaveBtn));
-        if(prayTime.getTimeFormat() == prayTime.Time12){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if(preferences.getBoolean("SilentMode",false)){
+            silentModeSwitch.setChecked(true);
+            linearLayout.setVisibility(View.VISIBLE);
+
+        }
+        else{
+            silentModeSwitch.setChecked(false);
+            linearLayout.setVisibility(View.INVISIBLE);
+
+        }
+        if(!preferences.getBoolean("is24Hour",true)){
             Time24HFormat.setChecked(false);
         }
         else{
@@ -56,7 +72,7 @@ public class SettingsActivity extends AppCompatActivity {
          allowNotification.setChecked(true);
        }
     else{
-       allowNotification.setEnabled(false);
+       allowNotification.setChecked(false);
     }
         allowNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -83,55 +99,53 @@ public class SettingsActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean flag = true;
+                String minutes = minutesInput.getText().toString();
                 if(silentModeSwitch.isChecked()){
-                    int numMinutes = Integer.parseInt(minutesInput.getText().toString());
-                    interval = numMinutes;
-                    isSilentMode = true;
-                    for (String prayer: prayerTimes24) {
+                    if(minutes.equals("")){
+                        Toast.makeText(SettingsActivity.this, "لطفًا قم بإدخال مدة إبفاء الجهاز على وضعية الصامت", Toast.LENGTH_SHORT).show();
+                        Log.d("silent","silent");
+                         flag = false;
+                    }
+                    else {
+                        int numMinutes = Integer.parseInt(minutesInput.getText().toString());
+                        SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                        pref.putBoolean("SilentMode",true);
+                        pref.putInt("Interval",numMinutes);
+                        pref.commit();
+                        Toast.makeText(SettingsActivity.this, "سيتم وضع الجهاز على وضعية الصامت بعد كل آذان ولمدة "+ numMinutes + " دقيقة", Toast.LENGTH_SHORT).show();
 
-                        String[] time = prayer.split ( ":" );
-                        int hrs = Integer.parseInt ( time[0].trim() );
-                        int min = Integer.parseInt ( time[1].trim() );
-                        Date currentDate = Calendar.getInstance().getTime();
-                        HomeScreenActivity.silentModeTimer = new Timer();
-
-                        HomeScreenActivity.silentModeTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                            }
-
-                        }, new java.util.Date(currentDate.getYear(),currentDate.getMonth(),currentDate.getDay(),hrs,min,0));
-                        HomeScreenActivity.silentModeTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                            }
-
-                        }, new Date(currentDate.getYear(),currentDate.getMonth(),currentDate.getDay(),hrs,min+numMinutes,0));
                     }
                 }
                 else {
-                    isSilentMode = false;
+                    SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                    pref.putBoolean("SilentMode",false);
+                    pref.putInt("Interval",0);
+                    pref.commit();
+                    if(silentModeTimer!= null)
                     HomeScreenActivity.silentModeTimer.cancel();
-                }
-//                if(allowNotifications.isChecked()){
-//                }
-//                else{
-//                }
-                if(Time24HFormat.isChecked()){
-                    prayTime.setTimeFormat(prayTime.Time24);
-                    is24Hour = true;
-                }
-                else{
-                    prayTime.setTimeFormat(prayTime.Time12);
-                    is24Hour = false;
+                    AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                    Toast.makeText(SettingsActivity.this, "تم إلغاء وضع الصامت", Toast.LENGTH_SHORT).show();
 
                 }
-                Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
-                startActivity(intent);
+                SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                if(Time24HFormat.isChecked()){
+                    preferences.putBoolean("is24Hour",true);
+                    preferences.commit();
+                    Toast.makeText(SettingsActivity.this, "تم وضع التطبيق على نظام ٢٤ ساعة", Toast.LENGTH_SHORT).show();
+
+                }
+                else{
+                    preferences.putBoolean("is24Hour",false);
+                    preferences.commit();
+                    Toast.makeText(SettingsActivity.this, "تم وضع التطبيق على نظام ١٢ ساعة", Toast.LENGTH_SHORT).show();
+
+                }
+                if(flag) {
+                    Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
