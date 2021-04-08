@@ -18,14 +18,15 @@ public class NotificationManager extends BroadcastReceiver {
         SharedPreferences settings = context.getSharedPreferences("PREFS",0);
         boolean isNotificationAllowed = settings.getBoolean("isNotificationAllowed",true);
         if(!isNotificationAllowed)
-            return;
+           return;
+        System.out.println("RECEIVED NOTIFICATION");
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         Intent prayNowIntent = new Intent(context, HomeScreenActivity.class);//on tap go to home
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         String prayer =  pref.getString("upcomingPrayer","ERROR CHECK UPCOMING PRAYER");
         prayNowIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,1,prayNowIntent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,prayNowIntent.getIntExtra("id",0),prayNowIntent,0);
 
             NotificationCompat.Builder notifyBuilder =
                     new NotificationCompat.Builder(context, "high_important_channel")
