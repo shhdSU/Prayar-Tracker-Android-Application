@@ -2,6 +2,7 @@ package com.example.prayartracker;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -34,7 +35,9 @@ public class LoginActivity extends AppCompatActivity {
 
 
     DatabaseHelper db;
+    SharedPreferences sp;
     private FusedLocationProviderClient fusedLocationProviderClient;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,8 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = findViewById(R.id.password);
         final Button loginButton = findViewById(R.id.login);
         final Button registerButton = findViewById(R.id.GoToRegister);
+
+
 
 
         db = new DatabaseHelper(this);
@@ -87,8 +92,10 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("email/password", email + "/" + password);
                 if (db.validateLogin(email, password)) {
                     Log.d("a", "inside if");
+                    sp.edit().putBoolean("logged",true).apply();
                     Intent intent = new Intent(LoginActivity.this,HomeScreenActivity.class);
                     startActivity(intent);
+
                 }
                 else{
                     Toast.makeText(LoginActivity.this, "لا يوجد حساب مسجل بالبريد الالكتروني وكلمة السر المدخلة", Toast.LENGTH_SHORT).show();

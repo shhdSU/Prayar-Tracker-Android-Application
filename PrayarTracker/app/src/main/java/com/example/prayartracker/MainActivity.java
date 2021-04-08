@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 public class MainActivity extends AppCompatActivity {
     EditText email, username, password, repassword;
     Button signup, signin;
+    SharedPreferences sp;
     DatabaseHelper DB;
 
     @Override
@@ -33,6 +35,16 @@ public class MainActivity extends AppCompatActivity {
         signup = (Button) findViewById(R.id.btnsignup);
         signin = (Button) findViewById(R.id.signin);
         DB = new DatabaseHelper(this);
+
+
+        sp = getSharedPreferences("login",MODE_PRIVATE);
+
+        if(sp.getBoolean("logged",true)){
+            Intent intent = new Intent(MainActivity.this, HomeScreenActivity.class);
+            startActivity(intent);
+        }
+
+
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
