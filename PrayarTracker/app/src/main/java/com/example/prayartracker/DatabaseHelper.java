@@ -23,7 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Boolean insertData(String email, String username, String password){
         SQLiteDatabase PDB = this.getWritableDatabase();
         ContentValues contentValues= new ContentValues();
-        contentValues.put("email", email);
+        contentValues.put("email", email.toLowerCase());
         contentValues.put("username", username);
         contentValues.put("password", password);
         long result = PDB.insert("users", null, contentValues);
@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     public boolean validateLogin(String email, String password){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cr = db.rawQuery("Select email, password from users where email = ? and password = ?", new String[] {email,password});
+        Cursor cr = db.rawQuery("Select email, password from users where email = ? and password = ?", new String[] {email.toLowerCase(),password});
         Log.d("a", ""+cr.getCount());
         if(cr.getCount()>0){
             return true;
