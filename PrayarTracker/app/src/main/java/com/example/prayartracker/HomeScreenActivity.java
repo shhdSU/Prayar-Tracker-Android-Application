@@ -241,16 +241,16 @@ public class HomeScreenActivity extends AppCompatActivity {
         }
     }
     private void schedulePrayersDaily(Location location){
+        calculatePrayerTimes(location);
         Calendar cal = Calendar.getInstance();
         int today = cal.get(Calendar.DAY_OF_MONTH);
         SharedPreferences settings = getSharedPreferences("PREFS",0);
         int yesterday = settings.getInt("day",0);
-      //  if(yesterday!=today){
+          if(yesterday!=today){
             Log.d("","first time today");
             SharedPreferences.Editor editor = settings.edit();
             editor.putInt("day",today);
             editor.commit();
-            calculatePrayerTimes(location);
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             if(preferences.getBoolean("SilentMode",false)){
                 if(preferences.getInt("Interval",0) != 0) {
@@ -287,22 +287,75 @@ public class HomeScreenActivity extends AppCompatActivity {
                     }
                 }
             }
-            System.out.println("Before setPrayersNotifications");
             setPrayersNotifications(location);//ONLY if the notification permission is granted
-        System.out.println("After setPrayersNotifications");
-
-    }
-    //}
+        }
+   }
 private void calculatePrayerTimes(Location location){
         prayTime = new PrayTime();
     TimeZone timeZone = TimeZone.getDefault();
     String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
             TimeZone.SHORT);
+    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     zone = zone.substring(4);
     zone = zone.replaceAll(":",".");
     Double tz = Double.parseDouble(zone);
-    prayTime.setCalcMethod(prayTime.Makkah);
-    prayTime.setAdjustHighLats(prayTime.AngleBased);
+    switch (preferences.getString("CalcMethod","Makkah")){
+        case "Makkah":
+            prayTime.setCalcMethod(prayTime.Makkah);
+            break;
+        case "Tehran":
+            prayTime.setCalcMethod(prayTime.Tehran);
+            break;
+
+        case "ISNA":
+            prayTime.setCalcMethod(prayTime.ISNA);
+            break;
+
+        case "Egypt":
+            prayTime.setCalcMethod(prayTime.Egypt);
+            break;
+
+        case "Custom":
+            prayTime.setCalcMethod(prayTime.Custom);
+            break;
+
+        case "Karachi":
+            prayTime.setCalcMethod(prayTime.Karachi);
+            break;
+
+        case "MWL":
+            prayTime.setCalcMethod(prayTime.MWL);
+            break;
+
+        case "Jafari":
+            prayTime.setCalcMethod(prayTime.Jafari);
+            break;
+    }
+    switch (preferences.getString("JuristicMethod","Shafii")){
+        case "Shafii":
+            prayTime.setCalcMethod(prayTime.Shafii);
+            break;
+        case "Hanafi":
+            prayTime.setCalcMethod(prayTime.Hanafi);
+            break;
+    }
+
+    switch(preferences.getString("HighAltCalc","AngleBased")){
+        case "AngleBased":
+            prayTime.setCalcMethod(prayTime.AngleBased);
+            break;
+        case "None":
+            prayTime.setCalcMethod(prayTime.None);
+            break;
+
+        case "Midnight":
+            prayTime.setCalcMethod(prayTime.MidNight);
+            break;
+
+        case "OneSeventh":
+            prayTime.setCalcMethod(prayTime.OneSeventh);
+            break;
+    }
     int[] offsets = {0, 0, 0, 0, 0, 0, 0};
     prayTime.tune(offsets);
     Date now = new Date();
@@ -324,20 +377,16 @@ private void calculatePrayerTimes(Location location){
     public void setPrayersNotifications(Location location){
         Calendar cal = Calendar.getInstance();
         int alarmsCounter = 0;
-        int i = 0;
-       for (String prayer: prayerTimes24){
-           if(i!=1&&i!=4){
-            //if(!(prayer.equalsIgnoreCase(prayerTimes24.get(1))||prayer.equalsIgnoreCase(prayerTimes24.get(4)))){
+        for (String prayer: prayerTimes24){
+            if(!prayer.equalsIgnoreCase(prayerTimes24.get(1))){
                 alarmsCounter++;
-                cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(prayer.substring(0,2)));
+                cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(prayer.substring(0,2)));
                 cal.set(Calendar.MINUTE,Integer.parseInt(prayer.substring(3,5)));
                 cal.set(Calendar.SECOND,0);
                 cal.set(Calendar.MILLISECOND,0);
                 scheduleAlarms(cal,alarmsCounter);
-                System.out.println("Calendar is "+cal.getTime());
-           }
-            i++;
-       }
+            }
+        }
     }
     public void scheduleAlarms(Calendar calendar, int alarmsCounter){
         //Prepare the intents to be used to set the alarm
@@ -346,9 +395,6 @@ private void calculatePrayerTimes(Location location){
         //Create the alarm manager to schedule the prayer notification
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);
-        Log.d("","sceduled id is "+alarmsCounter );
-        System.out.println("Calendar is "+calendar.getTimeInMillis());
-
 
     }
 
@@ -403,11 +449,13 @@ private void calculatePrayerTimes(Location location){
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public void onResume() {
         super.onResume();
             getLastLocation();
 
+            Log.e("hi",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("CalcMethod","Makkah"));
     }
 
     public void goToSetting(View view) {

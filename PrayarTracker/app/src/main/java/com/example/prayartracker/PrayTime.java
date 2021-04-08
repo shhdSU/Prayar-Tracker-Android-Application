@@ -46,21 +46,21 @@ public class PrayTime {
     private double JDate; // Julian date
     // ------------------------------------------------------------
     // Calculation Methods
-    private int Jafari; // Ithna Ashari
-    private int Karachi; // University of Islamic Sciences, Karachi
-    private int ISNA; // Islamic Society of North America (ISNA)
-    private int MWL; // Muslim World League (MWL)
+    protected int Jafari; // Ithna Ashari
+    protected int Karachi; // University of Islamic Sciences, Karachi
+    protected int ISNA; // Islamic Society of North America (ISNA)
+    protected int MWL; // Muslim World League (MWL)
     protected int Makkah; // Umm al-Qura, Makkah
-    private int Egypt; // Egyptian General Authority of Survey
-    private int Custom; // Custom Setting
-    private int Tehran; // Institute of Geophysics, University of Tehran
+    protected int Egypt; // Egyptian General Authority of Survey
+    protected int Custom; // Custom Setting
+    protected int Tehran; // Institute of Geophysics, University of Tehran
     // Juristic Methods
     protected int Shafii; // Shafii (standard)
     protected int Hanafi; // Hanafi
     // Adjusting Methods for Higher Latitudes
-    private int None; // No adjustment
-    private int MidNight; // middle of night
-    private int OneSeventh; // 1/7th of night
+    protected int None; // No adjustment
+    protected int MidNight; // middle of night
+    protected int OneSeventh; // 1/7th of night
     protected int AngleBased; // angle/60th of night
     // Time Formats
     protected int Time24; // 24-hour format
@@ -851,8 +851,7 @@ public class PrayTime {
         return Custom;
     }
 
-    private void setCustom(int custom) {
-        Custom = custom;
+    private void setCustom(int custom) { Custom = custom;
     }
 
     private int getTehran() {
