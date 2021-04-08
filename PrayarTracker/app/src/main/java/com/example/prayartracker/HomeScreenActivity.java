@@ -287,9 +287,12 @@ public class HomeScreenActivity extends AppCompatActivity {
                     }
                 }
             }
+            System.out.println("Before setPrayersNotifications");
             setPrayersNotifications(location);//ONLY if the notification permission is granted
-        }
-  //  }
+        System.out.println("After setPrayersNotifications");
+
+    }
+    //}
 private void calculatePrayerTimes(Location location){
         prayTime = new PrayTime();
     TimeZone timeZone = TimeZone.getDefault();
@@ -321,16 +324,20 @@ private void calculatePrayerTimes(Location location){
     public void setPrayersNotifications(Location location){
         Calendar cal = Calendar.getInstance();
         int alarmsCounter = 0;
-        for (String prayer: prayerTimes24){
-            if(!prayer.equalsIgnoreCase(prayerTimes24.get(1))){
+        int i = 0;
+       for (String prayer: prayerTimes24){
+           if(i!=1&&i!=4){
+            //if(!(prayer.equalsIgnoreCase(prayerTimes24.get(1))||prayer.equalsIgnoreCase(prayerTimes24.get(4)))){
                 alarmsCounter++;
-                cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(prayer.substring(0,2)));
+                cal.set(Calendar.HOUR_OF_DAY, Integer.parseInt(prayer.substring(0,2)));
                 cal.set(Calendar.MINUTE,Integer.parseInt(prayer.substring(3,5)));
                 cal.set(Calendar.SECOND,0);
                 cal.set(Calendar.MILLISECOND,0);
                 scheduleAlarms(cal,alarmsCounter);
-            }
-        }
+                System.out.println("Calendar is "+cal.getTime());
+           }
+            i++;
+       }
     }
     public void scheduleAlarms(Calendar calendar, int alarmsCounter){
         //Prepare the intents to be used to set the alarm
@@ -339,6 +346,9 @@ private void calculatePrayerTimes(Location location){
         //Create the alarm manager to schedule the prayer notification
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);
+        Log.d("","sceduled id is "+alarmsCounter );
+        System.out.println("Calendar is "+calendar.getTimeInMillis());
+
 
     }
 
