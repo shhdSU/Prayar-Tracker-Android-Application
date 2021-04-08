@@ -7,12 +7,28 @@
     android:padding="10dp"
     tools:context=".MainActivity">
 
+    <Button
+        android:id="@+id/settingbutton"
+        android:layout_width="28dp"
+        android:layout_height="51dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/ic_back"
+        android:onClick="goToHome"
+  />
+
     <TextView
         android:id="@+id/Settings"
-        android:layout_width="match_parent"
+        android:layout_width="181dp"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
         android:fontFamily="@font/changa"
-        android:text="الاعدادات"
+        android:text="الإعدادات"
         android:textAlignment="center"
         android:textColor="#8EACD0"
         android:textFontWeight="600"

@@ -97,4 +97,8 @@ public class MainActivity extends AppCompatActivity {
             manager.createNotificationChannel(highImportantChannel);
         }
     }
+
+    public void goToHome(View view) {
+        finish();
+    }
 }
