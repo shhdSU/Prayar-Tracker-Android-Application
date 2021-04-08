@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -45,14 +47,16 @@ public class SettingsActivity extends AppCompatActivity {
          final Switch allowNotification = findViewById(R.id.allowNotif);
          final Switch silentModeSwitch = findViewById(R.id.silentModeSwitch);
          final Switch Time24HFormat = findViewById(R.id.Time24HFormat);
-         SharedPreferences settings = getSharedPreferences("PREFS",0);
+         final RadioGroup ShafiiGroup = findViewById(R.id.ShafiiButtonGroup);
+         final RadioGroup AltitudeGroup = findViewById(R.id.AltitudeButtonGroup);
+         final RadioGroup CalcMethod = findViewById(R.id.CalcMethodBtnGroup);
+         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean isNotificationAllowed = settings.getBoolean("isNotificationAllowed",true);
-        final SharedPreferences.Editor editor = settings.edit();
+          SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
         final LinearLayout linearLayout = (LinearLayout) findViewById((R.id.linearLayout));
         final EditText minutesInput = (EditText) findViewById((R.id.editTextNumber2));
         Button saveBtn = (Button) findViewById((R.id.SaveBtn));
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        if(preferences.getBoolean("SilentMode",false)){
+        if(settings.getBoolean("SilentMode",false)){
             silentModeSwitch.setChecked(true);
             linearLayout.setVisibility(View.VISIBLE);
 
@@ -62,7 +66,7 @@ public class SettingsActivity extends AppCompatActivity {
             linearLayout.setVisibility(View.INVISIBLE);
 
         }
-        if(!preferences.getBoolean("is24Hour",true)){
+        if(!settings.getBoolean("is24Hour",true)){
             Time24HFormat.setChecked(false);
         }
         else{
@@ -74,16 +78,164 @@ public class SettingsActivity extends AppCompatActivity {
     else{
        allowNotification.setChecked(false);
     }
+        RadioButton Jafari = (RadioButton) findViewById(R.id.Jafari);
+        RadioButton MWL = (RadioButton) findViewById(R.id.MWL);
+        RadioButton Karachi = (RadioButton) findViewById(R.id.Karachi);
+        RadioButton ISNA = (RadioButton) findViewById(R.id.ISNA);
+        RadioButton Tehran = (RadioButton) findViewById(R.id.Tehran);
+        RadioButton Makkah = (RadioButton) findViewById(R.id.Makkah);
+        RadioButton Egypt = (RadioButton) findViewById(R.id.Egypt);
+        RadioButton Custom = (RadioButton) findViewById(R.id.Custom);
+
+        switch(settings.getString("CalcMethod","Makkah")){
+        case "Makkah":
+            Makkah.setChecked(true);
+            break;
+            case "Tehran":
+                Tehran.setChecked(true);
+                break;
+
+            case "ISNA":
+                ISNA.setChecked(true);
+                break;
+
+            case "Egypt":
+                Egypt.setChecked(true);
+                break;
+
+            case "Custom":
+                Custom.setChecked(true);
+                break;
+
+            case "Karachi":
+                Karachi.setChecked(true);
+                break;
+
+            case "MWL":
+                MWL.setChecked(true);
+                break;
+
+            case "Jafari":
+                Jafari.setChecked(true);
+                break;
+
+        }
+        RadioButton Hanafi = (RadioButton) findViewById(R.id.HanafiBtn);
+        RadioButton Shafii = (RadioButton) findViewById(R.id.ShafiiBtn);
+
+        switch(settings.getString("JuristicMethod","Shafii")){
+            case "Shafii":
+                Shafii.setChecked(true);
+                break;
+
+            case "Hanafi":
+                Hanafi.setChecked(true);
+                break;
+
+        }
+        RadioButton None = (RadioButton) findViewById(R.id.None);
+        RadioButton Midnight = (RadioButton) findViewById(R.id.MidNight);
+        RadioButton OneSeventh = (RadioButton) findViewById(R.id.OneSeventh);
+        RadioButton AngleBased = (RadioButton) findViewById(R.id.AngleBased);
+        switch(settings.getString("HighAltCalc","AngleBased")){
+            case "AngleBased":
+                AngleBased.setChecked(true);
+                break;
+            case "None":
+                None.setChecked(true);
+                break;
+
+            case "Midnight":
+                Midnight.setChecked(true);
+                break;
+
+            case "OneSeventh":
+                OneSeventh.setChecked(true);
+                break;
+
+        }
+        AltitudeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+
+                switch(checkedId){
+                    case R.id.None:
+                        editor.putString("HighAltCalc","None");
+                        break;
+                    case R.id.MidNight:
+                        editor.putString("HighAltCalc","Midnight");
+                        break;
+                    case R.id.OneSeventh:
+                        editor.putString("HighAltCalc","OneSeventh");
+                        break;
+                    case R.id.AngleBased:
+                        editor.putString("HighAltCalc","AngleBased");
+                        break;
+                }
+                editor.apply();
+            }
+        });
+        ShafiiGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+
+                switch(checkedId) {
+                    case R.id.ShafiiBtn:
+                        editor.putString("JuristicMethod", "Shafii");
+                        break;
+                    case R.id.HanafiBtn:
+                        editor.putString("JuristicMethod", "Hanafi");
+                        break;
+                }
+                editor.apply();
+            }
+        });
+        CalcMethod.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                Log.d("hi!", ""+checkedId);
+                switch(checkedId){
+                    case R.id.Jafari:
+                        editor.putString("CalcMethod","Jafari");
+                        break;
+                    case R.id.Karachi:
+                        editor.putString("CalcMethod","Karachi");
+                        break;
+                    case R.id.ISNA:
+                        editor.putString("CalcMethod","ISNA");
+                        break;
+                    case R.id.MWL:
+                        editor.putString("CalcMethod","MWL");
+                        break;
+                    case R.id.Makkah:
+                        editor.putString("CalcMethod","Makkah");
+                        break;
+                    case R.id.Egypt:
+                        editor.putString("CalcMethod","Egypt");
+                        break;
+                    case R.id.Tehran:
+                        editor.putString("CalcMethod","Tehran");
+                        break;
+                    case R.id.Custom:
+                        editor.putString("CalcMethod","Custom");
+                        break;
+                }
+                editor.apply();
+
+            }
+        });
         allowNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
                 if (isChecked) {
                     // The toggle is enabled
                     editor.putBoolean("isNotificationAllowed",true);
                 } else {
                     editor.putBoolean("isNotificationAllowed",false);
                 }
-                editor.commit();
-
             }
         });
         silentModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -150,5 +302,4 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
     }
-
 }
