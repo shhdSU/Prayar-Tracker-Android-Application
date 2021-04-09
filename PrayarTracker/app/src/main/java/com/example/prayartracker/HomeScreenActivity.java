@@ -56,7 +56,7 @@ import android.os.CountDownTimer;
 
 
 public class HomeScreenActivity extends AppCompatActivity {
-    TextView TimerTextView;
+    static TextView TimerTextView;
     // initializing
     // FusedLocationProviderClient
     // object
@@ -70,6 +70,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     TextView fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
     int PERMISSION_ID = 44;
     static Timer silentModeTimer;
+    static CountDownTimer countDownTimer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,11 +108,11 @@ public class HomeScreenActivity extends AppCompatActivity {
                         if (location == null) {
                             requestNewLocationData();
                         } else {
+                            prayerTimes24 = null;
                             calculatePrayerTimes(location);
                             schedulePrayersDaily(location);
-                            ArrayList<String> prayerTimes;
+                            ArrayList<String> prayerTimes = null;
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                            Log.d("pref",""+preferences.getBoolean("is24Hour",true));
                             if(!preferences.getBoolean("is24Hour",true)){
                                 prayerTimes = prayerTimes12;
                             }
@@ -130,7 +131,6 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                             // Create an array for the difference between prayer time and the current time in ms.
                             long [] PrayerDiff = new long[7];
-
                                 // loop to fill the PrayerDiff array
                             for (int i = 0; i < 7; i++) {
                                 DateFormat df = new SimpleDateFormat("HH:mm:ss"); // current time format
@@ -153,15 +153,13 @@ public class HomeScreenActivity extends AppCompatActivity {
                             }
                             // loop to ensure from the result (only print)
                             for (int j = 0; j < 7; j++) {
-                                String time = prayerTimesForCount24H.get(j)+ ":00"; // if the time format 12 hours we use .replaceAll(" am","")
+                                String time =  prayerTimesForCount24H.get(j)+ ":00"; // if the time format 12 hours we use .replaceAll(" am","")
                                 LocalTime localTime = LocalTime.parse(time);
                                 Log.d("Before sub", String.valueOf(localTime.toSecondOfDay()*1000));
                             }
                             for (int j = 0; j < 7; j++) {
                                 Log.d("Aftar sub",Long.toString(PrayerDiff[j]));
                             }
-
-
                             // loop to find the minimum positive value ( the nearest prayer time == the smallest difference )
                             long minValue = Integer.MAX_VALUE;
                             for(int i=0;i<7;i++) {
@@ -201,32 +199,38 @@ public class HomeScreenActivity extends AppCompatActivity {
                             }
                                 Log.d("Minemum",Long.toString(minValue));
 
-                            //method to Count Down the time 
-                            new CountDownTimer(minValue, 1000) {
-                                public void onTick(long millisUntilFinished) {
-                                    long secondsInMilli = 1000;
-                                    long minutesInMilli = secondsInMilli * 60;
-                                    long hoursInMilli = minutesInMilli * 60;
-
-                                    long elapsedHours = millisUntilFinished / hoursInMilli;
-                                    millisUntilFinished = millisUntilFinished % hoursInMilli;
-
-                                    long elapsedMinutes = millisUntilFinished / minutesInMilli;
-                                    millisUntilFinished = millisUntilFinished % minutesInMilli;
-
-                                    long elapsedSeconds = millisUntilFinished / secondsInMilli;
-
-                                    String text = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes,elapsedSeconds);
-                                    TimerTextView.setText(text);
-                                }
-
-                                public void onFinish() {
-
-                                    TimerTextView.setText("00:00:00"); // here i prefer to set the notification "حان موعد صلاة ال... حسب توقيت مكة المكرمة"
-                                }
-                            }.start();
+                            if(countDownTimer != null) {
+                                countDownTimer.cancel();
+                                Log.d("cancel","cancel");
                             }
-                        }
+                                Log.d("cancel","cancel");
+                                //method to Count Down the time
+                                countDownTimer = new CountDownTimer(minValue, 1000) {
+                                    public void onTick(long millisUntilFinished) {
+                                        long secondsInMilli = 1000;
+                                        long minutesInMilli = secondsInMilli * 60;
+                                        long hoursInMilli = minutesInMilli * 60;
+
+                                        long elapsedHours = millisUntilFinished / hoursInMilli;
+                                        millisUntilFinished = millisUntilFinished % hoursInMilli;
+
+                                        long elapsedMinutes = millisUntilFinished / minutesInMilli;
+                                        millisUntilFinished = millisUntilFinished % minutesInMilli;
+
+                                        long elapsedSeconds = millisUntilFinished / secondsInMilli;
+
+                                        String text = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+                                        TimerTextView.setText(text);
+                                    }
+
+                                    public void onFinish() {
+
+                                        TimerTextView.setText("00:00:00"); // here i prefer to set the notification "حان موعد صلاة ال... حسب توقيت مكة المكرمة"
+                                    }
+                                };
+                                countDownTimer.start();
+                            }
+                            }
 
                 });
             } else {
@@ -333,27 +337,27 @@ private void calculatePrayerTimes(Location location){
     }
     switch (preferences.getString("JuristicMethod","Shafii")){
         case "Shafii":
-            prayTime.setCalcMethod(prayTime.Shafii);
+            prayTime.setAsrJuristic(prayTime.Shafii);
             break;
         case "Hanafi":
-            prayTime.setCalcMethod(prayTime.Hanafi);
+            prayTime.setAsrJuristic(prayTime.Hanafi);
             break;
     }
 
     switch(preferences.getString("HighAltCalc","AngleBased")){
         case "AngleBased":
-            prayTime.setCalcMethod(prayTime.AngleBased);
+            prayTime.setAdjustHighLats(prayTime.AngleBased);
             break;
         case "None":
-            prayTime.setCalcMethod(prayTime.None);
+            prayTime.setAdjustHighLats(prayTime.None);
             break;
 
         case "Midnight":
-            prayTime.setCalcMethod(prayTime.MidNight);
+            prayTime.setAdjustHighLats(prayTime.MidNight);
             break;
 
         case "OneSeventh":
-            prayTime.setCalcMethod(prayTime.OneSeventh);
+            prayTime.setAdjustHighLats(prayTime.OneSeventh);
             break;
     }
     int[] offsets = {0, 0, 0, 0, 0, 0, 0};
@@ -455,7 +459,6 @@ private void calculatePrayerTimes(Location location){
         super.onResume();
             getLastLocation();
 
-            Log.e("hi",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("CalcMethod","Makkah"));
     }
 
     public void goToSetting(View view) {

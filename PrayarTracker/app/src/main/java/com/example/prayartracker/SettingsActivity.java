@@ -173,7 +173,7 @@ public class SettingsActivity extends AppCompatActivity {
                         editor.putString("HighAltCalc","AngleBased");
                         break;
                 }
-                editor.apply();
+                editor.commit();
             }
         });
         ShafiiGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -189,7 +189,7 @@ public class SettingsActivity extends AppCompatActivity {
                         editor.putString("JuristicMethod", "Hanafi");
                         break;
                 }
-                editor.apply();
+                editor.commit();
             }
         });
         CalcMethod.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -223,7 +223,7 @@ public class SettingsActivity extends AppCompatActivity {
                         editor.putString("CalcMethod","Custom");
                         break;
                 }
-                editor.apply();
+                editor.commit();
 
             }
         });
