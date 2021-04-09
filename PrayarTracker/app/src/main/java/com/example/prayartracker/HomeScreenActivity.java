@@ -65,6 +65,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     public static ArrayList<String> prayerTimes24;
     static PrayTime prayTime;
     static String upcomingPrayer;
+    SharedPreferences sp;
     // Initializing other items
     // from layout file
     TextView fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
@@ -464,6 +465,12 @@ private void calculatePrayerTimes(Location location){
     public void goToSetting(View view) {
         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         startActivity(intent);
+    }
+
+    public void signOut(View view){
+        sp.edit().putBoolean("logged",false).apply(); //Please don't remove it
+        //Start your code HERE
+
     }
 }
 
