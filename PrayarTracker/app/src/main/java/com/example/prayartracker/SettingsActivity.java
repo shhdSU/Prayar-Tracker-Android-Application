@@ -227,11 +227,14 @@ public class SettingsActivity extends AppCompatActivity {
         allowNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-                if (isChecked) {
+                if(isChecked) {
                     // The toggle is enabled
                     editor.putBoolean("isNotificationAllowed",true);
+                    editor.commit();
                 } else {
                     editor.putBoolean("isNotificationAllowed",false);
+                    editor.commit();
+
                 }
             }
         });

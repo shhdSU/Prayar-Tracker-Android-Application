@@ -18,6 +18,16 @@
         android:translationY="-40dp" />
 
 
+    <Button
+        android:id="@+id/signputbutton"
+        android:layout_width="65dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="-50dp"
+        android:background="@drawable/ic_icon_awesome_sign_out_alt"
+        android:onClick="signOut"
+        android:translationX="-140dp"
+        android:translationY="-40dp" />
+
     <RelativeLayout
         android:id="@+id/timerParent"
         android:layout_width="wrap_content"

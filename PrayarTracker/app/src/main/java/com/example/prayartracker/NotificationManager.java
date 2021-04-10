@@ -15,30 +15,29 @@ public class NotificationManager extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SharedPreferences settings = context.getSharedPreferences("PREFS",0);
-        boolean isNotificationAllowed = settings.getBoolean("isNotificationAllowed",true);
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean isNotificationAllowed = pref.getBoolean("isNotificationAllowed",true);
         if(!isNotificationAllowed)
-           return;
+            return;
         System.out.println("RECEIVED NOTIFICATION");
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         Intent prayNowIntent = new Intent(context, HomeScreenActivity.class);//on tap go to home
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         String prayer =  pref.getString("upcomingPrayer","ERROR CHECK UPCOMING PRAYER");
         prayNowIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context,prayNowIntent.getIntExtra("id",0),prayNowIntent,0);
 
-            NotificationCompat.Builder notifyBuilder =
-                    new NotificationCompat.Builder(context, "high_important_channel")
-                            .setContentTitle("عماد")
-                            .setContentText("حان الآن موعد صلاة "+prayer)
-                            .setSmallIcon(R.drawable.ic_logo)
-                            //.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.======))
-                            .setContentIntent(pendingIntent)
-                            .setAutoCancel(true)
-                            .setPriority(NotificationCompat.PRIORITY_HIGH);
+        NotificationCompat.Builder notifyBuilder =
+                new NotificationCompat.Builder(context, "high_important_channel")
+                        .setContentTitle("عِمَـــــاد")
+                        .setContentText("حان الآن موعد صلاة "+prayer)
+                        .setSmallIcon(R.drawable.ic_logo)
+                        //.setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.drawable.======))
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-            manager.notify(1, notifyBuilder.build());
+        manager.notify(1, notifyBuilder.build());
            }
 
 
