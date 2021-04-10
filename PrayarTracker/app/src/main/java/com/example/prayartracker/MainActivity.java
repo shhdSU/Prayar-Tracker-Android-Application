@@ -111,6 +111,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToHome(View view) {
-        finish();
+        Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
+        startActivity(intent);
     }
+
+//    public void goToHome(View view) {
+//        finish();
+//    }
 }

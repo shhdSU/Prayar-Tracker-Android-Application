@@ -226,16 +226,16 @@ public class SettingsActivity extends AppCompatActivity {
         });
         allowNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-                if(isChecked) {
-                    // The toggle is enabled
-                    editor.putBoolean("isNotificationAllowed",true);
-                    editor.commit();
-                } else {
-                    editor.putBoolean("isNotificationAllowed",false);
-                    editor.commit();
-
-                }
+//                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+//                if(isChecked) {
+//                    // The toggle is enabled
+//                    editor.putBoolean("isNotificationAllowed",true);
+//                    editor.commit();
+//                } else {
+//                    editor.putBoolean("isNotificationAllowed",false);
+//                    editor.commit();
+//
+//                }
             }
         });
         silentModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -360,9 +360,9 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-    public void GoBack(View view) {
-     finish();
+    public void goToHome(View view){
+        Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
+        startActivity(intent);
     }
 }
