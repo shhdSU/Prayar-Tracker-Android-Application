@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
          final RadioGroup CalcMethod = findViewById(R.id.CalcMethodBtnGroup);
          SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean isNotificationAllowed = settings.getBoolean("isNotificationAllowed",true);
-          SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
         final LinearLayout linearLayout = (LinearLayout) findViewById((R.id.linearLayout));
         final EditText minutesInput = (EditText) findViewById((R.id.editTextNumber2));
         Button saveBtn = (Button) findViewById((R.id.SaveBtn));
@@ -158,38 +158,36 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-
-                switch(checkedId){
-                    case R.id.None:
-                        editor.putString("HighAltCalc","None");
-                        break;
-                    case R.id.MidNight:
-                        editor.putString("HighAltCalc","Midnight");
-                        break;
-                    case R.id.OneSeventh:
-                        editor.putString("HighAltCalc","OneSeventh");
-                        break;
-                    case R.id.AngleBased:
-                        editor.putString("HighAltCalc","AngleBased");
-                        break;
-                }
-                editor.commit();
+//
+//                switch(checkedId){
+//                    case R.id.None:
+//                        editor.putString("HighAltCalc","None");
+//                        break;
+//                    case R.id.MidNight:
+//                        editor.putString("HighAltCalc","Midnight");
+//                        break;
+//                    case R.id.OneSeventh:
+//                        editor.putString("HighAltCalc","OneSeventh");
+//                        break;
+//                    case R.id.AngleBased:
+//                        editor.putString("HighAltCalc","AngleBased");
+//                        break;
+//                }
             }
         });
         ShafiiGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-
-                switch(checkedId) {
-                    case R.id.ShafiiBtn:
-                        editor.putString("JuristicMethod", "Shafii");
-                        break;
-                    case R.id.HanafiBtn:
-                        editor.putString("JuristicMethod", "Hanafi");
-                        break;
-                }
-                editor.commit();
+//
+//                switch(checkedId) {
+//                    case R.id.ShafiiBtn:
+//                        editor.putString("JuristicMethod", "Shafii");
+//                        break;
+//                    case R.id.HanafiBtn:
+//                        editor.putString("JuristicMethod", "Hanafi");
+//                        break;
+//                }
             }
         });
         CalcMethod.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
@@ -197,33 +195,32 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
                 Log.d("hi!", ""+checkedId);
-                switch(checkedId){
-                    case R.id.Jafari:
-                        editor.putString("CalcMethod","Jafari");
-                        break;
-                    case R.id.Karachi:
-                        editor.putString("CalcMethod","Karachi");
-                        break;
-                    case R.id.ISNA:
-                        editor.putString("CalcMethod","ISNA");
-                        break;
-                    case R.id.MWL:
-                        editor.putString("CalcMethod","MWL");
-                        break;
-                    case R.id.Makkah:
-                        editor.putString("CalcMethod","Makkah");
-                        break;
-                    case R.id.Egypt:
-                        editor.putString("CalcMethod","Egypt");
-                        break;
-                    case R.id.Tehran:
-                        editor.putString("CalcMethod","Tehran");
-                        break;
-                    case R.id.Custom:
-                        editor.putString("CalcMethod","Custom");
-                        break;
-                }
-                editor.commit();
+//                switch(checkedId){
+//                    case R.id.Jafari:
+//                        editor.putString("CalcMethod","Jafari");
+//                        break;
+//                    case R.id.Karachi:
+//                        editor.putString("CalcMethod","Karachi");
+//                        break;
+//                    case R.id.ISNA:
+//                        editor.putString("CalcMethod","ISNA");
+//                        break;
+//                    case R.id.MWL:
+//                        editor.putString("CalcMethod","MWL");
+//                        break;
+//                    case R.id.Makkah:
+//                        editor.putString("CalcMethod","Makkah");
+//                        break;
+//                    case R.id.Egypt:
+//                        editor.putString("CalcMethod","Egypt");
+//                        break;
+//                    case R.id.Tehran:
+//                        editor.putString("CalcMethod","Tehran");
+//                        break;
+//                    case R.id.Custom:
+//                        editor.putString("CalcMethod","Custom");
+//                        break;
+//                }
 
             }
         });
@@ -251,6 +248,7 @@ public class SettingsActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
                 boolean flag = true;
                 String minutes = minutesInput.getText().toString();
                 if(silentModeSwitch.isChecked()){
@@ -258,6 +256,7 @@ public class SettingsActivity extends AppCompatActivity {
                         Toast.makeText(SettingsActivity.this, "لطفًا قم بإدخال مدة إبفاء الجهاز على وضعية الصامت", Toast.LENGTH_SHORT).show();
                         Log.d("silent","silent");
                          flag = false;
+                         return;
                     }
                     else {
                         int numMinutes = Integer.parseInt(minutesInput.getText().toString());
@@ -271,6 +270,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
                 else {
                     SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+
                     pref.putBoolean("SilentMode",false);
                     pref.putInt("Interval",0);
                     pref.commit();
@@ -294,6 +294,63 @@ public class SettingsActivity extends AppCompatActivity {
                     Toast.makeText(SettingsActivity.this, "تم وضع التطبيق على نظام ١٢ ساعة", Toast.LENGTH_SHORT).show();
 
                 }
+                if(allowNotification.isChecked()){
+                    editor.putBoolean("isNotificationAllowed",true);
+                }
+                else{
+                    editor.putBoolean("isNotificationAllowed",false);
+                }
+
+                switch(AltitudeGroup.getCheckedRadioButtonId()){
+                    case R.id.None:
+                        editor.putString("HighAltCalc","None");
+                        break;
+                    case R.id.MidNight:
+                        editor.putString("HighAltCalc","Midnight");
+                        break;
+                    case R.id.OneSeventh:
+                        editor.putString("HighAltCalc","OneSeventh");
+                        break;
+                    case R.id.AngleBased:
+                        editor.putString("HighAltCalc","AngleBased");
+                        break;
+                }
+
+                switch(ShafiiGroup.getCheckedRadioButtonId()) {
+                    case R.id.ShafiiBtn:
+                        editor.putString("JuristicMethod", "Shafii");
+                        break;
+                    case R.id.HanafiBtn:
+                        editor.putString("JuristicMethod", "Hanafi");
+                        break;
+                }
+                switch(CalcMethod.getCheckedRadioButtonId()){
+                    case R.id.Jafari:
+                        editor.putString("CalcMethod","Jafari");
+                        break;
+                    case R.id.Karachi:
+                        editor.putString("CalcMethod","Karachi");
+                        break;
+                    case R.id.ISNA:
+                        editor.putString("CalcMethod","ISNA");
+                        break;
+                    case R.id.MWL:
+                        editor.putString("CalcMethod","MWL");
+                        break;
+                    case R.id.Makkah:
+                        editor.putString("CalcMethod","Makkah");
+                        break;
+                    case R.id.Egypt:
+                        editor.putString("CalcMethod","Egypt");
+                        break;
+                    case R.id.Tehran:
+                        editor.putString("CalcMethod","Tehran");
+                        break;
+                    case R.id.Custom:
+                        editor.putString("CalcMethod","Custom");
+                        break;
+                }
+                editor.commit();
                 if(flag) {
                     Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);
                     startActivity(intent);
@@ -301,5 +358,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void GoBack(View view) {
+     finish();
     }
 }

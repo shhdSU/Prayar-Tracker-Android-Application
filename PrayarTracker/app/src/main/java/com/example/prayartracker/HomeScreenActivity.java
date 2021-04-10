@@ -198,6 +198,41 @@ public class HomeScreenActivity extends AppCompatActivity {
                                 pref.commit();
                             }
                                 Log.d("Minemum",Long.toString(minValue));
+                            Calendar cal = Calendar.getInstance();
+                            int numMinutes = preferences.getInt("Interval", 0);
+                            if(silentModeTimer != null){
+                                silentModeTimer.cancel();
+                            }
+                            silentModeTimer = new Timer();
+                            for (String prayer : prayerTimes24) {
+                                String[] time = prayer.split(":");
+                                int hrs = Integer.parseInt(time[0].trim());
+                                int min = Integer.parseInt(time[1].trim());
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+                                if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                                    Intent in = new Intent();
+                                    in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                                    startActivityForResult(in, 1);
+                                }
+
+                                silentModeTimer.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                                    }
+
+                                }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDay(), hrs, min, 0));
+                                silentModeTimer.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                                    }
+
+                                }, (hrs * 60 * 60 * 1000)  + (min * 60 * 1000) + (numMinutes * 60 * 1000));
+                            }
 
                             if(countDownTimer != null) {
                                 countDownTimer.cancel();
@@ -258,6 +293,11 @@ public class HomeScreenActivity extends AppCompatActivity {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             if(preferences.getBoolean("SilentMode",false)){
                 if(preferences.getInt("Interval",0) != 0) {
+                      if(silentModeTimer != null){
+                            silentModeTimer.cancel();
+                        }
+                        silentModeTimer = new Timer();
+
                     int numMinutes = preferences.getInt("Interval", 0);
                     for (String prayer : prayerTimes24) {
                         String[] time = prayer.split(":");
@@ -270,7 +310,6 @@ public class HomeScreenActivity extends AppCompatActivity {
                             in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
                             startActivityForResult(in, 1);
                         }
-                        silentModeTimer = new Timer();
 
                         silentModeTimer.schedule(new TimerTask() {
                             @Override
@@ -465,5 +504,6 @@ private void calculatePrayerTimes(Location location){
         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         startActivity(intent);
     }
+
 }
 
