@@ -53,7 +53,7 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 import android.os.CountDownTimer;
-
+import android.os.Handler;
 
 public class HomeScreenActivity extends AppCompatActivity {
     static TextView TimerTextView;
@@ -64,7 +64,14 @@ public class HomeScreenActivity extends AppCompatActivity {
     public static ArrayList<String> prayerTimes12;
     public static ArrayList<String> prayerTimes24;
     static PrayTime prayTime;
+    static Handler handler;
+    static Runnable runnable;
     static String upcomingPrayer;
+    static boolean onFinish = true;
+    static long minValue;
+    static long [] PrayerDiff;
+    static boolean first = true;
+    SharedPreferences sp;
     // Initializing other items
     // from layout file
     TextView fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;
@@ -75,7 +82,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
-
+        handler = new Handler();
         fajerTextView = findViewById(R.id.fajerTextView);
         dhuhrTextView = findViewById(R.id.dhuhrTextView);
         asrTextView = findViewById(R.id.asrTextView);
@@ -113,65 +120,37 @@ public class HomeScreenActivity extends AppCompatActivity {
                             schedulePrayersDaily(location);
                             ArrayList<String> prayerTimes = null;
                             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                            if(!preferences.getBoolean("is24Hour",true)){
+                            if (!preferences.getBoolean("is24Hour", true)) {
                                 prayerTimes = prayerTimes12;
-                            }
-                           else {
+                            } else {
                                 prayerTimes = prayerTimes24;
                             }
                             ArrayList<String> prayerTimesForCount24H = prayerTimes24;
-                                for (String prayer : prayerTimes) {
-                                    Log.d(" ", "prayer" + prayer);
-                                }
-                                    fajerTextView.setText(prayerTimes.get(0));
-                                    dhuhrTextView.setText(prayerTimes.get(2));
-                                    asrTextView.setText(prayerTimes.get(3));
-                                    maghribTextView.setText(prayerTimes.get(5));
-                                    IshaTextView.setText(prayerTimes.get(6));
-
-                            // Create an array for the difference between prayer time and the current time in ms.
-                            long [] PrayerDiff = new long[7];
-                                // loop to fill the PrayerDiff array
-                            for (int i = 0; i < 7; i++) {
-                                DateFormat df = new SimpleDateFormat("HH:mm:ss"); // current time format
-                                Calendar calobj = Calendar.getInstance(); // to get current time
-                                String time;
-                                time = prayerTimesForCount24H.get(i)+ ":00"; //  convert the prayer time format to HH:mm:ss format // if the time format 12 hours we use .replaceAll(" am","")
-                                LocalTime localTime = LocalTime.parse(time); // convert from String to LocalTime
-                                LocalTime CurrentTime = LocalTime.parse(df.format(calobj.getTime()));// convert from String to LocalTime
-                                if(Math.abs(localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000) >= 53940000){ // if the difference is grater or equal 8(20:00:00) then
-                                long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000)+ 86400000; // add 24 hours to get the correct time.
-                                long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ; // convert to ms
-                                PrayerDiff[i] = diffSeconds;} //assign
-                                else{
-                                    long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000); // without adding 24 hours
-                                    long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ;// convert to ms
-                                    PrayerDiff[i] = diffSeconds;//assign
-                                }
-                                Log.d("MY CUURENT TIME 2", String.valueOf(CurrentTime.toSecondOfDay()*1000));
-
+                            for (String prayer : prayerTimes) {
+                                Log.d(" ", "prayer" + prayer);
                             }
+                            fajerTextView.setText(prayerTimes.get(0));
+                            dhuhrTextView.setText(prayerTimes.get(2));
+                            asrTextView.setText(prayerTimes.get(3));
+                            maghribTextView.setText(prayerTimes.get(5));
+                            IshaTextView.setText(prayerTimes.get(6));
+
+
+                            getPrayerDiff(prayerTimesForCount24H);
                             // loop to ensure from the result (only print)
                             for (int j = 0; j < 7; j++) {
-                                String time =  prayerTimesForCount24H.get(j)+ ":00"; // if the time format 12 hours we use .replaceAll(" am","")
+                                String time = prayerTimesForCount24H.get(j) + ":00"; // if the time format 12 hours we use .replaceAll(" am","")
                                 LocalTime localTime = LocalTime.parse(time);
-                                Log.d("Before sub", String.valueOf(localTime.toSecondOfDay()*1000));
+                                Log.d("Before sub", String.valueOf(localTime.toSecondOfDay() * 1000));
                             }
                             for (int j = 0; j < 7; j++) {
-                                Log.d("Aftar sub",Long.toString(PrayerDiff[j]));
+                                Log.d("Aftar sub", Long.toString(PrayerDiff[j]));
                             }
-                            // loop to find the minimum positive value ( the nearest prayer time == the smallest difference )
-                            long minValue = Integer.MAX_VALUE;
-                            for(int i=0;i<7;i++) {
-                                if(PrayerDiff[i] > 0 && minValue > PrayerDiff[i])
-                                {
-                                    minValue = PrayerDiff[i];
-                                }
-                            }
+                            getMinValue();
                             SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-                            for(int i=0;i<7;i++) {
-                                if(PrayerDiff[i] == minValue) {
-                                    switch (i){
+                            for (int i = 0; i < 7; i++) {
+                                if (PrayerDiff[i] == minValue) {
+                                    switch (i) {
                                         case 0:
                                             upcomingPrayer = "الفجر";
                                             break;
@@ -194,13 +173,13 @@ public class HomeScreenActivity extends AppCompatActivity {
 
                                     }
                                 }
-                                pref.putString("upcomingPrayer",upcomingPrayer);
+                                pref.putString("upcomingPrayer", upcomingPrayer);
                                 pref.commit();
                             }
-                                Log.d("Minemum",Long.toString(minValue));
+                            Log.d("Minemum", Long.toString(minValue));
                             Calendar cal = Calendar.getInstance();
                             int numMinutes = preferences.getInt("Interval", 0);
-                            if(silentModeTimer != null){
+                            if (silentModeTimer != null) {
                                 silentModeTimer.cancel();
                             }
                             silentModeTimer = new Timer();
@@ -231,15 +210,10 @@ public class HomeScreenActivity extends AppCompatActivity {
                                         audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                                     }
 
-                                }, (hrs * 60 * 60 * 1000)  + (min * 60 * 1000) + (numMinutes * 60 * 1000));
+                                }, (hrs * 60 * 60 * 1000) + (min * 60 * 1000) + (numMinutes * 60 * 1000));
                             }
-
-                            if(countDownTimer != null) {
-                                countDownTimer.cancel();
-                                Log.d("cancel","cancel");
-                            }
-                                Log.d("cancel","cancel");
-                                //method to Count Down the time
+                            if(first) {
+                                first = false;
                                 countDownTimer = new CountDownTimer(minValue, 1000) {
                                     public void onTick(long millisUntilFinished) {
                                         long secondsInMilli = 1000;
@@ -259,12 +233,61 @@ public class HomeScreenActivity extends AppCompatActivity {
                                     }
 
                                     public void onFinish() {
-
                                         TimerTextView.setText("00:00:00"); // here i prefer to set the notification "حان موعد صلاة ال... حسب توقيت مكة المكرمة"
+                                        this.cancel();
+                                        Log.d("Minvalue", "" + minValue);
+                                        getMinValue();
+                                        Log.d("Minvalue", "" + minValue);
+                                        this.start();
                                     }
                                 };
                                 countDownTimer.start();
                             }
+                            handler.postDelayed(runnable = new Runnable() {
+                                public void run() {
+                                    handler.postDelayed(runnable, minValue);
+                                    if (countDownTimer != null) {
+                                        countDownTimer.cancel();
+                                        Log.d("cancel", "cancel");
+                                    }
+                                    getMinValue();
+                                    Log.d("cancel", "cancel");
+                                    if (onFinish) {
+                                        //method to Count Down the time
+                                        countDownTimer = new CountDownTimer(minValue, 1000) {
+                                            public void onTick(long millisUntilFinished) {
+                                                long secondsInMilli = 1000;
+                                                long minutesInMilli = secondsInMilli * 60;
+                                                long hoursInMilli = minutesInMilli * 60;
+
+                                                long elapsedHours = millisUntilFinished / hoursInMilli;
+                                                millisUntilFinished = millisUntilFinished % hoursInMilli;
+
+                                                long elapsedMinutes = millisUntilFinished / minutesInMilli;
+                                                millisUntilFinished = millisUntilFinished % minutesInMilli;
+
+                                                long elapsedSeconds = millisUntilFinished / secondsInMilli;
+
+                                                String text = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+                                                TimerTextView.setText(text);
+                                            }
+
+                                            public void onFinish() {
+                                                TimerTextView.setText("00:00:00"); // here i prefer to set the notification "حان موعد صلاة ال... حسب توقيت مكة المكرمة"
+                                                this.cancel();
+                                                Log.d("Minvalue", "" + minValue);
+                                                getMinValue();
+                                                Log.d("Minvalue", "" + minValue);
+                                                this.start();
+                                            }
+                                        };
+                                        countDownTimer.start();
+                                    }
+                                }
+
+                            },minValue);
+
+                        }
                             }
 
                 });
@@ -279,6 +302,47 @@ public class HomeScreenActivity extends AppCompatActivity {
             requestPermissions();
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getPrayerDiff(ArrayList<String> prayerTimesForCount24H) {
+        // Create an array for the difference between prayer time and the current time in ms.
+        PrayerDiff = new long[7];
+        // loop to fill the PrayerDiff array
+        for (int i = 0; i < 7; i++) {
+            DateFormat df = new SimpleDateFormat("HH:mm:ss"); // current time format
+            Calendar calobj = Calendar.getInstance(); // to get current time
+            String time;
+            time = prayerTimesForCount24H.get(i)+ ":00"; //  convert the prayer time format to HH:mm:ss format // if the time format 12 hours we use .replaceAll(" am","")
+            LocalTime localTime = null; // convert from String to LocalTime
+                localTime = LocalTime.parse(time);
+            LocalTime CurrentTime = LocalTime.parse(df.format(calobj.getTime()));// convert from String to LocalTime
+            if(Math.abs(localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000) >= 53940000){ // if the difference is grater or equal 8(20:00:00) then
+            long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000)+ 86400000; // add 24 hours to get the correct time.
+            long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ; // convert to ms
+            PrayerDiff[i] = diffSeconds;} //assign
+            else{
+                long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000); // without adding 24 hours
+                long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ;// convert to ms
+                PrayerDiff[i] = diffSeconds;//assign
+            }
+            Log.d("MY CUURENT TIME 2", String.valueOf(CurrentTime.toSecondOfDay()*1000));
+
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void getMinValue() {
+        getPrayerDiff(prayerTimes24);
+        // loop to find the minimum positive value ( the nearest prayer time == the smallest difference )
+         minValue = Integer.MAX_VALUE;
+        for(int i=0;i<7;i++) {
+            if(PrayerDiff[i] > 0 && minValue > PrayerDiff[i])
+            {
+                minValue = PrayerDiff[i];
+            }
+        }
+    }
+
     private void schedulePrayersDaily(Location location){
         calculatePrayerTimes(location);
         Calendar cal = Calendar.getInstance();
@@ -504,6 +568,12 @@ private void calculatePrayerTimes(Location location){
         Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
         startActivity(intent);
     }
+    public void signOut(View view){
+        //sp.edit().putBoolean("logged",false).apply(); //Please don't remove it
+        //Start your code HERE
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
 
+    }
 }
 
