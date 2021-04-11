@@ -24,8 +24,11 @@ import android.widget.Toast;
 import java.lang.reflect.Array;
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;//
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -187,30 +190,39 @@ public class HomeScreenActivity extends AppCompatActivity {
                                 String[] time = prayer.split(":");
                                 int hrs = Integer.parseInt(time[0].trim());
                                 int min = Integer.parseInt(time[1].trim());
-                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
-                                if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                                    Intent in = new Intent();
-                                    in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                                    startActivityForResult(in, 1);
-                                }
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
+                                LocalDateTime date1 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), cal.getTime().getHours(), cal.getTime().getMinutes(), cal.getTime().getSeconds());
+                                LocalDateTime date2 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs, min, 0);
+                                Log.d("date1",date1+"");
+                                Log.d("date2",date2+"");
+                                    if (date1.isAfter(date2)){
+                                        Log.d("hi","inside prayer");
+                                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                        android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+                                        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                                            Intent in = new Intent();
+                                            in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                                            startActivityForResult(in, 1);
+                                        }
+                                        silentModeTimer.schedule(new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                                            }
 
-                                silentModeTimer.schedule(new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                                        }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs, min, 0));
+                                        silentModeTimer.schedule(new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                                            }
+
+                                        }, (hrs * 60 * 60 * 1000) + (min * 60 * 1000) + (numMinutes * 60 * 1000));
+
                                     }
 
-                                }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDay(), hrs, min, 0));
-                                silentModeTimer.schedule(new TimerTask() {
-                                    @Override
-                                    public void run() {
-                                        AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                        audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                                    }
-
-                                }, (hrs * 60 * 60 * 1000) + (min * 60 * 1000) + (numMinutes * 60 * 1000));
                             }
                             if(first) {
                                 first = false;
@@ -355,14 +367,14 @@ public class HomeScreenActivity extends AppCompatActivity {
             editor.putInt("day",today);
             editor.commit();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            if(preferences.getBoolean("SilentMode",false)){
+              int numMinutes = preferences.getInt("Interval", 0);
+              if(preferences.getBoolean("SilentMode",false)){
                 if(preferences.getInt("Interval",0) != 0) {
                       if(silentModeTimer != null){
                             silentModeTimer.cancel();
                         }
                         silentModeTimer = new Timer();
 
-                    int numMinutes = preferences.getInt("Interval", 0);
                     for (String prayer : prayerTimes24) {
                         String[] time = prayer.split(":");
                         int hrs = Integer.parseInt(time[0].trim());
@@ -395,7 +407,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                 }
             }
             setPrayersNotifications(location);//ONLY if the notification permission is granted
-        }
+       }
    }
 private void calculatePrayerTimes(Location location){
         prayTime = new PrayTime();
@@ -569,10 +581,9 @@ private void calculatePrayerTimes(Location location){
         startActivity(intent);
     }
     public void signOut(View view){
-        //sp.edit().putBoolean("logged",false).apply(); //Please don't remove it
+        sp.edit().putBoolean("logged",false).apply(); //Please don't remove it
         //Start your code HERE
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(intent);
+    finish(); 
 
     }
 }
