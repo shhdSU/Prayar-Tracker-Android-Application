@@ -287,6 +287,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                                             public void onFinish() {
                                                 TimerTextView.setText("00:00:00"); // here i prefer to set the notification "حان موعد صلاة ال... حسب توقيت مكة المكرمة"
                                                 this.cancel();
+                                                sendNotification();
                                                 Log.d("Minvalue", "" + minValue);
                                                 getMinValue();
                                                 Log.d("Minvalue", "" + minValue);
@@ -406,7 +407,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                     }
                 }
             }
-            setPrayersNotifications(location);//ONLY if the notification permission is granted
+            //setPrayersNotifications(location);//ONLY if the notification permission is granted
        }
    }
 private void calculatePrayerTimes(Location location){
@@ -493,27 +494,28 @@ private void calculatePrayerTimes(Location location){
         Log.d(" ","prayer" + prayer);
     }
 }
-    public void setPrayersNotifications(Location location){
-        Calendar cal = Calendar.getInstance();
-        int alarmsCounter = 0;
-        for (String prayer: prayerTimes24){
-            if(!prayer.equalsIgnoreCase(prayerTimes24.get(1))){
-                alarmsCounter++;
-                cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(prayer.substring(0,2)));
-                cal.set(Calendar.MINUTE,Integer.parseInt(prayer.substring(3,5)));
-                cal.set(Calendar.SECOND,0);
-                cal.set(Calendar.MILLISECOND,0);
-                scheduleAlarms(cal,alarmsCounter);
-            }
-        }
-    }
-    public void scheduleAlarms(Calendar calendar, int alarmsCounter){
-        //Prepare the intents to be used to set the alarm
-        Intent reminderIntent = new Intent(this, NotificationManager.class);
-        PendingIntent intent = PendingIntent.getBroadcast(this,alarmsCounter, reminderIntent.putExtra("id",alarmsCounter), PendingIntent.FLAG_UPDATE_CURRENT);
-        //Create the alarm manager to schedule the prayer notification
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);
+
+    public void sendNotification(){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean isNotificationAllowed = pref.getBoolean("isNotificationAllowed",true);
+        if(!isNotificationAllowed)
+            return;
+        NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext());
+        Intent prayNowIntent = new Intent(getApplicationContext(), HomeScreenActivity.class);//on tap go to home
+        String prayer =  pref.getString("upcomingPrayer","ERROR CHECK UPCOMING PRAYER");
+        prayNowIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,prayNowIntent,0);
+        NotificationCompat.Builder notifyBuilder =
+                new NotificationCompat.Builder(getApplicationContext(), "high_important_channel")
+                        .setContentTitle("عِمَـــــاد")
+                        .setContentText("حان الآن موعد صلاة "+prayer)
+                        .setSmallIcon(R.drawable.ic_logo)
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true)
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        manager.notify(1, notifyBuilder.build());
 
     }
 
