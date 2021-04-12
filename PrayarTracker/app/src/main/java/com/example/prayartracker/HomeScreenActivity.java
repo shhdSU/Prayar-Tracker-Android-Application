@@ -74,6 +74,7 @@ public class HomeScreenActivity extends AppCompatActivity {
     static long minValue;
     static long [] PrayerDiff;
     static boolean first = true;
+    int notificationId;
     SharedPreferences sp;
     // Initializing other items
     // from layout file
@@ -92,7 +93,7 @@ public class HomeScreenActivity extends AppCompatActivity {
         maghribTextView = findViewById(R.id.maghribTextView);
         IshaTextView = findViewById(R.id.IshaTextView);
         TimerTextView = findViewById(R.id.CountDownTextView);
-
+        notificationId= 0;
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -263,6 +264,7 @@ public class HomeScreenActivity extends AppCompatActivity {
                                     getMinValue();
                                     Log.d("cancel", "cancel");
                                     if (onFinish) {
+                                        sendNotification();
                                         //method to Count Down the time
                                         countDownTimer = new CountDownTimer(minValue, 1000) {
                                             public void onTick(long millisUntilFinished) {
@@ -285,7 +287,6 @@ public class HomeScreenActivity extends AppCompatActivity {
                                             public void onFinish() {
                                                 TimerTextView.setText("00:00:00"); // here i prefer to set the notification "حان موعد صلاة ال... حسب توقيت مكة المكرمة"
                                                 this.cancel();
-                                                sendNotification();
                                                 Log.d("Minvalue", "" + minValue);
                                                 getMinValue();
                                                 Log.d("Minvalue", "" + minValue);
@@ -463,7 +464,7 @@ private void calculatePrayerTimes(Location location){
         String prayer =  pref.getString("upcomingPrayer","ERROR CHECK UPCOMING PRAYER");
         prayNowIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),0,prayNowIntent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),notificationId++,prayNowIntent,0);
         NotificationCompat.Builder notifyBuilder =
                 new NotificationCompat.Builder(getApplicationContext(), "high_important_channel")
                         .setContentTitle("عِمَـــــاد")
