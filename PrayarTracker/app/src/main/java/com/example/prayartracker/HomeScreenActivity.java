@@ -190,12 +190,11 @@ public class HomeScreenActivity extends AppCompatActivity {
                                 String[] time = prayer.split(":");
                                 int hrs = Integer.parseInt(time[0].trim());
                                 int min = Integer.parseInt(time[1].trim());
-                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
                                 LocalDateTime date1 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), cal.getTime().getHours(), cal.getTime().getMinutes(), cal.getTime().getSeconds());
                                 LocalDateTime date2 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs, min, 0);
                                 Log.d("date1",date1+"");
                                 Log.d("date2",date2+"");
-                                    if (date1.isAfter(date2)){
+                                    if (date1.isBefore(date2)){
                                         Log.d("hi","inside prayer");
                                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                         android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
@@ -222,7 +221,6 @@ public class HomeScreenActivity extends AppCompatActivity {
                                         }, (hrs * 60 * 60 * 1000) + (min * 60 * 1000) + (numMinutes * 60 * 1000));
 
                                     }
-
                             }
                             if(first) {
                                 first = false;
@@ -368,48 +366,8 @@ public class HomeScreenActivity extends AppCompatActivity {
             editor.putInt("day",today);
             editor.commit();
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-              int numMinutes = preferences.getInt("Interval", 0);
-              if(preferences.getBoolean("SilentMode",false)){
-                if(preferences.getInt("Interval",0) != 0) {
-                      if(silentModeTimer != null){
-                            silentModeTimer.cancel();
-                        }
-                        silentModeTimer = new Timer();
-
-                    for (String prayer : prayerTimes24) {
-                        String[] time = prayer.split(":");
-                        int hrs = Integer.parseInt(time[0].trim());
-                        int min = Integer.parseInt(time[1].trim());
-                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
-                        if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                            Intent in = new Intent();
-                            in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                            startActivityForResult(in, 1);
-                        }
-
-                        silentModeTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                            }
-
-                        }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDay(), hrs, min, 0));
-                        silentModeTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                            }
-
-                        }, (hrs * 60 * 60 * 1000)  + (min * 60 * 1000) + (numMinutes * 60 * 1000));
-                    }
-                }
             }
-            //setPrayersNotifications(location);//ONLY if the notification permission is granted
        }
-   }
 private void calculatePrayerTimes(Location location){
         prayTime = new PrayTime();
     TimeZone timeZone = TimeZone.getDefault();
