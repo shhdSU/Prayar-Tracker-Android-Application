@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -262,6 +263,12 @@ public class SettingsActivity extends AppCompatActivity {
                          return;
                     }
                     else {
+                        android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+                        if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                            Intent in = new Intent();
+                            in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                            startActivityForResult(in, 1);
+                        }
                         int numMinutes = Integer.parseInt(minutesInput.getText().toString());
                         SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
                         pref.putBoolean("SilentMode",true);
@@ -272,8 +279,13 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
                 else {
+                    android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
+                        Intent in = new Intent();
+                        in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
+                        startActivityForResult(in, 1);
+                    }
                     SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-
                     pref.putBoolean("SilentMode",false);
                     pref.putInt("Interval",0);
                     pref.commit();
