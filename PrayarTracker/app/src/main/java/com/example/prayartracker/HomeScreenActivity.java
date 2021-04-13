@@ -196,6 +196,8 @@ public class HomeScreenActivity extends AppCompatActivity {
                                 Log.d("date1",date1+"");
                                 Log.d("date2",date2+"");
                                     if (date1.isBefore(date2)){
+                                        int hours = numMinutes/ 60;
+                                        int minutes = numMinutes % 60;
                                         Log.d("hi","inside prayer");
                                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                                         android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
@@ -219,7 +221,8 @@ public class HomeScreenActivity extends AppCompatActivity {
                                                 audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                                             }
 
-                                        }, (hrs * 60 * 60 * 1000) + (min * 60 * 1000) + (numMinutes * 60 * 1000));
+
+                                        }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs+hours, min+minutes, 0));
 
                                     }
                             }
@@ -542,10 +545,10 @@ private void calculatePrayerTimes(Location location){
         startActivity(intent);
     }
     public void signOut(View view){
-        sp.edit().putBoolean("logged",false).apply(); //Please don't remove it
+        //sp.edit().putBoolean("logged",false).apply(); //Please don't remove it
         //Start your code HERE
-    finish(); 
-
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivity(intent);
     }
 }
 
