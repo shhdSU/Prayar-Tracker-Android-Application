@@ -519,7 +519,8 @@ private void calculatePrayerTimes(Location location){
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+                Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+        getLastLocation();
     }
 
     // method to check
