@@ -1,0 +1,136 @@
+<html>
+<head>
+<title>LoginActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+LoginActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.prayartracker</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.Manifest</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.Activity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.SharedPreferences</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.pm.PackageManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.location.Location</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Build</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.text.Editable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.text.TextWatcher</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.EditText</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TextView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.annotation.Nullable</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.core.app.ActivityCompat</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.lifecycle.Observer</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.lifecycle.ViewModelProviders</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.example.prayartracker.R</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.location.FusedLocationProviderClient</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationServices</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.tasks.OnSuccessListener</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.regex.Matcher</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.regex.Pattern</span><span class="s0">;</span>
+
+
+<span class="s0">public class </span><span class="s1">LoginActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+
+
+    <span class="s1">DatabaseHelper db</span><span class="s0">;</span>
+    <span class="s1">SharedPreferences sp</span><span class="s0">;</span>
+    <span class="s0">private </span><span class="s1">FusedLocationProviderClient fusedLocationProviderClient</span><span class="s0">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_prayer_login)</span><span class="s0">;</span>
+        <span class="s0">final </span><span class="s1">EditText EmailEditText = findViewById(R.id.Email)</span><span class="s0">;</span>
+        <span class="s0">final </span><span class="s1">EditText passwordEditText = findViewById(R.id.password)</span><span class="s0">;</span>
+        <span class="s0">final </span><span class="s1">Button loginButton = findViewById(R.id.login)</span><span class="s0">;</span>
+        <span class="s0">final </span><span class="s1">Button registerButton = findViewById(R.id.GoToRegister)</span><span class="s0">;</span>
+
+
+
+
+        <span class="s1">db = </span><span class="s0">new </span><span class="s1">DatabaseHelper(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+
+
+        <span class="s1">TextWatcher afterTextChangedListener = </span><span class="s0">new </span><span class="s1">TextWatcher() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">beforeTextChanged(CharSequence s</span><span class="s0">, int </span><span class="s1">start</span><span class="s0">, int </span><span class="s1">count</span><span class="s0">, int </span><span class="s1">after) {</span>
+            <span class="s1">}</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onTextChanged(CharSequence s</span><span class="s0">, int </span><span class="s1">start</span><span class="s0">, int </span><span class="s1">before</span><span class="s0">, int </span><span class="s1">count) {</span>
+            <span class="s1">}</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">afterTextChanged(Editable s) {</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span><span class="s0">;</span>
+        <span class="s1">EmailEditText.addTextChangedListener(afterTextChangedListener)</span><span class="s0">;</span>
+        <span class="s1">passwordEditText.addTextChangedListener(afterTextChangedListener)</span><span class="s0">;</span>
+        <span class="s1">loginButton.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">String email = EmailEditText.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">String password = passwordEditText.getText().toString()</span><span class="s0">;</span>
+                <span class="s0">if</span><span class="s1">(email.equals(</span><span class="s2">&quot;&quot;</span><span class="s1">) || password.equals(</span><span class="s2">&quot;&quot;</span><span class="s1">)){</span>
+                    <span class="s1">Toast.makeText(LoginActivity.</span><span class="s0">this, </span><span class="s2">&quot;لطفًا قم بتعبئة جميع الحقول&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                    <span class="s0">return;</span>
+                <span class="s1">}</span>
+                <span class="s1">String emailRegex = </span><span class="s2">&quot;^[A-Za-z0-9._%+</span><span class="s0">\\</span><span class="s2">-]+@[A-Za-z0-9.</span><span class="s0">\\</span><span class="s2">-]+</span><span class="s0">\\</span><span class="s2">.[A-Za-z]{2,4}$&quot;</span><span class="s0">;</span>
+                <span class="s1">Pattern pattern = Pattern.compile(emailRegex)</span><span class="s0">;</span>
+                <span class="s1">Matcher matcher = pattern.matcher(email)</span><span class="s0">;</span>
+                <span class="s0">if </span><span class="s1">(!matcher.find()) {</span>
+                    <span class="s1">Toast.makeText(LoginActivity.</span><span class="s0">this, </span><span class="s2">&quot;لطفًا قم بإدخال البريد إلكتروني بشكل صحيح&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                    <span class="s0">return;</span>
+                <span class="s1">}</span>
+                <span class="s0">if</span><span class="s1">(password.length()&lt;</span><span class="s3">8</span><span class="s1">){</span>
+                    <span class="s1">Toast.makeText(LoginActivity.</span><span class="s0">this, </span><span class="s2">&quot;لطفًا تأكد أن كلمة السر طولها ٨ أحرف على الأقل&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                    <span class="s0">return;</span>
+                <span class="s1">}</span>
+                <span class="s1">Log.d(</span><span class="s2">&quot;email/password&quot;</span><span class="s0">, </span><span class="s1">email + </span><span class="s2">&quot;/&quot; </span><span class="s1">+ password)</span><span class="s0">;</span>
+                <span class="s0">if </span><span class="s1">(db.validateLogin(email</span><span class="s0">, </span><span class="s1">password)) {</span>
+                    <span class="s1">Log.d(</span><span class="s2">&quot;a&quot;</span><span class="s0">, </span><span class="s2">&quot;inside if&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">sp.edit().putBoolean(</span><span class="s2">&quot;logged&quot;</span><span class="s0">,true</span><span class="s1">).apply()</span><span class="s0">;</span>
+                    <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(LoginActivity.</span><span class="s0">this,</span><span class="s1">HomeScreenActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+
+                <span class="s1">}</span>
+                <span class="s0">else</span><span class="s1">{</span>
+                    <span class="s1">Toast.makeText(LoginActivity.</span><span class="s0">this, </span><span class="s2">&quot;لا يوجد حساب مسجل بالبريد الالكتروني وكلمة السر المدخلة&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+            <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">registerButton.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(LoginActivity.</span><span class="s0">this, </span><span class="s1">MainActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+    <span class="s1">})</span><span class="s0">;</span>
+<span class="s1">}</span>
+
+<span class="s1">}</span>
+
+</pre>
+</body>
+</html>

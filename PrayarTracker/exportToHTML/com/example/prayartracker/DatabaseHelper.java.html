@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>DatabaseHelper.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DatabaseHelper.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.prayartracker</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.ContentValues</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.database.Cursor</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.database.sqlite.SQLiteDatabase</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.database.sqlite.SQLiteOpenHelper</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.annotation.Nullable</span><span class="s0">;</span>
+<span class="s0">public class </span><span class="s1">DatabaseHelper </span><span class="s0">extends </span><span class="s1">SQLiteOpenHelper {</span>
+    <span class="s0">public static final </span><span class="s1">String DBNAME = </span><span class="s2">&quot;PrayerDB.db&quot;</span><span class="s0">;</span>
+    <span class="s0">public </span><span class="s1">DatabaseHelper(Context context) {</span>
+        <span class="s0">super</span><span class="s1">(context</span><span class="s0">, </span><span class="s2">&quot;PrayerDB.db&quot;</span><span class="s0">, null, </span><span class="s3">1</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onCreate(SQLiteDatabase PDB) {</span>
+        <span class="s1">PDB.execSQL(</span><span class="s2">&quot;create Table users(email TEXT primary key, username TEXT, password TEXT)&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onUpgrade(SQLiteDatabase PDB</span><span class="s0">, int </span><span class="s1">i</span><span class="s0">, int </span><span class="s1">i1) {</span>
+        <span class="s1">PDB.execSQL(</span><span class="s2">&quot;drop Table if exists users&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public </span><span class="s1">Boolean insertData(String email</span><span class="s0">, </span><span class="s1">String username</span><span class="s0">, </span><span class="s1">String password){</span>
+        <span class="s1">SQLiteDatabase PDB = </span><span class="s0">this</span><span class="s1">.getWritableDatabase()</span><span class="s0">;</span>
+        <span class="s1">ContentValues contentValues= </span><span class="s0">new </span><span class="s1">ContentValues()</span><span class="s0">;</span>
+        <span class="s1">contentValues.put(</span><span class="s2">&quot;email&quot;</span><span class="s0">, </span><span class="s1">email.toLowerCase())</span><span class="s0">;</span>
+        <span class="s1">contentValues.put(</span><span class="s2">&quot;username&quot;</span><span class="s0">, </span><span class="s1">username)</span><span class="s0">;</span>
+        <span class="s1">contentValues.put(</span><span class="s2">&quot;password&quot;</span><span class="s0">, </span><span class="s1">password)</span><span class="s0">;</span>
+        <span class="s0">long </span><span class="s1">result = PDB.insert(</span><span class="s2">&quot;users&quot;</span><span class="s0">, null, </span><span class="s1">contentValues)</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(result==-</span><span class="s3">1</span><span class="s1">) </span><span class="s0">return false;</span>
+        <span class="s0">else</span>
+            <span class="s0">return true;</span>
+    <span class="s1">}</span>
+    <span class="s0">public </span><span class="s1">Boolean checkemail(String email) {</span>
+        <span class="s1">SQLiteDatabase PDB = </span><span class="s0">this</span><span class="s1">.getWritableDatabase()</span><span class="s0">;</span>
+        <span class="s1">Cursor cursor = PDB.rawQuery(</span><span class="s2">&quot;Select * from users where email = ?&quot;</span><span class="s0">, new </span><span class="s1">String[]{email})</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(cursor.getCount() &gt; </span><span class="s3">0</span><span class="s1">)</span>
+            <span class="s0">return true;</span>
+        <span class="s0">else</span>
+            <span class="s0">return false;</span>
+    <span class="s1">}</span>
+    <span class="s0">public </span><span class="s1">Boolean checkemailpassword(String email</span><span class="s0">, </span><span class="s1">String password){</span>
+        <span class="s1">SQLiteDatabase PDB = </span><span class="s0">this</span><span class="s1">.getWritableDatabase()</span><span class="s0">;</span>
+        <span class="s1">Cursor cursor = PDB.rawQuery(</span><span class="s2">&quot;Select * from users where email = ? and password = ?&quot;</span><span class="s0">, new </span><span class="s1">String[] {email</span><span class="s0">,</span><span class="s1">password})</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(cursor.getCount()&gt;</span><span class="s3">0</span><span class="s1">)</span>
+            <span class="s0">return true;</span>
+        <span class="s0">else</span>
+            <span class="s0">return false;</span>
+    <span class="s1">}</span>
+    <span class="s0">public boolean </span><span class="s1">validateLogin(String email</span><span class="s0">, </span><span class="s1">String password){</span>
+        <span class="s1">SQLiteDatabase db = </span><span class="s0">this</span><span class="s1">.getWritableDatabase()</span><span class="s0">;</span>
+        <span class="s1">Cursor cr = db.rawQuery(</span><span class="s2">&quot;Select email, password from users where email = ? and password = ?&quot;</span><span class="s0">, new </span><span class="s1">String[] {email.toLowerCase()</span><span class="s0">,</span><span class="s1">password})</span><span class="s0">;</span>
+        <span class="s1">Log.d(</span><span class="s2">&quot;a&quot;</span><span class="s0">, </span><span class="s2">&quot;&quot;</span><span class="s1">+cr.getCount())</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(cr.getCount()&gt;</span><span class="s3">0</span><span class="s1">){</span>
+            <span class="s0">return true;</span>
+        <span class="s1">}</span>
+        <span class="s0">else return false;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>

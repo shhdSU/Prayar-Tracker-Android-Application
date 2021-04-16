@@ -1,0 +1,395 @@
+<html>
+<head>
+<title>SettingsActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #808080;}
+.s4 { color: #6897bb;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+SettingsActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.prayartracker</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.SharedPreferences</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.media.AudioManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.preference.PreferenceManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.provider.Settings</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.ViewGroup</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.CompoundButton</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.EditText</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.LinearLayout</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.RadioButton</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.RadioGroup</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Switch</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.ToggleButton</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.sql.Time</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalTime</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.format.DateTimeFormatter</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Calendar</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Date</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Locale</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Set</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Timer</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.TimerTask</span><span class="s0">;</span>
+
+<span class="s0">import static </span><span class="s1">com.example.prayartracker.HomeScreenActivity.prayTime</span><span class="s0">;</span>
+<span class="s0">import static </span><span class="s1">com.example.prayartracker.HomeScreenActivity.prayerTimes24</span><span class="s0">;</span>
+<span class="s0">import static </span><span class="s1">com.example.prayartracker.HomeScreenActivity.silentModeTimer</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">SettingsActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+
+    <span class="s0">public static boolean </span><span class="s1">isSilentMode = </span><span class="s0">false;</span>
+    <span class="s0">public static boolean </span><span class="s1">is24Hour</span><span class="s0">;</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_settings)</span><span class="s0">;</span>
+         <span class="s0">final </span><span class="s1">Switch allowNotification = findViewById(R.id.allowNotif)</span><span class="s0">;</span>
+         <span class="s0">final </span><span class="s1">Switch silentModeSwitch = findViewById(R.id.silentModeSwitch)</span><span class="s0">;</span>
+         <span class="s0">final </span><span class="s1">Switch Time24HFormat = findViewById(R.id.Time24HFormat)</span><span class="s0">;</span>
+         <span class="s0">final </span><span class="s1">RadioGroup ShafiiGroup = findViewById(R.id.ShafiiButtonGroup)</span><span class="s0">;</span>
+         <span class="s0">final </span><span class="s1">RadioGroup AltitudeGroup = findViewById(R.id.AltitudeButtonGroup)</span><span class="s0">;</span>
+         <span class="s0">final </span><span class="s1">RadioGroup CalcMethod = findViewById(R.id.CalcMethodBtnGroup)</span><span class="s0">;</span>
+         <span class="s1">SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())</span><span class="s0">;</span>
+        <span class="s0">boolean </span><span class="s1">isNotificationAllowed = settings.getBoolean(</span><span class="s2">&quot;isNotificationAllowed&quot;</span><span class="s0">,true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+        <span class="s0">final </span><span class="s1">LinearLayout linearLayout = (LinearLayout) findViewById((R.id.linearLayout))</span><span class="s0">;</span>
+        <span class="s0">final </span><span class="s1">EditText minutesInput = (EditText) findViewById((R.id.editTextNumber2))</span><span class="s0">;</span>
+        <span class="s1">Button saveBtn = (Button) findViewById((R.id.SaveBtn))</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(settings.getBoolean(</span><span class="s2">&quot;SilentMode&quot;</span><span class="s0">,false</span><span class="s1">)){</span>
+            <span class="s1">silentModeSwitch.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">linearLayout.setVisibility(View.VISIBLE)</span><span class="s0">;</span>
+
+        <span class="s1">}</span>
+        <span class="s0">else</span><span class="s1">{</span>
+            <span class="s1">silentModeSwitch.setChecked(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">linearLayout.setVisibility(View.INVISIBLE)</span><span class="s0">;</span>
+
+        <span class="s1">}</span>
+        <span class="s0">if</span><span class="s1">(!settings.getBoolean(</span><span class="s2">&quot;is24Hour&quot;</span><span class="s0">,true</span><span class="s1">)){</span>
+            <span class="s1">Time24HFormat.setChecked(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+        <span class="s0">else</span><span class="s1">{</span>
+            <span class="s1">Time24HFormat.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+       <span class="s0">if</span><span class="s1">(isNotificationAllowed){ </span><span class="s3">//notifications are allowed</span>
+         <span class="s1">allowNotification.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+       <span class="s1">}</span>
+    <span class="s0">else</span><span class="s1">{</span>
+       <span class="s1">allowNotification.setChecked(</span><span class="s0">false</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+        <span class="s1">RadioButton Jafari = (RadioButton) findViewById(R.id.Jafari)</span><span class="s0">;</span>
+        <span class="s1">RadioButton MWL = (RadioButton) findViewById(R.id.MWL)</span><span class="s0">;</span>
+        <span class="s1">RadioButton Karachi = (RadioButton) findViewById(R.id.Karachi)</span><span class="s0">;</span>
+        <span class="s1">RadioButton ISNA = (RadioButton) findViewById(R.id.ISNA)</span><span class="s0">;</span>
+        <span class="s1">RadioButton Tehran = (RadioButton) findViewById(R.id.Tehran)</span><span class="s0">;</span>
+        <span class="s1">RadioButton Makkah = (RadioButton) findViewById(R.id.Makkah)</span><span class="s0">;</span>
+        <span class="s1">RadioButton Egypt = (RadioButton) findViewById(R.id.Egypt)</span><span class="s0">;</span>
+        <span class="s1">RadioButton Custom = (RadioButton) findViewById(R.id.Custom)</span><span class="s0">;</span>
+
+        <span class="s0">switch</span><span class="s1">(settings.getString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Makkah&quot;</span><span class="s1">)){</span>
+        <span class="s0">case </span><span class="s2">&quot;Makkah&quot;</span><span class="s1">:</span>
+            <span class="s1">Makkah.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s2">&quot;Tehran&quot;</span><span class="s1">:</span>
+                <span class="s1">Tehran.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;ISNA&quot;</span><span class="s1">:</span>
+                <span class="s1">ISNA.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;Egypt&quot;</span><span class="s1">:</span>
+                <span class="s1">Egypt.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;Custom&quot;</span><span class="s1">:</span>
+                <span class="s1">Custom.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;Karachi&quot;</span><span class="s1">:</span>
+                <span class="s1">Karachi.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;MWL&quot;</span><span class="s1">:</span>
+                <span class="s1">MWL.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;Jafari&quot;</span><span class="s1">:</span>
+                <span class="s1">Jafari.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+        <span class="s1">}</span>
+        <span class="s1">RadioButton Hanafi = (RadioButton) findViewById(R.id.HanafiBtn)</span><span class="s0">;</span>
+        <span class="s1">RadioButton Shafii = (RadioButton) findViewById(R.id.ShafiiBtn)</span><span class="s0">;</span>
+
+        <span class="s0">switch</span><span class="s1">(settings.getString(</span><span class="s2">&quot;JuristicMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Shafii&quot;</span><span class="s1">)){</span>
+            <span class="s0">case </span><span class="s2">&quot;Shafii&quot;</span><span class="s1">:</span>
+                <span class="s1">Shafii.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;Hanafi&quot;</span><span class="s1">:</span>
+                <span class="s1">Hanafi.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+        <span class="s1">}</span>
+        <span class="s1">RadioButton None = (RadioButton) findViewById(R.id.None)</span><span class="s0">;</span>
+        <span class="s1">RadioButton Midnight = (RadioButton) findViewById(R.id.MidNight)</span><span class="s0">;</span>
+        <span class="s1">RadioButton OneSeventh = (RadioButton) findViewById(R.id.OneSeventh)</span><span class="s0">;</span>
+        <span class="s1">RadioButton AngleBased = (RadioButton) findViewById(R.id.AngleBased)</span><span class="s0">;</span>
+        <span class="s0">switch</span><span class="s1">(settings.getString(</span><span class="s2">&quot;HighAltCalc&quot;</span><span class="s0">,</span><span class="s2">&quot;AngleBased&quot;</span><span class="s1">)){</span>
+            <span class="s0">case </span><span class="s2">&quot;AngleBased&quot;</span><span class="s1">:</span>
+                <span class="s1">AngleBased.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+            <span class="s0">case </span><span class="s2">&quot;None&quot;</span><span class="s1">:</span>
+                <span class="s1">None.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;Midnight&quot;</span><span class="s1">:</span>
+                <span class="s1">Midnight.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+            <span class="s0">case </span><span class="s2">&quot;OneSeventh&quot;</span><span class="s1">:</span>
+                <span class="s1">OneSeventh.setChecked(</span><span class="s0">true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s0">break;</span>
+
+        <span class="s1">}</span>
+        <span class="s1">AltitudeGroup.setOnCheckedChangeListener(</span><span class="s0">new </span><span class="s1">RadioGroup.OnCheckedChangeListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onCheckedChanged(RadioGroup group</span><span class="s0">, int </span><span class="s1">checkedId) {</span>
+                <span class="s1">SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+<span class="s3">//</span>
+<span class="s3">//                switch(checkedId){</span>
+<span class="s3">//                    case R.id.None:</span>
+<span class="s3">//                        editor.putString(&quot;HighAltCalc&quot;,&quot;None&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.MidNight:</span>
+<span class="s3">//                        editor.putString(&quot;HighAltCalc&quot;,&quot;Midnight&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.OneSeventh:</span>
+<span class="s3">//                        editor.putString(&quot;HighAltCalc&quot;,&quot;OneSeventh&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.AngleBased:</span>
+<span class="s3">//                        editor.putString(&quot;HighAltCalc&quot;,&quot;AngleBased&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                }</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">ShafiiGroup.setOnCheckedChangeListener(</span><span class="s0">new </span><span class="s1">RadioGroup.OnCheckedChangeListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onCheckedChanged(RadioGroup group</span><span class="s0">, int </span><span class="s1">checkedId) {</span>
+                <span class="s1">SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+<span class="s3">//</span>
+<span class="s3">//                switch(checkedId) {</span>
+<span class="s3">//                    case R.id.ShafiiBtn:</span>
+<span class="s3">//                        editor.putString(&quot;JuristicMethod&quot;, &quot;Shafii&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.HanafiBtn:</span>
+<span class="s3">//                        editor.putString(&quot;JuristicMethod&quot;, &quot;Hanafi&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                }</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">CalcMethod.setOnCheckedChangeListener(</span><span class="s0">new </span><span class="s1">RadioGroup.OnCheckedChangeListener(){</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onCheckedChanged(RadioGroup group</span><span class="s0">, int </span><span class="s1">checkedId) {</span>
+                <span class="s1">SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+                <span class="s1">Log.d(</span><span class="s2">&quot;hi!&quot;</span><span class="s0">, </span><span class="s2">&quot;&quot;</span><span class="s1">+checkedId)</span><span class="s0">;</span>
+<span class="s3">//                switch(checkedId){</span>
+<span class="s3">//                    case R.id.Jafari:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;Jafari&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.Karachi:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;Karachi&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.ISNA:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;ISNA&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.MWL:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;MWL&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.Makkah:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;Makkah&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.Egypt:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;Egypt&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.Tehran:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;Tehran&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                    case R.id.Custom:</span>
+<span class="s3">//                        editor.putString(&quot;CalcMethod&quot;,&quot;Custom&quot;);</span>
+<span class="s3">//                        break;</span>
+<span class="s3">//                }</span>
+
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">allowNotification.setOnCheckedChangeListener(</span><span class="s0">new </span><span class="s1">CompoundButton.OnCheckedChangeListener() {</span>
+            <span class="s0">public void </span><span class="s1">onCheckedChanged(CompoundButton buttonView</span><span class="s0">, boolean </span><span class="s1">isChecked) {</span>
+<span class="s3">//                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();</span>
+<span class="s3">//                if(isChecked) {</span>
+<span class="s3">//                    // The toggle is enabled</span>
+<span class="s3">//                    editor.putBoolean(&quot;isNotificationAllowed&quot;,true);</span>
+<span class="s3">//                    editor.commit();</span>
+<span class="s3">//                } else {</span>
+<span class="s3">//                    editor.putBoolean(&quot;isNotificationAllowed&quot;,false);</span>
+<span class="s3">//                    editor.commit();</span>
+<span class="s3">//</span>
+<span class="s3">//                }</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">silentModeSwitch.setOnCheckedChangeListener(</span><span class="s0">new </span><span class="s1">CompoundButton.OnCheckedChangeListener() {</span>
+            <span class="s0">public void </span><span class="s1">onCheckedChanged(CompoundButton buttonView</span><span class="s0">, boolean </span><span class="s1">isChecked) {</span>
+                <span class="s0">if </span><span class="s1">(isChecked) {</span>
+                    <span class="s3">// The toggle is enabled</span>
+                    <span class="s1">linearLayout.setVisibility(View.VISIBLE)</span><span class="s0">;</span>
+                <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                    <span class="s1">linearLayout.setVisibility(View.INVISIBLE)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">saveBtn.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View v) {</span>
+                <span class="s1">SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+                <span class="s0">boolean </span><span class="s1">flag = </span><span class="s0">true;</span>
+                <span class="s1">String minutes = minutesInput.getText().toString()</span><span class="s0">;</span>
+                <span class="s0">if</span><span class="s1">(silentModeSwitch.isChecked()){</span>
+                    <span class="s0">if</span><span class="s1">(minutes.equals(</span><span class="s2">&quot;&quot;</span><span class="s1">)){</span>
+                        <span class="s1">Toast.makeText(SettingsActivity.</span><span class="s0">this, </span><span class="s2">&quot;لطفًا قم بإدخال مدة إبفاء الجهاز على وضعية الصامت&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                        <span class="s1">Log.d(</span><span class="s2">&quot;silent&quot;</span><span class="s0">,</span><span class="s2">&quot;silent&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                         <span class="s1">flag = </span><span class="s0">false;</span>
+                         <span class="s0">return;</span>
+                    <span class="s1">}</span>
+                    <span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">if </span><span class="s1">(!notificationManager.isNotificationPolicyAccessGranted()) {</span>
+                            <span class="s1">Intent in = </span><span class="s0">new </span><span class="s1">Intent()</span><span class="s0">;</span>
+                            <span class="s1">in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)</span><span class="s0">;</span>
+                            <span class="s1">startActivityForResult(in</span><span class="s0">, </span><span class="s4">1</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">}</span>
+                        <span class="s0">int </span><span class="s1">numMinutes = Integer.parseInt(minutesInput.getText().toString())</span><span class="s0">;</span>
+                        <span class="s1">SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+                        <span class="s1">pref.putBoolean(</span><span class="s2">&quot;SilentMode&quot;</span><span class="s0">,true</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s1">pref.putInt(</span><span class="s2">&quot;Interval&quot;</span><span class="s0">,</span><span class="s1">numMinutes)</span><span class="s0">;</span>
+                        <span class="s1">pref.commit()</span><span class="s0">;</span>
+                        <span class="s1">Toast.makeText(SettingsActivity.</span><span class="s0">this, </span><span class="s2">&quot;سيتم وضع الجهاز على وضعية الصامت بعد كل آذان ولمدة &quot;</span><span class="s1">+ numMinutes + </span><span class="s2">&quot; دقيقة&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                <span class="s0">else </span><span class="s1">{</span>
+                    <span class="s1">SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+                    <span class="s1">pref.putBoolean(</span><span class="s2">&quot;SilentMode&quot;</span><span class="s0">,false</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">pref.putInt(</span><span class="s2">&quot;Interval&quot;</span><span class="s0">,</span><span class="s4">0</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">pref.commit()</span><span class="s0">;</span>
+                    <span class="s0">if</span><span class="s1">(silentModeTimer!= </span><span class="s0">null</span><span class="s1">)</span>
+                    <span class="s1">HomeScreenActivity.silentModeTimer.cancel()</span><span class="s0">;</span>
+                    <span class="s1">AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE)</span><span class="s0">;</span>
+                    <span class="s1">audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL)</span><span class="s0">;</span>
+                    <span class="s1">Toast.makeText(SettingsActivity.</span><span class="s0">this, </span><span class="s2">&quot;تم إلغاء وضع الصامت&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+
+                <span class="s1">}</span>
+                <span class="s1">SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+                <span class="s0">if</span><span class="s1">(Time24HFormat.isChecked()){</span>
+                    <span class="s1">preferences.putBoolean(</span><span class="s2">&quot;is24Hour&quot;</span><span class="s0">,true</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">preferences.commit()</span><span class="s0">;</span>
+                    <span class="s1">Toast.makeText(SettingsActivity.</span><span class="s0">this, </span><span class="s2">&quot;تم وضع التطبيق على نظام ٢٤ ساعة&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+
+                <span class="s1">}</span>
+                <span class="s0">else</span><span class="s1">{</span>
+                    <span class="s1">preferences.putBoolean(</span><span class="s2">&quot;is24Hour&quot;</span><span class="s0">,false</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">preferences.commit()</span><span class="s0">;</span>
+                    <span class="s1">Toast.makeText(SettingsActivity.</span><span class="s0">this, </span><span class="s2">&quot;تم وضع التطبيق على نظام ١٢ ساعة&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+
+                <span class="s1">}</span>
+                <span class="s0">if</span><span class="s1">(allowNotification.isChecked()){</span>
+                    <span class="s1">editor.putBoolean(</span><span class="s2">&quot;isNotificationAllowed&quot;</span><span class="s0">,true</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+                <span class="s0">else</span><span class="s1">{</span>
+                    <span class="s1">editor.putBoolean(</span><span class="s2">&quot;isNotificationAllowed&quot;</span><span class="s0">,false</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+
+                <span class="s0">switch</span><span class="s1">(AltitudeGroup.getCheckedRadioButtonId()){</span>
+                    <span class="s0">case </span><span class="s1">R.id.None:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;HighAltCalc&quot;</span><span class="s0">,</span><span class="s2">&quot;None&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.MidNight:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;HighAltCalc&quot;</span><span class="s0">,</span><span class="s2">&quot;Midnight&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.OneSeventh:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;HighAltCalc&quot;</span><span class="s0">,</span><span class="s2">&quot;OneSeventh&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.AngleBased:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;HighAltCalc&quot;</span><span class="s0">,</span><span class="s2">&quot;AngleBased&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                <span class="s1">}</span>
+
+                <span class="s0">switch</span><span class="s1">(ShafiiGroup.getCheckedRadioButtonId()) {</span>
+                    <span class="s0">case </span><span class="s1">R.id.ShafiiBtn:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;JuristicMethod&quot;</span><span class="s0">, </span><span class="s2">&quot;Shafii&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.HanafiBtn:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;JuristicMethod&quot;</span><span class="s0">, </span><span class="s2">&quot;Hanafi&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                <span class="s1">}</span>
+                <span class="s0">switch</span><span class="s1">(CalcMethod.getCheckedRadioButtonId()){</span>
+                    <span class="s0">case </span><span class="s1">R.id.Jafari:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Jafari&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.Karachi:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Karachi&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.ISNA:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;ISNA&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.MWL:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;MWL&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.Makkah:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Makkah&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.Egypt:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Egypt&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.Tehran:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Tehran&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                    <span class="s0">case </span><span class="s1">R.id.Custom:</span>
+                        <span class="s1">editor.putString(</span><span class="s2">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s2">&quot;Custom&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                        <span class="s0">break;</span>
+                <span class="s1">}</span>
+                <span class="s1">editor.commit()</span><span class="s0">;</span>
+                <span class="s0">if</span><span class="s1">(flag) {</span>
+                    <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">HomeScreenActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                    <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">goToHome(View view){</span>
+        <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">HomeScreenActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

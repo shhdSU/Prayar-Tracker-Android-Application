@@ -1,0 +1,1004 @@
+Index: app/src/main/res/layout/activity_settings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:padding=\"10dp\"\n    tools:context=\".MainActivity\">\n\n    <TextView\n        android:id=\"@+id/Settings\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"wrap_content\"\n        android:fontFamily=\"@font/changa\"\n        android:text=\"الاعدادات\"\n        android:textAlignment=\"center\"\n        android:textColor=\"#8EACD0\"\n        android:textFontWeight=\"600\"\n        android:textSize=\"36sp\" />\n\n    <View\n        android:id=\"@+id/divider2\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"5dp\"\n        android:layout_below=\"@+id/Settings\"\n        android:background=\"?android:attr/listDivider\" />\n\n    <RelativeLayout\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:layout_below=\"@+id/Settings\"\n        android:id=\"@+id/allowNotifParent\"\n        android:paddingTop=\"30dp\"\n       >\n\n    <TextView\n\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:layout_alignParentEnd=\"true\"\n        android:layout_toRightOf=\"@+id/allowNotif\"\n        android:checked=\"false\"\n        android:fontFamily=\"@font/changa\"\n        android:textFontWeight=\"600\"\n        android:textSize=\"20sp\"\n        android:text=\"السماح بالاشعارات\" />\n\n    <Switch\n        android:id=\"@+id/allowNotif\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"39dp\"\n        android:layout_alignParentStart=\"true\"\n        android:checked=\"false\"\n        app:thumbTint=\"@drawable/switchcolor\"\n        app:trackTint=\"@drawable/switch_track\"\n        />\n\n    </RelativeLayout>\n    <View\n        android:id=\"@+id/divider3\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"1dp\"\n        android:layout_below=\"@+id/allowNotifParent\"\n        android:background=\"?android:attr/listDivider\" />\n\n    <RelativeLayout\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:layout_below=\"@+id/allowNotifParent\"\n        android:paddingTop=\"30dp\"\n        android:id=\"@+id/Time24HFormatParent\"\n        >\n\n            <Switch\n                android:id=\"@+id/Time24HFormat\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"39dp\"\n                android:layout_alignParentStart=\"true\"\n                android:checked=\"false\"\n                app:thumbTint=\"@drawable/switchcolor\"\n                app:trackTint=\"@drawable/switch_track\"\n               />\n\n        <TextView\n\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_alignParentEnd=\"true\"\n            android:layout_toRightOf=\"@+id/Time24HFormat\"\n            android:checked=\"false\"\n            android:fontFamily=\"@font/changa\"\n            android:textFontWeight=\"600\"\n            android:textSize=\"20sp\"\n            android:text=\"استخدام نظام ٢٤ ساعة\" />\n\n\n    </RelativeLayout>\n\n\n    <View\n        android:id=\"@+id/divider4\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"1dp\"\n        android:layout_below=\"@+id/Time24HFormatParent\"\n        android:background=\"?android:attr/listDivider\" />\n\n\n    <RelativeLayout\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"wrap_content\"\n        android:layout_below=\"@+id/Time24HFormatParent\"\n        android:paddingTop=\"30dp\"\n        android:paddingBottom=\"50dp\"\n        android:id=\"@+id/silentModeParent\"\n        >\n\n            <Switch\n                android:id=\"@+id/silentModeSwitch\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"39dp\"\n                android:layout_alignParentStart=\"true\"\n                android:checked=\"false\"\n                app:thumbTint=\"@drawable/switchcolor\"\n                app:trackTint=\"@drawable/switch_track\"\n                />\n\n\n        <TextView\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_alignParentEnd=\"true\"\n            android:layout_toRightOf=\"@+id/silentModeSwitch\"\n            android:enabled=\"true\"\n            android:fontFamily=\"@font/changa\"\n            android:text=\"وضع الصامت\"\n            android:textFontWeight=\"600\"\n            android:textSize=\"20sp\" />\n\n\n\n        <LinearLayout\n            android:id=\"@+id/linearLayout\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_alignParentEnd=\"true\"\n            android:layout_marginEnd=\"50dp\"\n            android:orientation=\"horizontal\"\n            android:textAlignment=\"center\"\n            android:textDirection=\"rtl\"\n            android:paddingTop=\"50dp\"\n            android:visibility=\"invisible\">\n\n\n            <TextView\n                android:id=\"@+id/Minutes\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:enabled=\"true\"\n                android:text=\"دقيقة\"\n                android:textSize=\"20sp\"\n                android:visibility=\"visible\" />\n\n            <EditText\n                android:id=\"@+id/editTextNumber2\"\n                android:layout_width=\"50dp\"\n                android:layout_height=\"wrap_content\"\n                android:ems=\"10\"\n                android:inputType=\"number\"\n                android:maxLength=\"3\"\n                android:textSize=\"20sp\"\n                android:visibility=\"visible\"\n                tools:layout_editor_absoluteX=\"148dp\"\n                tools:layout_editor_absoluteY=\"327dp\" />\n\n            <TextView\n                android:id=\"@+id/SetSilentFor\"\n                android:layout_width=\"wrap_content\"\n                android:layout_height=\"wrap_content\"\n                android:enabled=\"true\"\n                android:textSize=\"20sp\"\n                android:text=\"لمدة\"\n                android:visibility=\"visible\" />\n\n        </LinearLayout>\n\n    </RelativeLayout>\n\n    <TextView\n        android:layout_width=\"165dp\"\n        android:layout_height=\"40dp\"\n        android:layout_below=\"@+id/silentModeParent\"\n        android:layout_alignParentStart=\"true\"\n        android:layout_alignParentEnd=\"true\"\n        android:layout_marginStart=\"90dp\"\n        android:layout_marginTop=\"145dp\"\n        android:layout_marginEnd=\"90dp\"\n        android:checked=\"false\"\n        android:fontFamily=\"@font/changa\"\n        android:text=\"حفظ الاعدادات\"\n        android:textFontWeight=\"900\"\n        android:textSize=\"25sp\"\n        android:textAlignment=\"center\"\n        android:translationZ=\"3dp\" />\n\n\n    <Button\n        android:id=\"@+id/SaveBtn\"\n        android:layout_width=\"194dp\"\n        android:layout_height=\"144dp\"\n        android:layout_below=\"@+id/silentModeParent\"\n        android:layout_alignParentStart=\"true\"\n        android:layout_alignParentEnd=\"true\"\n        android:layout_marginStart=\"80dp\"\n        android:layout_marginTop=\"52dp\"\n        android:layout_marginEnd=\"80dp\"\n        android:background=\"@drawable/ic_button\"\n        android:fontFamily=\"@font/changa\"\n        android:textFontWeight=\"600\" />\n\n\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_settings.xml	(revision d4a6d7092d0cf6d0b5afc3b76b7a288a55329043)
++++ app/src/main/res/layout/activity_settings.xml	(date 1617897487000)
+@@ -7,215 +7,429 @@
+     android:padding="10dp"
+     tools:context=".MainActivity">
+ 
+-    <TextView
+-        android:id="@+id/Settings"
+-        android:layout_width="match_parent"
+-        android:layout_height="wrap_content"
+-        android:fontFamily="@font/changa"
+-        android:text="الاعدادات"
+-        android:textAlignment="center"
+-        android:textColor="#8EACD0"
+-        android:textFontWeight="600"
+-        android:textSize="36sp" />
++
++    <ScrollView
++        android:layout_width="match_parent"
++        android:layout_height="match_parent">
++
++        <LinearLayout
++            android:layout_width="match_parent"
++            android:layout_height="wrap_content"
++            android:orientation="vertical"
++         >
++
++            <TextView
++                android:id="@+id/Settings"
++                android:layout_width="match_parent"
++                android:layout_height="wrap_content"
++                android:fontFamily="@font/changa"
++                android:text="الاعدادات"
++                android:textAlignment="center"
++                android:textColor="#8EACD0"
++                android:textFontWeight="600"
++                android:textSize="36sp" />
+ 
+-    <View
+-        android:id="@+id/divider2"
+-        android:layout_width="match_parent"
+-        android:layout_height="5dp"
+-        android:layout_below="@+id/Settings"
+-        android:background="?android:attr/listDivider" />
++            <View
++                android:id="@+id/divider2"
++                android:layout_width="match_parent"
++                android:layout_height="5dp"
++                android:layout_below="@+id/Settings"
++                android:background="?android:attr/listDivider" />
+ 
+-    <RelativeLayout
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_below="@+id/Settings"
+-        android:id="@+id/allowNotifParent"
+-        android:paddingTop="30dp"
+-       >
++            <RelativeLayout
++                android:id="@+id/allowNotifParent"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:paddingTop="30dp">
+ 
+-    <TextView
++                <TextView
+ 
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_alignParentEnd="true"
+-        android:layout_toRightOf="@+id/allowNotif"
+-        android:checked="false"
+-        android:fontFamily="@font/changa"
+-        android:textFontWeight="600"
+-        android:textSize="20sp"
+-        android:text="السماح بالاشعارات" />
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentEnd="true"
++                    android:layout_toRightOf="@+id/allowNotif"
++                    android:checked="false"
++                    android:fontFamily="@font/changa"
++                    android:text="السماح بالاشعارات"
++                    android:textFontWeight="600"
++                    android:textSize="20sp" />
+ 
+-    <Switch
+-        android:id="@+id/allowNotif"
+-        android:layout_width="wrap_content"
+-        android:layout_height="39dp"
+-        android:layout_alignParentStart="true"
+-        android:checked="false"
+-        app:thumbTint="@drawable/switchcolor"
+-        app:trackTint="@drawable/switch_track"
+-        />
++                <Switch
++                    android:id="@+id/allowNotif"
++                    android:layout_width="wrap_content"
++                    android:layout_height="39dp"
++                    android:layout_alignParentStart="true"
++                    android:checked="false"
++                    app:thumbTint="@drawable/switchcolor"
++                    app:trackTint="@drawable/switch_track" />
+ 
+-    </RelativeLayout>
+-    <View
+-        android:id="@+id/divider3"
+-        android:layout_width="match_parent"
+-        android:layout_height="1dp"
+-        android:layout_below="@+id/allowNotifParent"
+-        android:background="?android:attr/listDivider" />
++            </RelativeLayout>
++
++            <View
++                android:id="@+id/divider3"
++                android:layout_width="match_parent"
++                android:layout_height="1dp"
++                android:background="?android:attr/listDivider" />
+ 
+-    <RelativeLayout
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_below="@+id/allowNotifParent"
+-        android:paddingTop="30dp"
+-        android:id="@+id/Time24HFormatParent"
+-        >
++            <RelativeLayout
++                android:id="@+id/Time24HFormatParent"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:paddingTop="30dp">
+ 
+-            <Switch
+-                android:id="@+id/Time24HFormat"
+-                android:layout_width="wrap_content"
+-                android:layout_height="39dp"
+-                android:layout_alignParentStart="true"
+-                android:checked="false"
+-                app:thumbTint="@drawable/switchcolor"
+-                app:trackTint="@drawable/switch_track"
+-               />
++                <Switch
++                    android:id="@+id/Time24HFormat"
++                    android:layout_width="wrap_content"
++                    android:layout_height="39dp"
++                    android:layout_alignParentStart="true"
++                    android:checked="false"
++                    app:thumbTint="@drawable/switchcolor"
++                    app:trackTint="@drawable/switch_track" />
+ 
+-        <TextView
++                <TextView
+ 
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_alignParentEnd="true"
+-            android:layout_toRightOf="@+id/Time24HFormat"
+-            android:checked="false"
+-            android:fontFamily="@font/changa"
+-            android:textFontWeight="600"
+-            android:textSize="20sp"
+-            android:text="استخدام نظام ٢٤ ساعة" />
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentEnd="true"
++                    android:layout_toRightOf="@+id/Time24HFormat"
++                    android:checked="false"
++                    android:fontFamily="@font/changa"
++                    android:text="استخدام نظام ٢٤ ساعة"
++                    android:textFontWeight="600"
++                    android:textSize="20sp" />
+ 
+ 
+-    </RelativeLayout>
++            </RelativeLayout>
+ 
+ 
+-    <View
+-        android:id="@+id/divider4"
+-        android:layout_width="match_parent"
+-        android:layout_height="1dp"
+-        android:layout_below="@+id/Time24HFormatParent"
+-        android:background="?android:attr/listDivider" />
++            <View
++                android:id="@+id/divider4"
++                android:layout_width="match_parent"
++                android:layout_height="1dp"
++                android:background="?android:attr/listDivider" />
+ 
+ 
+-    <RelativeLayout
+-        android:layout_width="wrap_content"
+-        android:layout_height="wrap_content"
+-        android:layout_below="@+id/Time24HFormatParent"
+-        android:paddingTop="30dp"
+-        android:paddingBottom="50dp"
+-        android:id="@+id/silentModeParent"
+-        >
++            <RelativeLayout
++                android:id="@+id/silentModeParent"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:paddingTop="30dp"
++                android:paddingBottom="0dp">
+ 
+-            <Switch
+-                android:id="@+id/silentModeSwitch"
+-                android:layout_width="wrap_content"
+-                android:layout_height="39dp"
+-                android:layout_alignParentStart="true"
+-                android:checked="false"
+-                app:thumbTint="@drawable/switchcolor"
+-                app:trackTint="@drawable/switch_track"
+-                />
++                <Switch
++                    android:id="@+id/silentModeSwitch"
++                    android:layout_width="wrap_content"
++                    android:layout_height="39dp"
++                    android:layout_alignParentStart="true"
++                    android:checked="false"
++                    app:thumbTint="@drawable/switchcolor"
++                    app:trackTint="@drawable/switch_track" />
+ 
+ 
+-        <TextView
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_alignParentEnd="true"
+-            android:layout_toRightOf="@+id/silentModeSwitch"
+-            android:enabled="true"
+-            android:fontFamily="@font/changa"
+-            android:text="وضع الصامت"
+-            android:textFontWeight="600"
+-            android:textSize="20sp" />
++                <TextView
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentEnd="true"
++                    android:layout_toRightOf="@+id/silentModeSwitch"
++                    android:enabled="true"
++                    android:fontFamily="@font/changa"
++                    android:text="وضع الصامت"
++                    android:textFontWeight="600"
++                    android:textSize="20sp" />
+ 
+ 
+-
+-        <LinearLayout
+-            android:id="@+id/linearLayout"
+-            android:layout_width="wrap_content"
+-            android:layout_height="wrap_content"
+-            android:layout_alignParentEnd="true"
+-            android:layout_marginEnd="50dp"
+-            android:orientation="horizontal"
+-            android:textAlignment="center"
+-            android:textDirection="rtl"
+-            android:paddingTop="50dp"
+-            android:visibility="invisible">
++                <LinearLayout
++                    android:id="@+id/linearLayout"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentEnd="true"
++                    android:layout_marginEnd="50dp"
++                    android:orientation="horizontal"
++                    android:paddingTop="50dp"
++                    android:textAlignment="center"
++                    android:textDirection="rtl"
++                    android:visibility="invisible">
+ 
+ 
+-            <TextView
+-                android:id="@+id/Minutes"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:enabled="true"
+-                android:text="دقيقة"
+-                android:textSize="20sp"
+-                android:visibility="visible" />
++                    <TextView
++                        android:id="@+id/Minutes"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:enabled="true"
++                        android:text="دقيقة"
++                        android:textSize="20sp"
++                        android:visibility="visible" />
+ 
+-            <EditText
+-                android:id="@+id/editTextNumber2"
+-                android:layout_width="50dp"
+-                android:layout_height="wrap_content"
+-                android:ems="10"
+-                android:inputType="number"
+-                android:maxLength="3"
+-                android:textSize="20sp"
+-                android:visibility="visible"
+-                tools:layout_editor_absoluteX="148dp"
+-                tools:layout_editor_absoluteY="327dp" />
++                    <EditText
++                        android:id="@+id/editTextNumber2"
++                        android:layout_width="50dp"
++                        android:layout_height="wrap_content"
++                        android:ems="10"
++                        android:inputType="number"
++                        android:maxLength="3"
++                        android:textSize="20sp"
++                        android:visibility="visible"
++                        tools:layout_editor_absoluteX="148dp"
++                        tools:layout_editor_absoluteY="327dp" />
+ 
+-            <TextView
+-                android:id="@+id/SetSilentFor"
+-                android:layout_width="wrap_content"
+-                android:layout_height="wrap_content"
+-                android:enabled="true"
+-                android:textSize="20sp"
+-                android:text="لمدة"
+-                android:visibility="visible" />
++                    <TextView
++                        android:id="@+id/SetSilentFor"
++                        android:layout_width="wrap_content"
++                        android:layout_height="wrap_content"
++                        android:enabled="true"
++                        android:text="لمدة"
++                        android:textSize="20sp"
++                        android:visibility="visible" />
+ 
+-        </LinearLayout>
++                </LinearLayout>
+ 
+-    </RelativeLayout>
++
++            </RelativeLayout>
+ 
+-    <TextView
+-        android:layout_width="165dp"
+-        android:layout_height="40dp"
+-        android:layout_below="@+id/silentModeParent"
+-        android:layout_alignParentStart="true"
+-        android:layout_alignParentEnd="true"
+-        android:layout_marginStart="90dp"
+-        android:layout_marginTop="145dp"
+-        android:layout_marginEnd="90dp"
+-        android:checked="false"
+-        android:fontFamily="@font/changa"
+-        android:text="حفظ الاعدادات"
+-        android:textFontWeight="900"
+-        android:textSize="25sp"
+-        android:textAlignment="center"
+-        android:translationZ="3dp" />
++            <View
++                android:id="@+id/divider5"
++                android:layout_width="match_parent"
++                android:layout_height="1dp"
++                android:background="?android:attr/listDivider" />
++
++            <RelativeLayout
++                android:id="@+id/CalcMethodParent"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:paddingTop="30dp"
++                android:paddingBottom="40dp">
++
++                <TextView
++
++                    android:id="@+id/CalcMethodText"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentEnd="true"
++                    android:layout_toLeftOf="@+id/CalcMethodBtnGroup"
++                    android:checked="false"
++                    android:fontFamily="@font/changa"
++                    android:text="طريقة الحساب"
++                    android:textFontWeight="600"
++                    android:textSize="20sp" />
++
++                <RadioGroup
++                    android:id="@+id/CalcMethodBtnGroup"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:minWidth="140dp">
++
++                    <RadioButton
++                        android:id="@+id/Jafari"
++                        android:layout_width="202dp"
++                        android:layout_height="wrap_content"
++                        android:checked="false"
++                        android:fontFamily="@font/changa"
++                        android:text="المذهب الجعفري" />
++
++                    <RadioButton
++                        android:id="@+id/Karachi"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="جامعة العلوم الإسلامية بكراتشي" />
++
++                    <RadioButton
++                        android:id="@+id/ISNA"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="الجمعية الإسلامية لأمريكا الشمالية" />
++
++                    <RadioButton
++                        android:id="@+id/MWL"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="رابطة العالم الإسلامي" />
++
++                    <RadioButton
++                        android:id="@+id/Makkah"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="جامعة أم القرى" />
++
++                    <RadioButton
++                        android:id="@+id/Egypt"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="الهيئة المصرية العامة للمساحة" />
++
++                    <RadioButton
++                        android:id="@+id/Tehran"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="جامعة طهران" />
++
++                    <RadioButton
++                        android:id="@+id/Custom"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="مخصص" />
++                </RadioGroup>
++
++
++            </RelativeLayout>
++
++            <View
++                android:id="@+id/divider6"
++                android:layout_width="match_parent"
++                android:layout_height="1dp"
++                android:background="?android:attr/listDivider" />
++
++            <RelativeLayout
++                android:id="@+id/ShafiiParent"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_below="@+id/divider6"
++                android:paddingTop="40dp">
++
++                <TextView
++
++                    android:id="@+id/ShafiiText"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentEnd="true"
++                    android:layout_toRightOf="@+id/ShafiiButtonGroup"
++                    android:checked="false"
++                    android:fontFamily="@font/changa"
++                    android:text="المذهب الفقهي"
++                    android:textFontWeight="600"
++                    android:textSize="20sp" />
++
++                <RadioGroup
++                    android:id="@+id/ShafiiButtonGroup"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:minWidth="140dp">
++
++                    <RadioButton
++                        android:id="@+id/ShafiiBtn"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="المذهب الشافعي" />
++
++                    <RadioButton
++                        android:id="@+id/HanafiBtn"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="المذهب الحنفي" />
++                </RadioGroup>
++            </RelativeLayout>
++
++            <View
++                android:id="@+id/divider7"
++                android:layout_width="match_parent"
++                android:layout_height="1dp"
++                android:background="?android:attr/listDivider" />
++
++            <RelativeLayout
++                android:id="@+id/AltitudeParent"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_below="@+id/divider7"
++                android:paddingTop="40dp">
++
++                <TextView
++
++                    android:id="@+id/AltitudeText"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:layout_alignParentEnd="true"
++                    android:layout_toRightOf="@+id/AltitudeButtonGroup"
++                    android:checked="false"
++                    android:fontFamily="@font/changa"
++                    android:text="تعديل مواقيت الصلاة في خطوط العرض العليا"
++                    android:textFontWeight="600"
++                    android:textSize="20sp" />
++
++                <RadioGroup
++                    android:id="@+id/AltitudeButtonGroup"
++                    android:layout_width="wrap_content"
++                    android:layout_height="wrap_content"
++                    android:minWidth="140dp">
++
++                    <RadioButton
++                        android:id="@+id/None"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="بدون تعديل" />
+ 
++                    <RadioButton
++                        android:id="@+id/MidNight"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="منتصف الليل" />
++                    <RadioButton
++                        android:id="@+id/OneSeventh"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="سبع من الليل" />
++                    <RadioButton
++                        android:id="@+id/AngleBased"
++                        android:layout_width="match_parent"
++                        android:layout_height="wrap_content"
++                        android:fontFamily="@font/changa"
++                        android:text="حسب الزاوية" />
++                </RadioGroup>
++            </RelativeLayout>
++
++            <View
++                android:id="@+id/divider8"
++                android:layout_width="match_parent"
++                android:layout_height="1dp"
++                android:background="?android:attr/listDivider" />
++
++            <RelativeLayout
++                android:id="@+id/button"
++                android:layout_width="wrap_content"
++                android:layout_height="wrap_content"
++                android:layout_below="@+id/divider8"
++                android:paddingTop="40dp">
+ 
+-    <Button
+-        android:id="@+id/SaveBtn"
+-        android:layout_width="194dp"
+-        android:layout_height="144dp"
+-        android:layout_below="@+id/silentModeParent"
+-        android:layout_alignParentStart="true"
+-        android:layout_alignParentEnd="true"
+-        android:layout_marginStart="80dp"
+-        android:layout_marginTop="52dp"
+-        android:layout_marginEnd="80dp"
+-        android:background="@drawable/ic_button"
+-        android:fontFamily="@font/changa"
+-        android:textFontWeight="600" />
++            <Button
++                android:id="@+id/SaveBtn"
++                android:layout_width="wrap_content"
++                android:layout_height="144dp"
++                android:layout_marginStart="80dp"
++                android:layout_marginTop="52dp"
++                android:layout_marginEnd="80dp"
++                android:background="@drawable/ic_button"
++                android:fontFamily="@font/changa"
++                android:textFontWeight="600" />
++                <TextView
++                    android:layout_width="165dp"
++                    android:layout_height="40dp"
++                    android:layout_marginStart="90dp"
++                    android:layout_marginTop="145dp"
++                    android:layout_marginEnd="90dp"
++                    android:checked="false"
++                    android:fontFamily="@font/changa"
++                    android:text="حفظ الاعدادات"
++                    android:textAlignment="center"
++                    android:textFontWeight="900"
++                    android:textSize="25sp"
++                    android:translationZ="3dp" />
++
++
++            </RelativeLayout>
++
++        </LinearLayout>
++
++    </ScrollView>
+ 
+ 
+ </RelativeLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/prayartracker/HomeScreenActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.prayartracker;\nimport android.Manifest;\nimport android.annotation.SuppressLint;\nimport android.app.AlarmManager;\nimport android.app.Notification;\nimport android.app.PendingIntent;\nimport android.content.Context;\nimport android.content.Intent;\nimport android.content.SharedPreferences;\nimport android.content.pm.PackageManager;\nimport android.location.Location;\nimport android.location.LocationManager;\nimport android.media.AudioManager;\nimport android.os.Build;\nimport android.os.Bundle;\nimport android.os.Looper;\nimport android.preference.PreferenceManager;\nimport android.provider.Settings;\nimport android.util.Log;\nimport android.view.View;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport java.lang.reflect.Array;\nimport java.sql.Time;\nimport java.text.DateFormat;\nimport java.text.SimpleDateFormat;\nimport java.time.Duration;\nimport java.time.LocalTime;//\nimport java.time.ZoneId;\nimport java.time.ZonedDateTime;\nimport java.util.ArrayList;\nimport androidx.annotation.NonNull;\nimport androidx.annotation.RequiresApi;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.app.ActivityCompat;\nimport androidx.core.app.NotificationCompat;\nimport androidx.core.app.NotificationManagerCompat;\n\nimport com.google.android.gms.location.FusedLocationProviderClient;\nimport com.google.android.gms.location.LocationCallback;\nimport com.google.android.gms.location.LocationRequest;\nimport com.google.android.gms.location.LocationResult;\nimport com.google.android.gms.location.LocationServices;\nimport com.google.android.gms.tasks.OnCompleteListener;\nimport com.google.android.gms.tasks.Task;\n\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.TimeZone;\nimport java.util.Timer;\nimport java.util.TimerTask;\nimport java.util.concurrent.TimeUnit;\n\nimport android.os.CountDownTimer;\n\n\npublic class HomeScreenActivity extends AppCompatActivity {\n    TextView TimerTextView;\n    // initializing\n    // FusedLocationProviderClient\n    // object\n    FusedLocationProviderClient mFusedLocationClient;\n    public static ArrayList<String> prayerTimes12;\n    public static ArrayList<String> prayerTimes24;\n    static PrayTime prayTime;\n    static String upcomingPrayer;\n    // Initializing other items\n    // from layout file\n    TextView fajerTextView,dhuhrTextView,asrTextView,maghribTextView,IshaTextView;\n    int PERMISSION_ID = 44;\n    static Timer silentModeTimer;\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_home_screen);\n\n        fajerTextView = findViewById(R.id.fajerTextView);\n        dhuhrTextView = findViewById(R.id.dhuhrTextView);\n        asrTextView = findViewById(R.id.asrTextView);\n        maghribTextView = findViewById(R.id.maghribTextView);\n        IshaTextView = findViewById(R.id.IshaTextView);\n        TimerTextView = findViewById(R.id.CountDownTextView);\n\n\n        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);\n\n        // method to get the location\n        getLastLocation();\n\n    }\n\n\n    @SuppressLint(\"MissingPermission\")\n    private void getLastLocation() {\n        // check if permissions are given\n        if (checkPermissions()) {\n\n            // check if location is enabled\n            if (isLocationEnabled()) {\n\n                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {\n                    @RequiresApi(api = Build.VERSION_CODES.O)\n                    @Override\n                    public void onComplete(@NonNull Task<Location> task) {\n                        Location location = task.getResult();\n                        if (location == null) {\n                            requestNewLocationData();\n                        } else {\n                            calculatePrayerTimes(location);\n                            schedulePrayersDaily(location);\n                            ArrayList<String> prayerTimes;\n                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());\n                            Log.d(\"pref\",\"\"+preferences.getBoolean(\"is24Hour\",true));\n                            if(!preferences.getBoolean(\"is24Hour\",true)){\n                                prayerTimes = prayerTimes12;\n                            }\n                           else {\n                                prayerTimes = prayerTimes24;\n                            }\n                            ArrayList<String> prayerTimesForCount24H = prayerTimes24;\n                                for (String prayer : prayerTimes) {\n                                    Log.d(\" \", \"prayer\" + prayer);\n                                }\n                                    fajerTextView.setText(prayerTimes.get(0));\n                                    dhuhrTextView.setText(prayerTimes.get(2));\n                                    asrTextView.setText(prayerTimes.get(3));\n                                    maghribTextView.setText(prayerTimes.get(5));\n                                    IshaTextView.setText(prayerTimes.get(6));\n\n                            // Create an array for the difference between prayer time and the current time in ms.\n                            long [] PrayerDiff = new long[7];\n\n                                // loop to fill the PrayerDiff array\n                            for (int i = 0; i < 7; i++) {\n                                DateFormat df = new SimpleDateFormat(\"HH:mm:ss\"); // current time format\n                                Calendar calobj = Calendar.getInstance(); // to get current time\n                                String time;\n                                time = prayerTimesForCount24H.get(i)+ \":00\"; //  convert the prayer time format to HH:mm:ss format // if the time format 12 hours we use .replaceAll(\" am\",\"\")\n                                LocalTime localTime = LocalTime.parse(time); // convert from String to LocalTime\n                                LocalTime CurrentTime = LocalTime.parse(df.format(calobj.getTime()));// convert from String to LocalTime\n                                if(Math.abs(localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000) >= 53940000){ // if the difference is grater or equal 8(20:00:00) then\n                                long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000)+ 86400000; // add 24 hours to get the correct time.\n                                long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ; // convert to ms\n                                PrayerDiff[i] = diffSeconds;} //assign\n                                else{\n                                    long diff = (localTime.toSecondOfDay()*1000 - CurrentTime.toSecondOfDay()*1000); // without adding 24 hours\n                                    long diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) ;// convert to ms\n                                    PrayerDiff[i] = diffSeconds;//assign\n                                }\n                                Log.d(\"MY CUURENT TIME 2\", String.valueOf(CurrentTime.toSecondOfDay()*1000));\n\n                            }\n                            // loop to ensure from the result (only print)\n                            for (int j = 0; j < 7; j++) {\n                                String time = prayerTimesForCount24H.get(j)+ \":00\"; // if the time format 12 hours we use .replaceAll(\" am\",\"\")\n                                LocalTime localTime = LocalTime.parse(time);\n                                Log.d(\"Before sub\", String.valueOf(localTime.toSecondOfDay()*1000));\n                            }\n                            for (int j = 0; j < 7; j++) {\n                                Log.d(\"Aftar sub\",Long.toString(PrayerDiff[j]));\n                            }\n\n\n                            // loop to find the minimum positive value ( the nearest prayer time == the smallest difference )\n                            long minValue = Integer.MAX_VALUE;\n                            for(int i=0;i<7;i++) {\n                                if(PrayerDiff[i] > 0 && minValue > PrayerDiff[i])\n                                {\n                                    minValue = PrayerDiff[i];\n                                }\n                            }\n                            SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();\n                            for(int i=0;i<7;i++) {\n                                if(PrayerDiff[i] == minValue) {\n                                    switch (i){\n                                        case 0:\n                                            upcomingPrayer = \"الفجر\";\n                                            break;\n                                        case 2:\n                                            upcomingPrayer = \"الظهر\";\n\n                                            break;\n\n                                        case 3:\n                                            upcomingPrayer = \"العصر\";\n                                            break;\n\n                                        case 5:\n                                            upcomingPrayer = \"المغرب\";\n                                            break;\n\n                                        case 6:\n                                            upcomingPrayer = \"العشاء\";\n                                            break;\n\n                                    }\n                                }\n                                pref.putString(\"upcomingPrayer\",upcomingPrayer);\n                                pref.commit();\n                            }\n                                Log.d(\"Minemum\",Long.toString(minValue));\n\n                            //method to Count Down the time \n                            new CountDownTimer(minValue, 1000) {\n                                public void onTick(long millisUntilFinished) {\n                                    long secondsInMilli = 1000;\n                                    long minutesInMilli = secondsInMilli * 60;\n                                    long hoursInMilli = minutesInMilli * 60;\n\n                                    long elapsedHours = millisUntilFinished / hoursInMilli;\n                                    millisUntilFinished = millisUntilFinished % hoursInMilli;\n\n                                    long elapsedMinutes = millisUntilFinished / minutesInMilli;\n                                    millisUntilFinished = millisUntilFinished % minutesInMilli;\n\n                                    long elapsedSeconds = millisUntilFinished / secondsInMilli;\n\n                                    String text = String.format(\"%02d:%02d:%02d\", elapsedHours, elapsedMinutes,elapsedSeconds);\n                                    TimerTextView.setText(text);\n                                }\n\n                                public void onFinish() {\n\n                                    TimerTextView.setText(\"00:00:00\"); // here i prefer to set the notification \"حان موعد صلاة ال... حسب توقيت مكة المكرمة\"\n                                }\n                            }.start();\n                            }\n                        }\n\n                });\n            } else {\n                Toast.makeText(this, \"لطفًا قم بتفعيل خاصية الموقع لهذا التطبيق\", Toast.LENGTH_LONG).show();\n                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);\n                startActivity(intent);\n            }\n        } else {\n            // if permissions aren't available,\n            // request for permissions\n            requestPermissions();\n        }\n    }\n    private void schedulePrayersDaily(Location location){\n        Calendar cal = Calendar.getInstance();\n        int today = cal.get(Calendar.DAY_OF_MONTH);\n        SharedPreferences settings = getSharedPreferences(\"PREFS\",0);\n        int yesterday = settings.getInt(\"day\",0);\n      //  if(yesterday!=today){\n            Log.d(\"\",\"first time today\");\n            SharedPreferences.Editor editor = settings.edit();\n            editor.putInt(\"day\",today);\n            editor.commit();\n            calculatePrayerTimes(location);\n            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());\n            if(preferences.getBoolean(\"SilentMode\",false)){\n                if(preferences.getInt(\"Interval\",0) != 0) {\n                    int numMinutes = preferences.getInt(\"Interval\", 0);\n                    for (String prayer : prayerTimes24) {\n                        String[] time = prayer.split(\":\");\n                        int hrs = Integer.parseInt(time[0].trim());\n                        int min = Integer.parseInt(time[1].trim());\n                        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());\n                        android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);\n                        if (!notificationManager.isNotificationPolicyAccessGranted()) {\n                            Intent in = new Intent();\n                            in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);\n                            startActivityForResult(in, 1);\n                        }\n                        silentModeTimer = new Timer();\n\n                        silentModeTimer.schedule(new TimerTask() {\n                            @Override\n                            public void run() {\n                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);\n                                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);\n                            }\n\n                        }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDay(), hrs, min, 0));\n                        silentModeTimer.schedule(new TimerTask() {\n                            @Override\n                            public void run() {\n                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);\n                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);\n                            }\n\n                        }, (hrs * 60 * 60 * 1000)  + (min * 60 * 1000) + (numMinutes * 60 * 1000));\n                    }\n                }\n            }\n            setPrayersNotifications(location);//ONLY if the notification permission is granted\n        }\n  //  }\nprivate void calculatePrayerTimes(Location location){\n        prayTime = new PrayTime();\n    TimeZone timeZone = TimeZone.getDefault();\n    String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,\n            TimeZone.SHORT);\n    zone = zone.substring(4);\n    zone = zone.replaceAll(\":\",\".\");\n    Double tz = Double.parseDouble(zone);\n    prayTime.setCalcMethod(prayTime.Makkah);\n    prayTime.setAdjustHighLats(prayTime.AngleBased);\n    int[] offsets = {0, 0, 0, 0, 0, 0, 0};\n    prayTime.tune(offsets);\n    Date now = new Date();\n    Calendar cal = Calendar.getInstance();\n    cal.setTime(now);\n    Log.d(\"S\",\"\"+location.getLatitude());\n    Log.d(\"S\",\"\"+location.getLongitude());\n    prayTime.setTimeFormat(prayTime.Time24);\n    prayerTimes24 = prayTime.getPrayerTimes(cal,\n            location.getLatitude(), location.getLongitude(), 3);\n    prayTime.setTimeFormat(prayTime.Time12);\n    prayerTimes12 = prayTime.getPrayerTimes(cal,\n            location.getLatitude(), location.getLongitude(), 3);\n    for (String prayer: prayerTimes12\n    ) {\n        Log.d(\" \",\"prayer\" + prayer);\n    }\n}\n    public void setPrayersNotifications(Location location){\n        Calendar cal = Calendar.getInstance();\n        int alarmsCounter = 0;\n        for (String prayer: prayerTimes24){\n            if(!prayer.equalsIgnoreCase(prayerTimes24.get(1))){\n                alarmsCounter++;\n                cal.set(Calendar.HOUR_OF_DAY,Integer.parseInt(prayer.substring(0,2)));\n                cal.set(Calendar.MINUTE,Integer.parseInt(prayer.substring(3,5)));\n                cal.set(Calendar.SECOND,0);\n                cal.set(Calendar.MILLISECOND,0);\n                scheduleAlarms(cal,alarmsCounter);\n            }\n        }\n    }\n    public void scheduleAlarms(Calendar calendar, int alarmsCounter){\n        //Prepare the intents to be used to set the alarm\n        Intent reminderIntent = new Intent(this, NotificationManager.class);\n        PendingIntent intent = PendingIntent.getBroadcast(this,alarmsCounter, reminderIntent.putExtra(\"id\",alarmsCounter), PendingIntent.FLAG_UPDATE_CURRENT);\n        //Create the alarm manager to schedule the prayer notification\n        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);\n        alarmManager.setExact(AlarmManager.RTC_WAKEUP,  calendar.getTimeInMillis(), intent);\n\n    }\n\n    @SuppressLint(\"MissingPermission\")\n    private void requestNewLocationData() {\n\n        // Initializing LocationRequest\n        // object with appropriate methods\n        LocationRequest mLocationRequest = new LocationRequest();\n        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);\n        mLocationRequest.setInterval(5);\n        mLocationRequest.setFastestInterval(0);\n        mLocationRequest.setNumUpdates(1);\n\n        // setting LocationRequest\n        // on FusedLocationClient\n        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);\n        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());\n    }\n\n    private LocationCallback mLocationCallback = new LocationCallback() {\n\n        @Override\n        public void onLocationResult(LocationResult locationResult) {\n            Location mLastLocation = locationResult.getLastLocation();\n            //latitudeTextView.setText(\"Latitude: \" + mLastLocation.getLatitude() + \"\");\n           // longitTextView.setText(\"Longitude: \" + mLastLocation.getLongitude() + \"\");\n        }\n    };\n\n    // method to check for permissions\n    private boolean checkPermissions() {\n        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;\n\n        // If we want background location\n        // on Android 10.0 and higher,\n        // use:\n        // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED\n    }\n\n    // method to request for permissions\n    private void requestPermissions() {\n        ActivityCompat.requestPermissions(this, new String[]{\n                Manifest.permission.ACCESS_COARSE_LOCATION,\n                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);\n    }\n\n    // method to check\n    // if location is enabled\n    private boolean isLocationEnabled() {\n        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);\n        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);\n    }\n\n    @Override\n    public void onResume() {\n        super.onResume();\n            getLastLocation();\n\n    }\n\n    public void goToSetting(View view) {\n        Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);\n        startActivity(intent);\n    }\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/prayartracker/HomeScreenActivity.java	(revision d4a6d7092d0cf6d0b5afc3b76b7a288a55329043)
++++ app/src/main/java/com/example/prayartracker/HomeScreenActivity.java	(date 1617901513000)
+@@ -241,16 +241,16 @@
+         }
+     }
+     private void schedulePrayersDaily(Location location){
++        calculatePrayerTimes(location);
+         Calendar cal = Calendar.getInstance();
+         int today = cal.get(Calendar.DAY_OF_MONTH);
+         SharedPreferences settings = getSharedPreferences("PREFS",0);
+         int yesterday = settings.getInt("day",0);
+-      //  if(yesterday!=today){
++          if(yesterday!=today){
+             Log.d("","first time today");
+             SharedPreferences.Editor editor = settings.edit();
+             editor.putInt("day",today);
+             editor.commit();
+-            calculatePrayerTimes(location);
+             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+             if(preferences.getBoolean("SilentMode",false)){
+                 if(preferences.getInt("Interval",0) != 0) {
+@@ -289,17 +289,73 @@
+             }
+             setPrayersNotifications(location);//ONLY if the notification permission is granted
+         }
+-  //  }
++   }
+ private void calculatePrayerTimes(Location location){
+         prayTime = new PrayTime();
+     TimeZone timeZone = TimeZone.getDefault();
+     String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(false,
+             TimeZone.SHORT);
++    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+     zone = zone.substring(4);
+     zone = zone.replaceAll(":",".");
+     Double tz = Double.parseDouble(zone);
+-    prayTime.setCalcMethod(prayTime.Makkah);
+-    prayTime.setAdjustHighLats(prayTime.AngleBased);
++    switch (preferences.getString("CalcMethod","Makkah")){
++        case "Makkah":
++            prayTime.setCalcMethod(prayTime.Makkah);
++            break;
++        case "Tehran":
++            prayTime.setCalcMethod(prayTime.Tehran);
++            break;
++
++        case "ISNA":
++            prayTime.setCalcMethod(prayTime.ISNA);
++            break;
++
++        case "Egypt":
++            prayTime.setCalcMethod(prayTime.Egypt);
++            break;
++
++        case "Custom":
++            prayTime.setCalcMethod(prayTime.Custom);
++            break;
++
++        case "Karachi":
++            prayTime.setCalcMethod(prayTime.Karachi);
++            break;
++
++        case "MWL":
++            prayTime.setCalcMethod(prayTime.MWL);
++            break;
++
++        case "Jafari":
++            prayTime.setCalcMethod(prayTime.Jafari);
++            break;
++    }
++    switch (preferences.getString("JuristicMethod","Shafii")){
++        case "Shafii":
++            prayTime.setCalcMethod(prayTime.Shafii);
++            break;
++        case "Hanafi":
++            prayTime.setCalcMethod(prayTime.Hanafi);
++            break;
++    }
++
++    switch(preferences.getString("HighAltCalc","AngleBased")){
++        case "AngleBased":
++            prayTime.setCalcMethod(prayTime.AngleBased);
++            break;
++        case "None":
++            prayTime.setCalcMethod(prayTime.None);
++            break;
++
++        case "Midnight":
++            prayTime.setCalcMethod(prayTime.MidNight);
++            break;
++
++        case "OneSeventh":
++            prayTime.setCalcMethod(prayTime.OneSeventh);
++            break;
++    }
+     int[] offsets = {0, 0, 0, 0, 0, 0, 0};
+     prayTime.tune(offsets);
+     Date now = new Date();
+@@ -393,11 +449,13 @@
+         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+     }
+ 
++    @SuppressLint("MissingPermission")
+     @Override
+     public void onResume() {
+         super.onResume();
+             getLastLocation();
+ 
++            Log.e("hi",PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("CalcMethod","Makkah"));
+     }
+ 
+     public void goToSetting(View view) {
+Index: app/src/main/java/com/example/prayartracker/SettingsActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.prayartracker;\n\nimport androidx.appcompat.app.AppCompatActivity;\n\nimport android.content.Context;\nimport android.content.Intent;\nimport android.content.SharedPreferences;\nimport android.media.AudioManager;\nimport android.os.Bundle;\nimport android.preference.PreferenceManager;\nimport android.util.Log;\nimport android.view.View;\nimport android.view.ViewGroup;\nimport android.widget.Button;\nimport android.widget.CompoundButton;\nimport android.widget.EditText;\nimport android.widget.LinearLayout;\nimport android.widget.Switch;\nimport android.widget.Toast;\nimport android.widget.ToggleButton;\n\nimport java.sql.Time;\nimport java.time.LocalTime;\nimport java.time.format.DateTimeFormatter;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.Locale;\nimport java.util.Set;\nimport java.util.Timer;\nimport java.util.TimerTask;\n\nimport static com.example.prayartracker.HomeScreenActivity.prayTime;\nimport static com.example.prayartracker.HomeScreenActivity.prayerTimes24;\nimport static com.example.prayartracker.HomeScreenActivity.silentModeTimer;\n\npublic class SettingsActivity extends AppCompatActivity {\n\n    public static boolean isSilentMode = false;\n    public static boolean is24Hour;\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n\n        super.onCreate(savedInstanceState);\n        setContentView(R.layout.activity_settings);\n         final Switch allowNotification = findViewById(R.id.allowNotif);\n         final Switch silentModeSwitch = findViewById(R.id.silentModeSwitch);\n         final Switch Time24HFormat = findViewById(R.id.Time24HFormat);\n         SharedPreferences settings = getSharedPreferences(\"PREFS\",0);\n        boolean isNotificationAllowed = settings.getBoolean(\"isNotificationAllowed\",true);\n        final SharedPreferences.Editor editor = settings.edit();\n        final LinearLayout linearLayout = (LinearLayout) findViewById((R.id.linearLayout));\n        final EditText minutesInput = (EditText) findViewById((R.id.editTextNumber2));\n        Button saveBtn = (Button) findViewById((R.id.SaveBtn));\n        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());\n        if(preferences.getBoolean(\"SilentMode\",false)){\n            silentModeSwitch.setChecked(true);\n            linearLayout.setVisibility(View.VISIBLE);\n\n        }\n        else{\n            silentModeSwitch.setChecked(false);\n            linearLayout.setVisibility(View.INVISIBLE);\n\n        }\n        if(!preferences.getBoolean(\"is24Hour\",true)){\n            Time24HFormat.setChecked(false);\n        }\n        else{\n            Time24HFormat.setChecked(true);\n        }\n       if(isNotificationAllowed){ //notifications are allowed\n         allowNotification.setChecked(true);\n       }\n    else{\n       allowNotification.setChecked(false);\n    }\n        allowNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {\n            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {\n                if (isChecked) {\n                    // The toggle is enabled\n                    editor.putBoolean(\"isNotificationAllowed\",true);\n                } else {\n                    editor.putBoolean(\"isNotificationAllowed\",false);\n                }\n                editor.commit();\n\n            }\n        });\n        silentModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {\n            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {\n                if (isChecked) {\n                    // The toggle is enabled\n                    linearLayout.setVisibility(View.VISIBLE);\n                } else {\n                    linearLayout.setVisibility(View.INVISIBLE);\n                }\n            }\n        });\n        saveBtn.setOnClickListener(new View.OnClickListener() {\n            @Override\n            public void onClick(View v) {\n                boolean flag = true;\n                String minutes = minutesInput.getText().toString();\n                if(silentModeSwitch.isChecked()){\n                    if(minutes.equals(\"\")){\n                        Toast.makeText(SettingsActivity.this, \"لطفًا قم بإدخال مدة إبفاء الجهاز على وضعية الصامت\", Toast.LENGTH_SHORT).show();\n                        Log.d(\"silent\",\"silent\");\n                         flag = false;\n                    }\n                    else {\n                        int numMinutes = Integer.parseInt(minutesInput.getText().toString());\n                        SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();\n                        pref.putBoolean(\"SilentMode\",true);\n                        pref.putInt(\"Interval\",numMinutes);\n                        pref.commit();\n                        Toast.makeText(SettingsActivity.this, \"سيتم وضع الجهاز على وضعية الصامت بعد كل آذان ولمدة \"+ numMinutes + \" دقيقة\", Toast.LENGTH_SHORT).show();\n\n                    }\n                }\n                else {\n                    SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();\n                    pref.putBoolean(\"SilentMode\",false);\n                    pref.putInt(\"Interval\",0);\n                    pref.commit();\n                    if(silentModeTimer!= null)\n                    HomeScreenActivity.silentModeTimer.cancel();\n                    AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);\n                    audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);\n                    Toast.makeText(SettingsActivity.this, \"تم إلغاء وضع الصامت\", Toast.LENGTH_SHORT).show();\n\n                }\n                SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();\n                if(Time24HFormat.isChecked()){\n                    preferences.putBoolean(\"is24Hour\",true);\n                    preferences.commit();\n                    Toast.makeText(SettingsActivity.this, \"تم وضع التطبيق على نظام ٢٤ ساعة\", Toast.LENGTH_SHORT).show();\n\n                }\n                else{\n                    preferences.putBoolean(\"is24Hour\",false);\n                    preferences.commit();\n                    Toast.makeText(SettingsActivity.this, \"تم وضع التطبيق على نظام ١٢ ساعة\", Toast.LENGTH_SHORT).show();\n\n                }\n                if(flag) {\n                    Intent intent = new Intent(getApplicationContext(), HomeScreenActivity.class);\n                    startActivity(intent);\n                }\n            }\n        });\n\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/prayartracker/SettingsActivity.java	(revision d4a6d7092d0cf6d0b5afc3b76b7a288a55329043)
++++ app/src/main/java/com/example/prayartracker/SettingsActivity.java	(date 1617903993000)
+@@ -15,6 +15,8 @@
+ import android.widget.CompoundButton;
+ import android.widget.EditText;
+ import android.widget.LinearLayout;
++import android.widget.RadioButton;
++import android.widget.RadioGroup;
+ import android.widget.Switch;
+ import android.widget.Toast;
+ import android.widget.ToggleButton;
+@@ -45,14 +47,16 @@
+          final Switch allowNotification = findViewById(R.id.allowNotif);
+          final Switch silentModeSwitch = findViewById(R.id.silentModeSwitch);
+          final Switch Time24HFormat = findViewById(R.id.Time24HFormat);
+-         SharedPreferences settings = getSharedPreferences("PREFS",0);
++         final RadioGroup ShafiiGroup = findViewById(R.id.ShafiiButtonGroup);
++         final RadioGroup AltitudeGroup = findViewById(R.id.AltitudeButtonGroup);
++         final RadioGroup CalcMethod = findViewById(R.id.CalcMethodBtnGroup);
++         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+         boolean isNotificationAllowed = settings.getBoolean("isNotificationAllowed",true);
+-        final SharedPreferences.Editor editor = settings.edit();
++          SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+         final LinearLayout linearLayout = (LinearLayout) findViewById((R.id.linearLayout));
+         final EditText minutesInput = (EditText) findViewById((R.id.editTextNumber2));
+         Button saveBtn = (Button) findViewById((R.id.SaveBtn));
+-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+-        if(preferences.getBoolean("SilentMode",false)){
++        if(settings.getBoolean("SilentMode",false)){
+             silentModeSwitch.setChecked(true);
+             linearLayout.setVisibility(View.VISIBLE);
+ 
+@@ -62,7 +66,7 @@
+             linearLayout.setVisibility(View.INVISIBLE);
+ 
+         }
+-        if(!preferences.getBoolean("is24Hour",true)){
++        if(!settings.getBoolean("is24Hour",true)){
+             Time24HFormat.setChecked(false);
+         }
+         else{
+@@ -74,16 +78,164 @@
+     else{
+        allowNotification.setChecked(false);
+     }
++        RadioButton Jafari = (RadioButton) findViewById(R.id.Jafari);
++        RadioButton MWL = (RadioButton) findViewById(R.id.MWL);
++        RadioButton Karachi = (RadioButton) findViewById(R.id.Karachi);
++        RadioButton ISNA = (RadioButton) findViewById(R.id.ISNA);
++        RadioButton Tehran = (RadioButton) findViewById(R.id.Tehran);
++        RadioButton Makkah = (RadioButton) findViewById(R.id.Makkah);
++        RadioButton Egypt = (RadioButton) findViewById(R.id.Egypt);
++        RadioButton Custom = (RadioButton) findViewById(R.id.Custom);
++
++        switch(settings.getString("CalcMethod","Makkah")){
++        case "Makkah":
++            Makkah.setChecked(true);
++            break;
++            case "Tehran":
++                Tehran.setChecked(true);
++                break;
++
++            case "ISNA":
++                ISNA.setChecked(true);
++                break;
++
++            case "Egypt":
++                Egypt.setChecked(true);
++                break;
++
++            case "Custom":
++                Custom.setChecked(true);
++                break;
++
++            case "Karachi":
++                Karachi.setChecked(true);
++                break;
++
++            case "MWL":
++                MWL.setChecked(true);
++                break;
++
++            case "Jafari":
++                Jafari.setChecked(true);
++                break;
++
++        }
++        RadioButton Hanafi = (RadioButton) findViewById(R.id.HanafiBtn);
++        RadioButton Shafii = (RadioButton) findViewById(R.id.ShafiiBtn);
++
++        switch(settings.getString("JuristicMethod","Shafii")){
++            case "Shafii":
++                Shafii.setChecked(true);
++                break;
++
++            case "Hanafi":
++                Hanafi.setChecked(true);
++                break;
++
++        }
++        RadioButton None = (RadioButton) findViewById(R.id.None);
++        RadioButton Midnight = (RadioButton) findViewById(R.id.MidNight);
++        RadioButton OneSeventh = (RadioButton) findViewById(R.id.OneSeventh);
++        RadioButton AngleBased = (RadioButton) findViewById(R.id.AngleBased);
++        switch(settings.getString("HighAltCalc","AngleBased")){
++            case "AngleBased":
++                AngleBased.setChecked(true);
++                break;
++            case "None":
++                None.setChecked(true);
++                break;
++
++            case "Midnight":
++                Midnight.setChecked(true);
++                break;
++
++            case "OneSeventh":
++                OneSeventh.setChecked(true);
++                break;
++
++        }
++        AltitudeGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
++            @Override
++            public void onCheckedChanged(RadioGroup group, int checkedId) {
++                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
++
++                switch(checkedId){
++                    case R.id.None:
++                        editor.putString("HighAltCalc","None");
++                        break;
++                    case R.id.MidNight:
++                        editor.putString("HighAltCalc","Midnight");
++                        break;
++                    case R.id.OneSeventh:
++                        editor.putString("HighAltCalc","OneSeventh");
++                        break;
++                    case R.id.AngleBased:
++                        editor.putString("HighAltCalc","AngleBased");
++                        break;
++                }
++                editor.apply();
++            }
++        });
++        ShafiiGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
++            @Override
++            public void onCheckedChanged(RadioGroup group, int checkedId) {
++                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
++
++                switch(checkedId) {
++                    case R.id.ShafiiBtn:
++                        editor.putString("JuristicMethod", "Shafii");
++                        break;
++                    case R.id.HanafiBtn:
++                        editor.putString("JuristicMethod", "Hanafi");
++                        break;
++                }
++                editor.apply();
++            }
++        });
++        CalcMethod.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
++            @Override
++            public void onCheckedChanged(RadioGroup group, int checkedId) {
++                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
++                Log.d("hi!", ""+checkedId);
++                switch(checkedId){
++                    case R.id.Jafari:
++                        editor.putString("CalcMethod","Jafari");
++                        break;
++                    case R.id.Karachi:
++                        editor.putString("CalcMethod","Karachi");
++                        break;
++                    case R.id.ISNA:
++                        editor.putString("CalcMethod","ISNA");
++                        break;
++                    case R.id.MWL:
++                        editor.putString("CalcMethod","MWL");
++                        break;
++                    case R.id.Makkah:
++                        editor.putString("CalcMethod","Makkah");
++                        break;
++                    case R.id.Egypt:
++                        editor.putString("CalcMethod","Egypt");
++                        break;
++                    case R.id.Tehran:
++                        editor.putString("CalcMethod","Tehran");
++                        break;
++                    case R.id.Custom:
++                        editor.putString("CalcMethod","Custom");
++                        break;
++                }
++                editor.apply();
++
++            }
++        });
+         allowNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
++                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
+                 if (isChecked) {
+                     // The toggle is enabled
+                     editor.putBoolean("isNotificationAllowed",true);
+                 } else {
+                     editor.putBoolean("isNotificationAllowed",false);
+                 }
+-                editor.commit();
+-
+             }
+         });
+         silentModeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+Index: app/src/main/java/com/example/prayartracker/PrayTime.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>\n//--------------------- Copyright Block ----------------------\n/*\n\nPrayTime.java: Prayer Times Calculator (ver 1.0)\nCopyright (C) 2007-2010 PrayTimes.org\n\nJava Code By: Hussain Ali Khan\nOriginal JS Code By: Hamid Zarrabi-Zadeh\n\nLicense: GNU LGPL v3.0\n\nTERMS OF USE:\n\tPermission is granted to use this code, with or\n\twithout modification, in any website or application\n\tprovided that credit is given to the original work\n\twith a link back to PrayTimes.org.\n\nThis program is distributed in the hope that it will\nbe useful, but WITHOUT ANY WARRANTY.\n\nPLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK.\n\n*/\n\npackage com.example.prayartracker;\n\n\nimport java.util.ArrayList;\nimport java.util.Calendar;\nimport java.util.Date;\nimport java.util.HashMap;\nimport java.util.TimeZone;\n\npublic class PrayTime {\n\n    // ---------------------- Global Variables --------------------\n    private int calcMethod; // caculation method\n    private int asrJuristic; // Juristic method for Asr\n    private int dhuhrMinutes; // minutes after mid-day for Dhuhr\n    private int adjustHighLats; // adjusting method for higher latitudes\n    private int timeFormat; // time format\n    private double lat; // latitude\n    private double lng; // longitude\n    private double timeZone; // time-zone\n    private double JDate; // Julian date\n    // ------------------------------------------------------------\n    // Calculation Methods\n    private int Jafari; // Ithna Ashari\n    private int Karachi; // University of Islamic Sciences, Karachi\n    private int ISNA; // Islamic Society of North America (ISNA)\n    private int MWL; // Muslim World League (MWL)\n    protected int Makkah; // Umm al-Qura, Makkah\n    private int Egypt; // Egyptian General Authority of Survey\n    private int Custom; // Custom Setting\n    private int Tehran; // Institute of Geophysics, University of Tehran\n    // Juristic Methods\n    protected int Shafii; // Shafii (standard)\n    protected int Hanafi; // Hanafi\n    // Adjusting Methods for Higher Latitudes\n    private int None; // No adjustment\n    private int MidNight; // middle of night\n    private int OneSeventh; // 1/7th of night\n    protected int AngleBased; // angle/60th of night\n    // Time Formats\n    protected int Time24; // 24-hour format\n    protected int Time12; // 12-hour format\n    private int Time12NS; // 12-hour format with no suffix\n    private int Floating; // floating point number\n    // Time Names\n    private ArrayList<String> timeNames;\n    private String InvalidTime; // The string used for invalid times\n    // --------------------- Technical Settings --------------------\n    private int numIterations; // number of iterations needed to compute times\n    // ------------------- Calc Method Parameters --------------------\n    private HashMap<Integer, double[]> methodParams;\n    /*\n     * this.methodParams[methodNum] = new Array(fa, ms, mv, is, iv);\n     *\n     * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after\n     * sunset) mv : maghrib parameter value (in angle or minutes) is : isha\n     * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter value\n     * (in angle or minutes)\n     */\n    private double[] prayerTimesCurrent;\n    private int[] offsets;\n\n    public PrayTime() {\n        // Initialize vars\n\n        this.setCalcMethod(0);\n        this.setAsrJuristic(0);\n        this.setDhuhrMinutes(0);\n        this.setAdjustHighLats(1);\n        this.setTimeFormat(0);\n\n        // Calculation Methods\n        this.setJafari(0); // Ithna Ashari\n        this.setKarachi(1); // University of Islamic Sciences, Karachi\n        this.setISNA(2); // Islamic Society of North America (ISNA)\n        this.setMWL(3); // Muslim World League (MWL)\n        this.setMakkah(4); // Umm al-Qura, Makkah\n        this.setEgypt(5); // Egyptian General Authority of Survey\n        this.setTehran(6); // Institute of Geophysics, University of Tehran\n        this.setCustom(7); // Custom Setting\n\n        // Juristic Methods\n        this.setShafii(0); // Shafii (standard)\n        this.setHanafi(1); // Hanafi\n\n        // Adjusting Methods for Higher Latitudes\n        this.setNone(0); // No adjustment\n        this.setMidNight(1); // middle of night\n        this.setOneSeventh(2); // 1/7th of night\n        this.setAngleBased(3); // angle/60th of night\n\n        // Time Formats\n        this.setTime24(0); // 24-hour format\n        this.setTime12(1); // 12-hour format\n        this.setTime12NS(2); // 12-hour format with no suffix\n        this.setFloating(3); // floating point number\n\n        // Time Names\n        timeNames = new ArrayList<String>();\n        timeNames.add(\"Fajr\");\n        timeNames.add(\"Sunrise\");\n        timeNames.add(\"Dhuhr\");\n        timeNames.add(\"Asr\");\n        timeNames.add(\"Sunset\");\n        timeNames.add(\"Maghrib\");\n        timeNames.add(\"Isha\");\n\n        InvalidTime = \"-----\"; // The string used for invalid times\n\n        // --------------------- Technical Settings --------------------\n\n        this.setNumIterations(1); // number of iterations needed to compute\n        // times\n\n        // ------------------- Calc Method Parameters --------------------\n\n        // Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}\n        offsets = new int[7];\n        offsets[0] = 0;\n        offsets[1] = 0;\n        offsets[2] = 0;\n        offsets[3] = 0;\n        offsets[4] = 0;\n        offsets[5] = 0;\n        offsets[6] = 0;\n\n        /*\n         *\n         * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after\n         * sunset) mv : maghrib parameter value (in angle or minutes) is : isha\n         * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter\n         * value (in angle or minutes)\n         */\n        methodParams = new HashMap<Integer, double[]>();\n\n        // Jafari\n        double[] Jvalues = {16,0,4,0,14};\n        methodParams.put(Integer.valueOf(this.getJafari()), Jvalues);\n\n        // Karachi\n        double[] Kvalues = {18,1,0,0,18};\n        methodParams.put(Integer.valueOf(this.getKarachi()), Kvalues);\n\n        // ISNA\n        double[] Ivalues = {15,1,0,0,15};\n        methodParams.put(Integer.valueOf(this.getISNA()), Ivalues);\n\n        // MWL\n        double[] MWvalues = {18,1,0,0,17};\n        methodParams.put(Integer.valueOf(this.getMWL()), MWvalues);\n\n        // Makkah\n        double[] MKvalues = {18.5,1,0,1,90};\n        methodParams.put(Integer.valueOf(this.getMakkah()), MKvalues);\n\n        // Egypt\n        double[] Evalues = {19.5,1,0,0,17.5};\n        methodParams.put(Integer.valueOf(this.getEgypt()), Evalues);\n\n        // Tehran\n        double[] Tvalues = {17.7,0,4.5,0,14};\n        methodParams.put(Integer.valueOf(this.getTehran()), Tvalues);\n\n        // Custom\n        double[] Cvalues = {18,1,0,0,17};\n        methodParams.put(Integer.valueOf(this.getCustom()), Cvalues);\n\n    }\n\n    // ---------------------- Trigonometric Functions -----------------------\n    // range reduce angle in degrees.\n    private double fixangle(double a) {\n\n        a = a - (360 * (Math.floor(a / 360.0)));\n\n        a = a < 0 ? (a + 360) : a;\n\n        return a;\n    }\n\n    // range reduce hours to 0..23\n    private double fixhour(double a) {\n        a = a - 24.0 * Math.floor(a / 24.0);\n        a = a < 0 ? (a + 24) : a;\n        return a;\n    }\n\n    // radian to degree\n    private double radiansToDegrees(double alpha) {\n        return ((alpha * 180.0) / Math.PI);\n    }\n\n    // deree to radian\n    private double DegreesToRadians(double alpha) {\n        return ((alpha * Math.PI) / 180.0);\n    }\n\n    // degree sin\n    private double dsin(double d) {\n        return (Math.sin(DegreesToRadians(d)));\n    }\n\n    // degree cos\n    private double dcos(double d) {\n        return (Math.cos(DegreesToRadians(d)));\n    }\n\n    // degree tan\n    private double dtan(double d) {\n        return (Math.tan(DegreesToRadians(d)));\n    }\n\n    // degree arcsin\n    private double darcsin(double x) {\n        double val = Math.asin(x);\n        return radiansToDegrees(val);\n    }\n\n    // degree arccos\n    private double darccos(double x) {\n        double val = Math.acos(x);\n        return radiansToDegrees(val);\n    }\n\n    // degree arctan\n    private double darctan(double x) {\n        double val = Math.atan(x);\n        return radiansToDegrees(val);\n    }\n\n    // degree arctan2\n    private double darctan2(double y, double x) {\n        double val = Math.atan2(y, x);\n        return radiansToDegrees(val);\n    }\n\n    // degree arccot\n    private double darccot(double x) {\n        double val = Math.atan2(1.0, x);\n        return radiansToDegrees(val);\n    }\n\n    // ---------------------- Time-Zone Functions -----------------------\n    // compute local time-zone for a specific date\n    private double getTimeZone1() {\n        TimeZone timez = TimeZone.getDefault();\n        double hoursDiff = (timez.getRawOffset() / 1000.0) / 3600;\n        return hoursDiff;\n    }\n\n    // compute base time-zone of the system\n    private double getBaseTimeZone() {\n        TimeZone timez = TimeZone.getDefault();\n        double hoursDiff = (timez.getRawOffset() / 1000.0) / 3600;\n        return hoursDiff;\n\n    }\n\n    // detect daylight saving in a given date\n    private double detectDaylightSaving() {\n        TimeZone timez = TimeZone.getDefault();\n        double hoursDiff = timez.getDSTSavings();\n        return hoursDiff;\n    }\n\n    // ---------------------- Julian Date Functions -----------------------\n    // calculate julian date from a calendar date\n    private double julianDate(int year, int month, int day) {\n\n        if (month <= 2) {\n            year -= 1;\n            month += 12;\n        }\n        double A = Math.floor(year / 100.0);\n\n        double B = 2 - A + Math.floor(A / 4.0);\n\n        double JD = Math.floor(365.25 * (year + 4716))\n                + Math.floor(30.6001 * (month + 1)) + day + B - 1524.5;\n\n        return JD;\n    }\n\n    // convert a calendar date to julian date (second method)\n    private double calcJD(int year, int month, int day) {\n        double J1970 = 2440588.0;\n        Date date = new Date(year, month - 1, day);\n\n        double ms = date.getTime(); // # of milliseconds since midnight Jan 1,\n        // 1970\n        double days = Math.floor(ms / (1000.0 * 60.0 * 60.0 * 24.0));\n        return J1970 + days - 0.5;\n\n    }\n\n    // ---------------------- Calculation Functions -----------------------\n    // References:\n    // http://www.ummah.net/astronomy/saltime\n    // http://aa.usno.navy.mil/faq/docs/SunApprox.html\n    // compute declination angle of sun and equation of time\n    private double[] sunPosition(double jd) {\n\n        double D = jd - 2451545;\n        double g = fixangle(357.529 + 0.98560028 * D);\n        double q = fixangle(280.459 + 0.98564736 * D);\n        double L = fixangle(q + (1.915 * dsin(g)) + (0.020 * dsin(2 * g)));\n\n        // double R = 1.00014 - 0.01671 * [self dcos:g] - 0.00014 * [self dcos:\n        // (2*g)];\n        double e = 23.439 - (0.00000036 * D);\n        double d = darcsin(dsin(e) * dsin(L));\n        double RA = (darctan2((dcos(e) * dsin(L)), (dcos(L))))/ 15.0;\n        RA = fixhour(RA);\n        double EqT = q/15.0 - RA;\n        double[] sPosition = new double[2];\n        sPosition[0] = d;\n        sPosition[1] = EqT;\n\n        return sPosition;\n    }\n\n    // compute equation of time\n    private double equationOfTime(double jd) {\n        double eq = sunPosition(jd)[1];\n        return eq;\n    }\n\n    // compute declination angle of sun\n    private double sunDeclination(double jd) {\n        double d = sunPosition(jd)[0];\n        return d;\n    }\n\n    // compute mid-day (Dhuhr, Zawal) time\n    private double computeMidDay(double t) {\n        double T = equationOfTime(this.getJDate() + t);\n        double Z = fixhour(12 - T);\n        return Z;\n    }\n\n    // compute time for a given angle G\n    private double computeTime(double G, double t) {\n\n        double D = sunDeclination(this.getJDate() + t);\n        double Z = computeMidDay(t);\n        double Beg = -dsin(G) - dsin(D) * dsin(this.getLat());\n        double Mid = dcos(D) * dcos(this.getLat());\n        double V = darccos(Beg/Mid)/15.0;\n\n        return Z + (G > 90 ? -V : V);\n    }\n\n    // compute the time of Asr\n    // Shafii: step=1, Hanafi: step=2\n    private double computeAsr(double step, double t) {\n        double D = sunDeclination(this.getJDate() + t);\n        double G = -darccot(step + dtan(Math.abs(this.getLat() - D)));\n        return computeTime(G, t);\n    }\n\n    // ---------------------- Misc Functions -----------------------\n    // compute the difference between two times\n    private double timeDiff(double time1, double time2) {\n        return fixhour(time2 - time1);\n    }\n\n    // -------------------- Interface Functions --------------------\n    // return prayer times for a given date\n    protected ArrayList<String> getDatePrayerTimes(int year, int month, int day,\n                                                   double latitude, double longitude, double tZone) {\n        this.setLat(latitude);\n        this.setLng(longitude);\n        this.setTimeZone(tZone);\n        this.setJDate(julianDate(year, month, day));\n        double lonDiff = longitude / (15.0 * 24.0);\n        this.setJDate(this.getJDate() - lonDiff);\n        return computeDayTimes();\n    }\n\n    // return prayer times for a given date\n    protected ArrayList<String> getPrayerTimes(Calendar date, double latitude,\n                                               double longitude, double tZone) {\n\n        int year = date.get(Calendar.YEAR);\n        int month = date.get(Calendar.MONTH);\n        int day = date.get(Calendar.DATE);\n\n        return getDatePrayerTimes(year, month+1, day, latitude, longitude, tZone);\n    }\n\n    // set custom values for calculation parameters\n    private void setCustomParams(double[] params) {\n\n        for (int i = 0; i < 5; i++) {\n            if (params[i] == -1) {\n                params[i] = methodParams.get(this.getCalcMethod())[i];\n                methodParams.put(this.getCustom(), params);\n            } else {\n                methodParams.get(this.getCustom())[i] = params[i];\n            }\n        }\n        this.setCalcMethod(this.getCustom());\n    }\n\n    // set the angle for calculating Fajr\n    public void setFajrAngle(double angle) {\n        double[] params = {angle, -1, -1, -1, -1};\n        setCustomParams(params);\n    }\n\n    // set the angle for calculating Maghrib\n    public void setMaghribAngle(double angle) {\n        double[] params = {-1, 0, angle, -1, -1};\n        setCustomParams(params);\n\n    }\n\n    // set the angle for calculating Isha\n    public void setIshaAngle(double angle) {\n        double[] params = {-1, -1, -1, 0, angle};\n        setCustomParams(params);\n\n    }\n\n    // set the minutes after Sunset for calculating Maghrib\n    public void setMaghribMinutes(double minutes) {\n        double[] params = {-1, 1, minutes, -1, -1};\n        setCustomParams(params);\n\n    }\n\n    // set the minutes after Maghrib for calculating Isha\n    public void setIshaMinutes(double minutes) {\n        double[] params = {-1, -1, -1, 1, minutes};\n        setCustomParams(params);\n\n    }\n\n    // convert double hours to 24h format\n    public String floatToTime24(double time) {\n\n        String result;\n\n        if (Double.isNaN(time)) {\n            return InvalidTime;\n        }\n\n        time = fixhour(time + 0.5 / 60.0); // add 0.5 minutes to round\n        int hours = (int)Math.floor(time);\n        double minutes = Math.floor((time - hours) * 60.0);\n\n        if ((hours >= 0 && hours <= 9) && (minutes >= 0 && minutes <= 9)) {\n            result = \"0\" + hours + \":0\" + Math.round(minutes);\n        } else if ((hours >= 0 && hours <= 9)) {\n            result = \"0\" + hours + \":\" + Math.round(minutes);\n        } else if ((minutes >= 0 && minutes <= 9)) {\n            result = hours + \":0\" + Math.round(minutes);\n        } else {\n            result = hours + \":\" + Math.round(minutes);\n        }\n        return result;\n    }\n\n    // convert double hours to 12h format\n    public String floatToTime12(double time, boolean noSuffix) {\n\n        if (Double.isNaN(time)) {\n            return InvalidTime;\n        }\n\n        time = fixhour(time + 0.5 / 60); // add 0.5 minutes to round\n        int hours = (int)Math.floor(time);\n        double minutes = Math.floor((time - hours) * 60);\n        String suffix, result;\n        if (hours >= 12) {\n            suffix = \"pm\";\n        } else {\n            suffix = \"am\";\n        }\n        hours = ((((hours+ 12) -1) % (12))+ 1);\n        /*hours = (hours + 12) - 1;\n        int hrs = (int) hours % 12;\n        hrs += 1;*/\n        if (noSuffix == false) {\n            if ((hours >= 0 && hours <= 9) && (minutes >= 0 && minutes <= 9)) {\n                result = \"0\" + hours + \":0\" + Math.round(minutes) + \" \"\n                        + suffix;\n            } else if ((hours >= 0 && hours <= 9)) {\n                result = \"0\" + hours + \":\" + Math.round(minutes) + \" \" + suffix;\n            } else if ((minutes >= 0 && minutes <= 9)) {\n                result = hours + \":0\" + Math.round(minutes) + \" \" + suffix;\n            } else {\n                result = hours + \":\" + Math.round(minutes) + \" \" + suffix;\n            }\n\n        } else {\n            if ((hours >= 0 && hours <= 9) && (minutes >= 0 && minutes <= 9)) {\n                result = \"0\" + hours + \":0\" + Math.round(minutes);\n            } else if ((hours >= 0 && hours <= 9)) {\n                result = \"0\" + hours + \":\" + Math.round(minutes);\n            } else if ((minutes >= 0 && minutes <= 9)) {\n                result = hours + \":0\" + Math.round(minutes);\n            } else {\n                result = hours + \":\" + Math.round(minutes);\n            }\n        }\n        return result;\n\n    }\n\n    // convert double hours to 12h format with no suffix\n    public String floatToTime12NS(double time) {\n        return floatToTime12(time, true);\n    }\n\n    // ---------------------- Compute Prayer Times -----------------------\n    // compute prayer times at given julian date\n    private double[] computeTimes(double[] times) {\n\n        double[] t = dayPortion(times);\n\n        double Fajr = this.computeTime(\n                180 - methodParams.get(this.getCalcMethod())[0], t[0]);\n\n        double Sunrise = this.computeTime(180 - 0.833, t[1]);\n\n        double Dhuhr = this.computeMidDay(t[2]);\n        double Asr = this.computeAsr(1 + this.getAsrJuristic(), t[3]);\n        double Sunset = this.computeTime(0.833, t[4]);\n\n        double Maghrib = this.computeTime(\n                methodParams.get(this.getCalcMethod())[2], t[5]);\n        double Isha = this.computeTime(\n                methodParams.get(this.getCalcMethod())[4], t[6]);\n\n        double[] CTimes = {Fajr, Sunrise, Dhuhr, Asr, Sunset, Maghrib, Isha};\n\n        return CTimes;\n\n    }\n\n    // compute prayer times at given julian date\n    private ArrayList<String> computeDayTimes() {\n        double[] times = {5, 6, 12, 13, 18, 18, 18}; // default times\n\n        for (int i = 1; i <= this.getNumIterations(); i++) {\n            times = computeTimes(times);\n        }\n\n        times = adjustTimes(times);\n        times = tuneTimes(times);\n\n        return adjustTimesFormat(times);\n    }\n\n    // adjust times in a prayer time array\n    private double[] adjustTimes(double[] times) {\n        for (int i = 0; i < times.length; i++) {\n            times[i] += this.getTimeZone() - this.getLng() / 15;\n        }\n\n        times[2] += this.getDhuhrMinutes() / 60; // Dhuhr\n        if (methodParams.get(this.getCalcMethod())[1] == 1) // Maghrib\n        {\n            times[5] = times[4] + methodParams.get(this.getCalcMethod())[2]/ 60;\n        }\n        if (methodParams.get(this.getCalcMethod())[3] == 1) // Isha\n        {\n            times[6] = times[5] + methodParams.get(this.getCalcMethod())[4]/ 60;\n        }\n\n        if (this.getAdjustHighLats() != this.getNone()) {\n            times = adjustHighLatTimes(times);\n        }\n\n        return times;\n    }\n\n    // convert times array to given time format\n    private ArrayList<String> adjustTimesFormat(double[] times) {\n\n        ArrayList<String> result = new ArrayList<String>();\n\n        if (this.getTimeFormat() == this.getFloating()) {\n            for (double time : times) {\n                result.add(String.valueOf(time));\n            }\n            return result;\n        }\n\n        for (int i = 0; i < 7; i++) {\n            if (this.getTimeFormat() == this.getTime12()) {\n                result.add(floatToTime12(times[i], false));\n            } else if (this.getTimeFormat() == this.getTime12NS()) {\n                result.add(floatToTime12(times[i], true));\n            } else {\n                result.add(floatToTime24(times[i]));\n            }\n        }\n        return result;\n    }\n\n    // adjust Fajr, Isha and Maghrib for locations in higher latitudes\n    private double[] adjustHighLatTimes(double[] times) {\n        double nightTime = timeDiff(times[4], times[1]); // sunset to sunrise\n\n        // Adjust Fajr\n        double FajrDiff = nightPortion(methodParams.get(this.getCalcMethod())[0]) * nightTime;\n\n        if (Double.isNaN(times[0]) || timeDiff(times[0], times[1]) > FajrDiff) {\n            times[0] = times[1] - FajrDiff;\n        }\n\n        // Adjust Isha\n        double IshaAngle = (methodParams.get(this.getCalcMethod())[3] == 0) ? methodParams.get(this.getCalcMethod())[4] : 18;\n        double IshaDiff = this.nightPortion(IshaAngle) * nightTime;\n        if (Double.isNaN(times[6]) || this.timeDiff(times[4], times[6]) > IshaDiff) {\n            times[6] = times[4] + IshaDiff;\n        }\n\n        // Adjust Maghrib\n        double MaghribAngle = (methodParams.get(this.getCalcMethod())[1] == 0) ? methodParams.get(this.getCalcMethod())[2] : 4;\n        double MaghribDiff = nightPortion(MaghribAngle) * nightTime;\n        if (Double.isNaN(times[5]) || this.timeDiff(times[4], times[5]) > MaghribDiff) {\n            times[5] = times[4] + MaghribDiff;\n        }\n\n        return times;\n    }\n\n    // the night portion used for adjusting times in higher latitudes\n    private double nightPortion(double angle) {\n        double calc = 0;\n\n        if (adjustHighLats == AngleBased)\n            calc = (angle)/60.0;\n        else if (adjustHighLats == MidNight)\n            calc = 0.5;\n        else if (adjustHighLats == OneSeventh)\n            calc = 0.14286;\n\n        return calc;\n    }\n\n    // convert hours to day portions\n    private double[] dayPortion(double[] times) {\n        for (int i = 0; i < 7; i++) {\n            times[i] /= 24;\n        }\n        return times;\n    }\n\n    // Tune timings for adjustments\n    // Set time offsets\n    public void tune(int[] offsetTimes) {\n\n        for (int i = 0; i < offsetTimes.length; i++) { // offsetTimes length\n            // should be 7 in order\n            // of Fajr, Sunrise,\n            // Dhuhr, Asr, Sunset,\n            // Maghrib, Isha\n            this.offsets[i] = offsetTimes[i];\n        }\n    }\n\n    private double[] tuneTimes(double[] times) {\n        for (int i = 0; i < times.length; i++) {\n            times[i] = times[i] + this.offsets[i] / 60.0;\n        }\n\n        return times;\n    }\n\n//    /**\n//     * @param args\n////     */\n//    public static void main(String[] args) {\n//        double latitude = -37.823689;\n//        double longitude = 145.121597;\n//        double timezone = 10;\n//        // Test Prayer times here\n//        PrayTime prayers = new PrayTime();\n//\n//        prayers.setTimeFormat(prayers.Time12);\n//        prayers.setCalcMethod(prayers.Jafari);\n//        prayers.setAsrJuristic(prayers.Shafii);\n//        prayers.setAdjustHighLats(prayers.AngleBased);\n//        int[] offsets = {0, 0, 0, 0, 0, 0, 0}; // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}\n//        prayers.tune(offsets);\n//\n//        Date now = new Date();\n//        Calendar cal = Calendar.getInstance();\n//        cal.setTime(now);\n//\n//        ArrayList<String> prayerTimes = prayers.getPrayerTimes(cal,\n//                latitude, longitude, timezone);\n//        ArrayList<String> prayerNames = prayers.getTimeNames();\n//\n//        for (int i = 0; i < prayerTimes.size(); i++) {\n//            System.out.println(prayerNames.get(i) + \" - \" + prayerTimes.get(i));\n//        }\n\n  //  }\n\n    public int getCalcMethod() {\n        return calcMethod;\n    }\n\n    public void setCalcMethod(int calcMethod) {\n        this.calcMethod = calcMethod;\n    }\n\n    public int getAsrJuristic() {\n        return asrJuristic;\n    }\n\n    public void setAsrJuristic(int asrJuristic) {\n        this.asrJuristic = asrJuristic;\n    }\n\n    public int getDhuhrMinutes() {\n        return dhuhrMinutes;\n    }\n\n    public void setDhuhrMinutes(int dhuhrMinutes) {\n        this.dhuhrMinutes = dhuhrMinutes;\n    }\n\n    public int getAdjustHighLats() {\n        return adjustHighLats;\n    }\n\n    public void setAdjustHighLats(int adjustHighLats) {\n        this.adjustHighLats = adjustHighLats;\n    }\n\n    public int getTimeFormat() {\n        return timeFormat;\n    }\n\n    public void setTimeFormat(int timeFormat) {\n        this.timeFormat = timeFormat;\n    }\n\n    public double getLat() {\n        return lat;\n    }\n\n    public void setLat(double lat) {\n        this.lat = lat;\n    }\n\n    public double getLng() {\n        return lng;\n    }\n\n    public void setLng(double lng) {\n        this.lng = lng;\n    }\n\n    public double getTimeZone() {\n        return timeZone;\n    }\n\n    public void setTimeZone(double timeZone) {\n        this.timeZone = timeZone;\n    }\n\n    public double getJDate() {\n        return JDate;\n    }\n\n    public void setJDate(double jDate) {\n        JDate = jDate;\n    }\n\n    private int getJafari() {\n        return Jafari;\n    }\n\n    private void setJafari(int jafari) {\n        Jafari = jafari;\n    }\n\n    private int getKarachi() {\n        return Karachi;\n    }\n\n    private void setKarachi(int karachi) {\n        Karachi = karachi;\n    }\n\n    private int getISNA() {\n        return ISNA;\n    }\n\n    private void setISNA(int iSNA) {\n        ISNA = iSNA;\n    }\n\n    private int getMWL() {\n        return MWL;\n    }\n\n    private void setMWL(int mWL) {\n        MWL = mWL;\n    }\n\n    private int getMakkah() {\n        return Makkah;\n    }\n\n    private void setMakkah(int makkah) {\n        Makkah = makkah;\n    }\n\n    private int getEgypt() {\n        return Egypt;\n    }\n\n    private void setEgypt(int egypt) {\n        Egypt = egypt;\n    }\n\n    private int getCustom() {\n        return Custom;\n    }\n\n    private void setCustom(int custom) {\n        Custom = custom;\n    }\n\n    private int getTehran() {\n        return Tehran;\n    }\n\n    private void setTehran(int tehran) {\n        Tehran = tehran;\n    }\n\n    private int getShafii() {\n        return Shafii;\n    }\n\n    private void setShafii(int shafii) {\n        Shafii = shafii;\n    }\n\n    private int getHanafi() {\n        return Hanafi;\n    }\n\n    private void setHanafi(int hanafi) {\n        Hanafi = hanafi;\n    }\n\n    private int getNone() {\n        return None;\n    }\n\n    private void setNone(int none) {\n        None = none;\n    }\n\n    private int getMidNight() {\n        return MidNight;\n    }\n\n    private void setMidNight(int midNight) {\n        MidNight = midNight;\n    }\n\n    private int getOneSeventh() {\n        return OneSeventh;\n    }\n\n    private void setOneSeventh(int oneSeventh) {\n        OneSeventh = oneSeventh;\n    }\n\n    private int getAngleBased() {\n        return AngleBased;\n    }\n\n    private void setAngleBased(int angleBased) {\n        AngleBased = angleBased;\n    }\n\n    private int getTime24() {\n        return Time24;\n    }\n\n    private void setTime24(int time24) {\n        Time24 = time24;\n    }\n\n    private int getTime12() {\n        return Time12;\n    }\n\n    private void setTime12(int time12) {\n        Time12 = time12;\n    }\n\n    private int getTime12NS() {\n        return Time12NS;\n    }\n\n    private void setTime12NS(int time12ns) {\n        Time12NS = time12ns;\n    }\n\n    private int getFloating() {\n        return Floating;\n    }\n\n    private void setFloating(int floating) {\n        Floating = floating;\n    }\n\n    private int getNumIterations() {\n        return numIterations;\n    }\n\n    private void setNumIterations(int numIterations) {\n        this.numIterations = numIterations;\n    }\n\n    public ArrayList<String> getTimeNames() {\n        return timeNames;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/prayartracker/PrayTime.java	(revision d4a6d7092d0cf6d0b5afc3b76b7a288a55329043)
++++ app/src/main/java/com/example/prayartracker/PrayTime.java	(date 1617896084000)
+@@ -46,21 +46,21 @@
+     private double JDate; // Julian date
+     // ------------------------------------------------------------
+     // Calculation Methods
+-    private int Jafari; // Ithna Ashari
+-    private int Karachi; // University of Islamic Sciences, Karachi
+-    private int ISNA; // Islamic Society of North America (ISNA)
+-    private int MWL; // Muslim World League (MWL)
++    protected int Jafari; // Ithna Ashari
++    protected int Karachi; // University of Islamic Sciences, Karachi
++    protected int ISNA; // Islamic Society of North America (ISNA)
++    protected int MWL; // Muslim World League (MWL)
+     protected int Makkah; // Umm al-Qura, Makkah
+-    private int Egypt; // Egyptian General Authority of Survey
+-    private int Custom; // Custom Setting
+-    private int Tehran; // Institute of Geophysics, University of Tehran
++    protected int Egypt; // Egyptian General Authority of Survey
++    protected int Custom; // Custom Setting
++    protected int Tehran; // Institute of Geophysics, University of Tehran
+     // Juristic Methods
+     protected int Shafii; // Shafii (standard)
+     protected int Hanafi; // Hanafi
+     // Adjusting Methods for Higher Latitudes
+-    private int None; // No adjustment
+-    private int MidNight; // middle of night
+-    private int OneSeventh; // 1/7th of night
++    protected int None; // No adjustment
++    protected int MidNight; // middle of night
++    protected int OneSeventh; // 1/7th of night
+     protected int AngleBased; // angle/60th of night
+     // Time Formats
+     protected int Time24; // 24-hour format
+@@ -851,8 +851,7 @@
+         return Custom;
+     }
+ 
+-    private void setCustom(int custom) {
+-        Custom = custom;
++    private void setCustom(int custom) { Custom = custom;
+     }
+ 
+     private int getTehran() {

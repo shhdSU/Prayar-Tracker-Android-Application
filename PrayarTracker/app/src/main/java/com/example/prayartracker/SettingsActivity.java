@@ -279,12 +279,6 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
                 else {
-                    android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
-                    if (!notificationManager.isNotificationPolicyAccessGranted()) {
-                        Intent in = new Intent();
-                        in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS);
-                        startActivityForResult(in, 1);
-                    }
                     SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
                     pref.putBoolean("SilentMode",false);
                     pref.putInt("Interval",0);

@@ -1,0 +1,142 @@
+<html>
+<head>
+<title>MainActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6a8759;}
+.s3 { color: #6897bb;}
+.s4 { color: #808080;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.prayartracker</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.app.NotificationChannel</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.NotificationManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.SharedPreferences</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Build</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Button</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.EditText</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.example.prayartracker.R</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.regex.Matcher</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.regex.Pattern</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">MainActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+    <span class="s1">EditText email</span><span class="s0">, </span><span class="s1">username</span><span class="s0">, </span><span class="s1">password</span><span class="s0">, </span><span class="s1">repassword</span><span class="s0">;</span>
+    <span class="s1">Button signup</span><span class="s0">, </span><span class="s1">signin</span><span class="s0">;</span>
+    <span class="s1">SharedPreferences sp</span><span class="s0">;</span>
+    <span class="s1">DatabaseHelper DB</span><span class="s0">;</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_main)</span><span class="s0">;</span>
+        <span class="s1">createNotificationChannel()</span><span class="s0">;</span>
+        <span class="s1">email = (EditText) findViewById(R.id.email)</span><span class="s0">;</span>
+        <span class="s1">username = (EditText) findViewById(R.id.username)</span><span class="s0">;</span>
+        <span class="s1">password = (EditText) findViewById(R.id.password)</span><span class="s0">;</span>
+        <span class="s1">repassword = (EditText) findViewById(R.id.repassword)</span><span class="s0">;</span>
+        <span class="s1">signup = (Button) findViewById(R.id.btnsignup)</span><span class="s0">;</span>
+        <span class="s1">signin = (Button) findViewById(R.id.signin)</span><span class="s0">;</span>
+        <span class="s1">DB = </span><span class="s0">new </span><span class="s1">DatabaseHelper(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+
+
+        <span class="s1">sp = getSharedPreferences(</span><span class="s2">&quot;login&quot;</span><span class="s0">,</span><span class="s1">MODE_PRIVATE)</span><span class="s0">;</span>
+
+        <span class="s0">if</span><span class="s1">(sp.getBoolean(</span><span class="s2">&quot;logged&quot;</span><span class="s0">,true</span><span class="s1">)){</span>
+            <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(MainActivity.</span><span class="s0">this, </span><span class="s1">HomeScreenActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+
+
+        <span class="s1">signup.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View view) {</span>
+                <span class="s1">String Email = email.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">String Username = username.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">String Pass = password.getText().toString()</span><span class="s0">;</span>
+                <span class="s1">String Repass = repassword.getText().toString()</span><span class="s0">;</span>
+                <span class="s0">if </span><span class="s1">(Email.equals(</span><span class="s2">&quot;&quot;</span><span class="s1">) || Username.equals(</span><span class="s2">&quot;&quot;</span><span class="s1">) || Pass.equals(</span><span class="s2">&quot;&quot;</span><span class="s1">) || Repass.equals(</span><span class="s2">&quot;&quot;</span><span class="s1">))</span>
+                    <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s2">&quot;لطفا قم بتعبئة جميع الحقول&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                <span class="s0">else </span><span class="s1">{</span>
+
+                    <span class="s0">if </span><span class="s1">(Pass.length() &gt;= </span><span class="s3">8</span><span class="s1">) {</span>
+                        <span class="s0">if </span><span class="s1">(Pass.equals(Repass)) {</span>
+
+                        <span class="s1">Boolean checkuserEmail = DB.checkemail(Email)</span><span class="s0">;</span>
+                        <span class="s1">String emailRegex = </span><span class="s2">&quot;^[A-Za-z0-9._%+</span><span class="s0">\\</span><span class="s2">-]+@[A-Za-z0-9.</span><span class="s0">\\</span><span class="s2">-]+</span><span class="s0">\\</span><span class="s2">.[A-Za-z]{2,4}$&quot;</span><span class="s0">;</span>
+                        <span class="s1">Pattern pattern = Pattern.compile(emailRegex)</span><span class="s0">;</span>
+                        <span class="s1">Matcher matcher = pattern.matcher(Email)</span><span class="s0">;</span>
+                        <span class="s0">if </span><span class="s1">(matcher.find()) {</span>
+                            <span class="s0">if </span><span class="s1">(checkuserEmail == </span><span class="s0">false</span><span class="s1">) {</span>
+                                <span class="s1">Boolean insert = DB.insertData(Email</span><span class="s0">, </span><span class="s1">Username</span><span class="s0">, </span><span class="s1">Pass)</span><span class="s0">;</span>
+                                <span class="s0">if </span><span class="s1">(insert == </span><span class="s0">true</span><span class="s1">) {</span>
+                                    <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s2">&quot;تم تسجيل الحساب بنجاح&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                                    <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">LoginActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                                    <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+                                <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                                    <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s2">&quot;فشل تسجيل الحساب&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                                <span class="s1">}</span>
+                            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s2">&quot;البريد الإلكتروني مسجل بالفعل. لطفًا قم بتسجيل الدخول&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s2">&quot;لطفًا قم بإدخال البريد إلكتروني بشكل صحيح&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+
+                        <span class="s1">}</span>
+                    <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s2">&quot;كلمتي السر غير متطابقة&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+                     <span class="s0">else </span><span class="s1">{</span>
+                        <span class="s1">Toast.makeText(MainActivity.</span><span class="s0">this, </span><span class="s2">&quot;لطفًا تأكد أن كلمة السر طولها ٨ أحرف على الأقل&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_SHORT).show()</span><span class="s0">;</span>
+                    <span class="s1">}</span>
+                <span class="s1">}</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+        <span class="s1">signin.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() {</span>
+            <span class="s1">@Override</span>
+            <span class="s0">public void </span><span class="s1">onClick(View view) {</span>
+                <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">LoginActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">createNotificationChannel(){</span>
+        <span class="s0">if </span><span class="s1">(Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.O) {</span>
+            <span class="s4">//create High Important Channel with id = high_important_channel</span>
+            <span class="s1">NotificationChannel highImportantChannel = </span><span class="s0">new </span><span class="s1">NotificationChannel(</span><span class="s2">&quot;high_important_channel&quot;</span><span class="s0">,</span>
+                    <span class="s2">&quot;High Important Reminder Notification&quot;</span><span class="s0">, </span><span class="s1">android.app.NotificationManager.IMPORTANCE_HIGH)</span><span class="s0">;</span>
+            <span class="s4">//create notification manager</span>
+            <span class="s1">android.app.NotificationManager manager = getSystemService(NotificationManager.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">manager.createNotificationChannel(highImportantChannel)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">goToHome(View view) {</span>
+        <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">HomeScreenActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+<span class="s4">//    public void goToHome(View view) {</span>
+<span class="s4">//        finish();</span>
+<span class="s4">//    }</span>
+<span class="s1">}</span>
+</pre>
+</body>
+</html>

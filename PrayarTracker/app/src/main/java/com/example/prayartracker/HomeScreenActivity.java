@@ -187,45 +187,46 @@ public class HomeScreenActivity extends AppCompatActivity {
                             Log.d("Minemum", Long.toString(minValue));
                             Calendar cal = Calendar.getInstance();
                             int numMinutes = preferences.getInt("Interval", 0);
+                            if(preferences.getBoolean("SilentMode",false)){
                             if (silentModeTimer != null) {
                                 silentModeTimer.cancel();
                             }
                             android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+                            if(notificationManager.isNotificationPolicyAccessGranted()) {
+                                silentModeTimer = new Timer();
+                                for (String prayer : prayerTimes24) {
+                                    String[] time = prayer.split(":");
+                                    int hrs = Integer.parseInt(time[0].trim());
+                                    int min = Integer.parseInt(time[1].trim());
+                                    LocalDateTime date1 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), cal.getTime().getHours(), cal.getTime().getMinutes(), cal.getTime().getSeconds());
+                                    LocalDateTime date2 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs, min, 0);
+                                    Log.d("date1", date1 + "");
+                                    Log.d("date2", date2 + "");
+                                    if (date1.isBefore(date2)) {
+                                        int hours = numMinutes / 60;
+                                        int minutes = numMinutes % 60;
+                                        Log.d("hi", "inside prayer");
+                                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-                            if(notificationManager.isNotificationPolicyAccessGranted()){
-                            silentModeTimer = new Timer();
-                            for (String prayer : prayerTimes24) {
-                                String[] time = prayer.split(":");
-                                int hrs = Integer.parseInt(time[0].trim());
-                                int min = Integer.parseInt(time[1].trim());
-                                LocalDateTime date1 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), cal.getTime().getHours(), cal.getTime().getMinutes(), cal.getTime().getSeconds());
-                                LocalDateTime date2 = LocalDateTime.of(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs, min, 0);
-                                Log.d("date1", date1 + "");
-                                Log.d("date2", date2 + "");
-                                if (date1.isBefore(date2)) {
-                                    int hours = numMinutes / 60;
-                                    int minutes = numMinutes % 60;
-                                    Log.d("hi", "inside prayer");
-                                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                        silentModeTimer.schedule(new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                                audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                                            }
 
-                                    silentModeTimer.schedule(new TimerTask() {
-                                        @Override
-                                        public void run() {
-                                            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                            audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                                        }
-
-                                    }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs, min, 0));
-                                    silentModeTimer.schedule(new TimerTask() {
-                                        @Override
-                                        public void run() {
-                                            AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                                            audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                                        }
+                                        }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs, min, 0));
+                                        silentModeTimer.schedule(new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                                                audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                                            }
 
 
-                                    }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs + hours, min + minutes, 0));
+                                        }, new Date(cal.getTime().getYear(), cal.getTime().getMonth(), cal.getTime().getDate(), hrs + hours, min + minutes, 0));
 
+                                    }
                                 }
                             }
                             }

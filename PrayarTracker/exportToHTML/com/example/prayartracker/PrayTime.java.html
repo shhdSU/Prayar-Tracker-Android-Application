@@ -1,0 +1,977 @@
+<html>
+<head>
+<title>PrayTime.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #a9b7c6;}
+.s1 { color: #808080;}
+.s2 { color: #cc7832;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+PrayTime.java</font>
+</center></td></tr></table>
+<pre>
+<span class="s1">//--------------------- Copyright Block ----------------------</span>
+<span class="s1">/* 
+ 
+PrayTime.java: Prayer Times Calculator (ver 1.0) 
+Copyright (C) 2007-2010 PrayTimes.org 
+ 
+Java Code By: Hussain Ali Khan 
+Original JS Code By: Hamid Zarrabi-Zadeh 
+ 
+License: GNU LGPL v3.0 
+ 
+TERMS OF USE: 
+    Permission is granted to use this code, with or 
+    without modification, in any website or application 
+    provided that credit is given to the original work 
+    with a link back to PrayTimes.org. 
+ 
+This program is distributed in the hope that it will 
+be useful, but WITHOUT ANY WARRANTY. 
+ 
+PLEASE DO NOT REMOVE THIS COPYRIGHT BLOCK. 
+ 
+*/</span>
+
+<span class="s2">package </span><span class="s0">com.example.prayartracker</span><span class="s2">;</span>
+
+
+<span class="s2">import </span><span class="s0">java.util.ArrayList</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s0">java.util.Calendar</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s0">java.util.Date</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s0">java.util.HashMap</span><span class="s2">;</span>
+<span class="s2">import </span><span class="s0">java.util.TimeZone</span><span class="s2">;</span>
+
+<span class="s2">public class </span><span class="s0">PrayTime {</span>
+
+    <span class="s1">// ---------------------- Global Variables --------------------</span>
+    <span class="s2">private int </span><span class="s0">calcMethod</span><span class="s2">; </span><span class="s1">// caculation method</span>
+    <span class="s2">private int </span><span class="s0">asrJuristic</span><span class="s2">; </span><span class="s1">// Juristic method for Asr</span>
+    <span class="s2">private int </span><span class="s0">dhuhrMinutes</span><span class="s2">; </span><span class="s1">// minutes after mid-day for Dhuhr</span>
+    <span class="s2">private int </span><span class="s0">adjustHighLats</span><span class="s2">; </span><span class="s1">// adjusting method for higher latitudes</span>
+    <span class="s2">private int </span><span class="s0">timeFormat</span><span class="s2">; </span><span class="s1">// time format</span>
+    <span class="s2">private double </span><span class="s0">lat</span><span class="s2">; </span><span class="s1">// latitude</span>
+    <span class="s2">private double </span><span class="s0">lng</span><span class="s2">; </span><span class="s1">// longitude</span>
+    <span class="s2">private double </span><span class="s0">timeZone</span><span class="s2">; </span><span class="s1">// time-zone</span>
+    <span class="s2">private double </span><span class="s0">JDate</span><span class="s2">; </span><span class="s1">// Julian date</span>
+    <span class="s1">// ------------------------------------------------------------</span>
+    <span class="s1">// Calculation Methods</span>
+    <span class="s2">protected int </span><span class="s0">Jafari</span><span class="s2">; </span><span class="s1">// Ithna Ashari</span>
+    <span class="s2">protected int </span><span class="s0">Karachi</span><span class="s2">; </span><span class="s1">// University of Islamic Sciences, Karachi</span>
+    <span class="s2">protected int </span><span class="s0">ISNA</span><span class="s2">; </span><span class="s1">// Islamic Society of North America (ISNA)</span>
+    <span class="s2">protected int </span><span class="s0">MWL</span><span class="s2">; </span><span class="s1">// Muslim World League (MWL)</span>
+    <span class="s2">protected int </span><span class="s0">Makkah</span><span class="s2">; </span><span class="s1">// Umm al-Qura, Makkah</span>
+    <span class="s2">protected int </span><span class="s0">Egypt</span><span class="s2">; </span><span class="s1">// Egyptian General Authority of Survey</span>
+    <span class="s2">protected int </span><span class="s0">Custom</span><span class="s2">; </span><span class="s1">// Custom Setting</span>
+    <span class="s2">protected int </span><span class="s0">Tehran</span><span class="s2">; </span><span class="s1">// Institute of Geophysics, University of Tehran</span>
+    <span class="s1">// Juristic Methods</span>
+    <span class="s2">protected int </span><span class="s0">Shafii</span><span class="s2">; </span><span class="s1">// Shafii (standard)</span>
+    <span class="s2">protected int </span><span class="s0">Hanafi</span><span class="s2">; </span><span class="s1">// Hanafi</span>
+    <span class="s1">// Adjusting Methods for Higher Latitudes</span>
+    <span class="s2">protected int </span><span class="s0">None</span><span class="s2">; </span><span class="s1">// No adjustment</span>
+    <span class="s2">protected int </span><span class="s0">MidNight</span><span class="s2">; </span><span class="s1">// middle of night</span>
+    <span class="s2">protected int </span><span class="s0">OneSeventh</span><span class="s2">; </span><span class="s1">// 1/7th of night</span>
+    <span class="s2">protected int </span><span class="s0">AngleBased</span><span class="s2">; </span><span class="s1">// angle/60th of night</span>
+    <span class="s1">// Time Formats</span>
+    <span class="s2">protected int </span><span class="s0">Time24</span><span class="s2">; </span><span class="s1">// 24-hour format</span>
+    <span class="s2">protected int </span><span class="s0">Time12</span><span class="s2">; </span><span class="s1">// 12-hour format</span>
+    <span class="s2">private int </span><span class="s0">Time12NS</span><span class="s2">; </span><span class="s1">// 12-hour format with no suffix</span>
+    <span class="s2">private int </span><span class="s0">Floating</span><span class="s2">; </span><span class="s1">// floating point number</span>
+    <span class="s1">// Time Names</span>
+    <span class="s2">private </span><span class="s0">ArrayList&lt;String&gt; timeNames</span><span class="s2">;</span>
+    <span class="s2">private </span><span class="s0">String InvalidTime</span><span class="s2">; </span><span class="s1">// The string used for invalid times</span>
+    <span class="s1">// --------------------- Technical Settings --------------------</span>
+    <span class="s2">private int </span><span class="s0">numIterations</span><span class="s2">; </span><span class="s1">// number of iterations needed to compute times</span>
+    <span class="s1">// ------------------- Calc Method Parameters --------------------</span>
+    <span class="s2">private </span><span class="s0">HashMap&lt;Integer</span><span class="s2">, double</span><span class="s0">[]&gt; methodParams</span><span class="s2">;</span>
+    <span class="s1">/* 
+     * this.methodParams[methodNum] = new Array(fa, ms, mv, is, iv); 
+     * 
+     * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after 
+     * sunset) mv : maghrib parameter value (in angle or minutes) is : isha 
+     * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter value 
+     * (in angle or minutes) 
+     */</span>
+    <span class="s2">private double</span><span class="s0">[] prayerTimesCurrent</span><span class="s2">;</span>
+    <span class="s2">private int</span><span class="s0">[] offsets</span><span class="s2">;</span>
+
+    <span class="s2">public </span><span class="s0">PrayTime() {</span>
+        <span class="s1">// Initialize vars</span>
+
+        <span class="s2">this</span><span class="s0">.setCalcMethod(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setAsrJuristic(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setDhuhrMinutes(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setAdjustHighLats(</span><span class="s3">1</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setTimeFormat(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">;</span>
+
+        <span class="s1">// Calculation Methods</span>
+        <span class="s2">this</span><span class="s0">.setJafari(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Ithna Ashari</span>
+        <span class="s2">this</span><span class="s0">.setKarachi(</span><span class="s3">1</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// University of Islamic Sciences, Karachi</span>
+        <span class="s2">this</span><span class="s0">.setISNA(</span><span class="s3">2</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Islamic Society of North America (ISNA)</span>
+        <span class="s2">this</span><span class="s0">.setMWL(</span><span class="s3">3</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Muslim World League (MWL)</span>
+        <span class="s2">this</span><span class="s0">.setMakkah(</span><span class="s3">4</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Umm al-Qura, Makkah</span>
+        <span class="s2">this</span><span class="s0">.setEgypt(</span><span class="s3">5</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Egyptian General Authority of Survey</span>
+        <span class="s2">this</span><span class="s0">.setTehran(</span><span class="s3">6</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Institute of Geophysics, University of Tehran</span>
+        <span class="s2">this</span><span class="s0">.setCustom(</span><span class="s3">7</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Custom Setting</span>
+
+        <span class="s1">// Juristic Methods</span>
+        <span class="s2">this</span><span class="s0">.setShafii(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Shafii (standard)</span>
+        <span class="s2">this</span><span class="s0">.setHanafi(</span><span class="s3">1</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// Hanafi</span>
+
+        <span class="s1">// Adjusting Methods for Higher Latitudes</span>
+        <span class="s2">this</span><span class="s0">.setNone(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// No adjustment</span>
+        <span class="s2">this</span><span class="s0">.setMidNight(</span><span class="s3">1</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// middle of night</span>
+        <span class="s2">this</span><span class="s0">.setOneSeventh(</span><span class="s3">2</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// 1/7th of night</span>
+        <span class="s2">this</span><span class="s0">.setAngleBased(</span><span class="s3">3</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// angle/60th of night</span>
+
+        <span class="s1">// Time Formats</span>
+        <span class="s2">this</span><span class="s0">.setTime24(</span><span class="s3">0</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// 24-hour format</span>
+        <span class="s2">this</span><span class="s0">.setTime12(</span><span class="s3">1</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// 12-hour format</span>
+        <span class="s2">this</span><span class="s0">.setTime12NS(</span><span class="s3">2</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// 12-hour format with no suffix</span>
+        <span class="s2">this</span><span class="s0">.setFloating(</span><span class="s3">3</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// floating point number</span>
+
+        <span class="s1">// Time Names</span>
+        <span class="s0">timeNames = </span><span class="s2">new </span><span class="s0">ArrayList&lt;String&gt;()</span><span class="s2">;</span>
+        <span class="s0">timeNames.add(</span><span class="s4">&quot;Fajr&quot;</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">timeNames.add(</span><span class="s4">&quot;Sunrise&quot;</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">timeNames.add(</span><span class="s4">&quot;Dhuhr&quot;</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">timeNames.add(</span><span class="s4">&quot;Asr&quot;</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">timeNames.add(</span><span class="s4">&quot;Sunset&quot;</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">timeNames.add(</span><span class="s4">&quot;Maghrib&quot;</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">timeNames.add(</span><span class="s4">&quot;Isha&quot;</span><span class="s0">)</span><span class="s2">;</span>
+
+        <span class="s0">InvalidTime = </span><span class="s4">&quot;-----&quot;</span><span class="s2">; </span><span class="s1">// The string used for invalid times</span>
+
+        <span class="s1">// --------------------- Technical Settings --------------------</span>
+
+        <span class="s2">this</span><span class="s0">.setNumIterations(</span><span class="s3">1</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// number of iterations needed to compute</span>
+        <span class="s1">// times</span>
+
+        <span class="s1">// ------------------- Calc Method Parameters --------------------</span>
+
+        <span class="s1">// Tuning offsets {fajr, sunrise, dhuhr, asr, sunset, maghrib, isha}</span>
+        <span class="s0">offsets = </span><span class="s2">new int</span><span class="s0">[</span><span class="s3">7</span><span class="s0">]</span><span class="s2">;</span>
+        <span class="s0">offsets[</span><span class="s3">0</span><span class="s0">] = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">offsets[</span><span class="s3">1</span><span class="s0">] = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">offsets[</span><span class="s3">2</span><span class="s0">] = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">offsets[</span><span class="s3">3</span><span class="s0">] = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">offsets[</span><span class="s3">4</span><span class="s0">] = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">offsets[</span><span class="s3">5</span><span class="s0">] = </span><span class="s3">0</span><span class="s2">;</span>
+        <span class="s0">offsets[</span><span class="s3">6</span><span class="s0">] = </span><span class="s3">0</span><span class="s2">;</span>
+
+        <span class="s1">/* 
+         * 
+         * fa : fajr angle ms : maghrib selector (0 = angle; 1 = minutes after 
+         * sunset) mv : maghrib parameter value (in angle or minutes) is : isha 
+         * selector (0 = angle; 1 = minutes after maghrib) iv : isha parameter 
+         * value (in angle or minutes) 
+         */</span>
+        <span class="s0">methodParams = </span><span class="s2">new </span><span class="s0">HashMap&lt;Integer</span><span class="s2">, double</span><span class="s0">[]&gt;()</span><span class="s2">;</span>
+
+        <span class="s1">// Jafari</span>
+        <span class="s2">double</span><span class="s0">[] Jvalues = {</span><span class="s3">16</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">4</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">14</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getJafari())</span><span class="s2">, </span><span class="s0">Jvalues)</span><span class="s2">;</span>
+
+        <span class="s1">// Karachi</span>
+        <span class="s2">double</span><span class="s0">[] Kvalues = {</span><span class="s3">18</span><span class="s2">,</span><span class="s3">1</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">18</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getKarachi())</span><span class="s2">, </span><span class="s0">Kvalues)</span><span class="s2">;</span>
+
+        <span class="s1">// ISNA</span>
+        <span class="s2">double</span><span class="s0">[] Ivalues = {</span><span class="s3">15</span><span class="s2">,</span><span class="s3">1</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">15</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getISNA())</span><span class="s2">, </span><span class="s0">Ivalues)</span><span class="s2">;</span>
+
+        <span class="s1">// MWL</span>
+        <span class="s2">double</span><span class="s0">[] MWvalues = {</span><span class="s3">18</span><span class="s2">,</span><span class="s3">1</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">17</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getMWL())</span><span class="s2">, </span><span class="s0">MWvalues)</span><span class="s2">;</span>
+
+        <span class="s1">// Makkah</span>
+        <span class="s2">double</span><span class="s0">[] MKvalues = {</span><span class="s3">18.5</span><span class="s2">,</span><span class="s3">1</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">1</span><span class="s2">,</span><span class="s3">90</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getMakkah())</span><span class="s2">, </span><span class="s0">MKvalues)</span><span class="s2">;</span>
+
+        <span class="s1">// Egypt</span>
+        <span class="s2">double</span><span class="s0">[] Evalues = {</span><span class="s3">19.5</span><span class="s2">,</span><span class="s3">1</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">17.5</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getEgypt())</span><span class="s2">, </span><span class="s0">Evalues)</span><span class="s2">;</span>
+
+        <span class="s1">// Tehran</span>
+        <span class="s2">double</span><span class="s0">[] Tvalues = {</span><span class="s3">17.7</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">4.5</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">14</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getTehran())</span><span class="s2">, </span><span class="s0">Tvalues)</span><span class="s2">;</span>
+
+        <span class="s1">// Custom</span>
+        <span class="s2">double</span><span class="s0">[] Cvalues = {</span><span class="s3">18</span><span class="s2">,</span><span class="s3">1</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">0</span><span class="s2">,</span><span class="s3">17</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">methodParams.put(Integer.valueOf(</span><span class="s2">this</span><span class="s0">.getCustom())</span><span class="s2">, </span><span class="s0">Cvalues)</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// ---------------------- Trigonometric Functions -----------------------</span>
+    <span class="s1">// range reduce angle in degrees.</span>
+    <span class="s2">private double </span><span class="s0">fixangle(</span><span class="s2">double </span><span class="s0">a) {</span>
+
+        <span class="s0">a = a - (</span><span class="s3">360 </span><span class="s0">* (Math.floor(a / </span><span class="s3">360.0</span><span class="s0">)))</span><span class="s2">;</span>
+
+        <span class="s0">a = a &lt; </span><span class="s3">0 </span><span class="s0">? (a + </span><span class="s3">360</span><span class="s0">) : a</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">a</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// range reduce hours to 0..23</span>
+    <span class="s2">private double </span><span class="s0">fixhour(</span><span class="s2">double </span><span class="s0">a) {</span>
+        <span class="s0">a = a - </span><span class="s3">24.0 </span><span class="s0">* Math.floor(a / </span><span class="s3">24.0</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">a = a &lt; </span><span class="s3">0 </span><span class="s0">? (a + </span><span class="s3">24</span><span class="s0">) : a</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">a</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// radian to degree</span>
+    <span class="s2">private double </span><span class="s0">radiansToDegrees(</span><span class="s2">double </span><span class="s0">alpha) {</span>
+        <span class="s2">return </span><span class="s0">((alpha * </span><span class="s3">180.0</span><span class="s0">) / Math.PI)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// deree to radian</span>
+    <span class="s2">private double </span><span class="s0">DegreesToRadians(</span><span class="s2">double </span><span class="s0">alpha) {</span>
+        <span class="s2">return </span><span class="s0">((alpha * Math.PI) / </span><span class="s3">180.0</span><span class="s0">)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree sin</span>
+    <span class="s2">private double </span><span class="s0">dsin(</span><span class="s2">double </span><span class="s0">d) {</span>
+        <span class="s2">return </span><span class="s0">(Math.sin(DegreesToRadians(d)))</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree cos</span>
+    <span class="s2">private double </span><span class="s0">dcos(</span><span class="s2">double </span><span class="s0">d) {</span>
+        <span class="s2">return </span><span class="s0">(Math.cos(DegreesToRadians(d)))</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree tan</span>
+    <span class="s2">private double </span><span class="s0">dtan(</span><span class="s2">double </span><span class="s0">d) {</span>
+        <span class="s2">return </span><span class="s0">(Math.tan(DegreesToRadians(d)))</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree arcsin</span>
+    <span class="s2">private double </span><span class="s0">darcsin(</span><span class="s2">double </span><span class="s0">x) {</span>
+        <span class="s2">double </span><span class="s0">val = Math.asin(x)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">radiansToDegrees(val)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree arccos</span>
+    <span class="s2">private double </span><span class="s0">darccos(</span><span class="s2">double </span><span class="s0">x) {</span>
+        <span class="s2">double </span><span class="s0">val = Math.acos(x)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">radiansToDegrees(val)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree arctan</span>
+    <span class="s2">private double </span><span class="s0">darctan(</span><span class="s2">double </span><span class="s0">x) {</span>
+        <span class="s2">double </span><span class="s0">val = Math.atan(x)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">radiansToDegrees(val)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree arctan2</span>
+    <span class="s2">private double </span><span class="s0">darctan2(</span><span class="s2">double </span><span class="s0">y</span><span class="s2">, double </span><span class="s0">x) {</span>
+        <span class="s2">double </span><span class="s0">val = Math.atan2(y</span><span class="s2">, </span><span class="s0">x)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">radiansToDegrees(val)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// degree arccot</span>
+    <span class="s2">private double </span><span class="s0">darccot(</span><span class="s2">double </span><span class="s0">x) {</span>
+        <span class="s2">double </span><span class="s0">val = Math.atan2(</span><span class="s3">1.0</span><span class="s2">, </span><span class="s0">x)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">radiansToDegrees(val)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// ---------------------- Time-Zone Functions -----------------------</span>
+    <span class="s1">// compute local time-zone for a specific date</span>
+    <span class="s2">private double </span><span class="s0">getTimeZone1() {</span>
+        <span class="s0">TimeZone timez = TimeZone.getDefault()</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">hoursDiff = (timez.getRawOffset() / </span><span class="s3">1000.0</span><span class="s0">) / </span><span class="s3">3600</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">hoursDiff</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// compute base time-zone of the system</span>
+    <span class="s2">private double </span><span class="s0">getBaseTimeZone() {</span>
+        <span class="s0">TimeZone timez = TimeZone.getDefault()</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">hoursDiff = (timez.getRawOffset() / </span><span class="s3">1000.0</span><span class="s0">) / </span><span class="s3">3600</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">hoursDiff</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// detect daylight saving in a given date</span>
+    <span class="s2">private double </span><span class="s0">detectDaylightSaving() {</span>
+        <span class="s0">TimeZone timez = TimeZone.getDefault()</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">hoursDiff = timez.getDSTSavings()</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">hoursDiff</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// ---------------------- Julian Date Functions -----------------------</span>
+    <span class="s1">// calculate julian date from a calendar date</span>
+    <span class="s2">private double </span><span class="s0">julianDate(</span><span class="s2">int </span><span class="s0">year</span><span class="s2">, int </span><span class="s0">month</span><span class="s2">, int </span><span class="s0">day) {</span>
+
+        <span class="s2">if </span><span class="s0">(month &lt;= </span><span class="s3">2</span><span class="s0">) {</span>
+            <span class="s0">year -= </span><span class="s3">1</span><span class="s2">;</span>
+            <span class="s0">month += </span><span class="s3">12</span><span class="s2">;</span>
+        <span class="s0">}</span>
+        <span class="s2">double </span><span class="s0">A = Math.floor(year / </span><span class="s3">100.0</span><span class="s0">)</span><span class="s2">;</span>
+
+        <span class="s2">double </span><span class="s0">B = </span><span class="s3">2 </span><span class="s0">- A + Math.floor(A / </span><span class="s3">4.0</span><span class="s0">)</span><span class="s2">;</span>
+
+        <span class="s2">double </span><span class="s0">JD = Math.floor(</span><span class="s3">365.25 </span><span class="s0">* (year + </span><span class="s3">4716</span><span class="s0">))</span>
+                <span class="s0">+ Math.floor(</span><span class="s3">30.6001 </span><span class="s0">* (month + </span><span class="s3">1</span><span class="s0">)) + day + B - </span><span class="s3">1524.5</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">JD</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// convert a calendar date to julian date (second method)</span>
+    <span class="s2">private double </span><span class="s0">calcJD(</span><span class="s2">int </span><span class="s0">year</span><span class="s2">, int </span><span class="s0">month</span><span class="s2">, int </span><span class="s0">day) {</span>
+        <span class="s2">double </span><span class="s0">J1970 = </span><span class="s3">2440588.0</span><span class="s2">;</span>
+        <span class="s0">Date date = </span><span class="s2">new </span><span class="s0">Date(year</span><span class="s2">, </span><span class="s0">month - </span><span class="s3">1</span><span class="s2">, </span><span class="s0">day)</span><span class="s2">;</span>
+
+        <span class="s2">double </span><span class="s0">ms = date.getTime()</span><span class="s2">; </span><span class="s1">// # of milliseconds since midnight Jan 1,</span>
+        <span class="s1">// 1970</span>
+        <span class="s2">double </span><span class="s0">days = Math.floor(ms / (</span><span class="s3">1000.0 </span><span class="s0">* </span><span class="s3">60.0 </span><span class="s0">* </span><span class="s3">60.0 </span><span class="s0">* </span><span class="s3">24.0</span><span class="s0">))</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">J1970 + days - </span><span class="s3">0.5</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// ---------------------- Calculation Functions -----------------------</span>
+    <span class="s1">// References:</span>
+    <span class="s1">// http://www.ummah.net/astronomy/saltime</span>
+    <span class="s1">// http://aa.usno.navy.mil/faq/docs/SunApprox.html</span>
+    <span class="s1">// compute declination angle of sun and equation of time</span>
+    <span class="s2">private double</span><span class="s0">[] sunPosition(</span><span class="s2">double </span><span class="s0">jd) {</span>
+
+        <span class="s2">double </span><span class="s0">D = jd - </span><span class="s3">2451545</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">g = fixangle(</span><span class="s3">357.529 </span><span class="s0">+ </span><span class="s3">0.98560028 </span><span class="s0">* D)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">q = fixangle(</span><span class="s3">280.459 </span><span class="s0">+ </span><span class="s3">0.98564736 </span><span class="s0">* D)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">L = fixangle(q + (</span><span class="s3">1.915 </span><span class="s0">* dsin(g)) + (</span><span class="s3">0.020 </span><span class="s0">* dsin(</span><span class="s3">2 </span><span class="s0">* g)))</span><span class="s2">;</span>
+
+        <span class="s1">// double R = 1.00014 - 0.01671 * [self dcos:g] - 0.00014 * [self dcos:</span>
+        <span class="s1">// (2*g)];</span>
+        <span class="s2">double </span><span class="s0">e = </span><span class="s3">23.439 </span><span class="s0">- (</span><span class="s3">0.00000036 </span><span class="s0">* D)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">d = darcsin(dsin(e) * dsin(L))</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">RA = (darctan2((dcos(e) * dsin(L))</span><span class="s2">, </span><span class="s0">(dcos(L))))/ </span><span class="s3">15.0</span><span class="s2">;</span>
+        <span class="s0">RA = fixhour(RA)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">EqT = q/</span><span class="s3">15.0 </span><span class="s0">- RA</span><span class="s2">;</span>
+        <span class="s2">double</span><span class="s0">[] sPosition = </span><span class="s2">new double</span><span class="s0">[</span><span class="s3">2</span><span class="s0">]</span><span class="s2">;</span>
+        <span class="s0">sPosition[</span><span class="s3">0</span><span class="s0">] = d</span><span class="s2">;</span>
+        <span class="s0">sPosition[</span><span class="s3">1</span><span class="s0">] = EqT</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">sPosition</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// compute equation of time</span>
+    <span class="s2">private double </span><span class="s0">equationOfTime(</span><span class="s2">double </span><span class="s0">jd) {</span>
+        <span class="s2">double </span><span class="s0">eq = sunPosition(jd)[</span><span class="s3">1</span><span class="s0">]</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">eq</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// compute declination angle of sun</span>
+    <span class="s2">private double </span><span class="s0">sunDeclination(</span><span class="s2">double </span><span class="s0">jd) {</span>
+        <span class="s2">double </span><span class="s0">d = sunPosition(jd)[</span><span class="s3">0</span><span class="s0">]</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">d</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// compute mid-day (Dhuhr, Zawal) time</span>
+    <span class="s2">private double </span><span class="s0">computeMidDay(</span><span class="s2">double </span><span class="s0">t) {</span>
+        <span class="s2">double </span><span class="s0">T = equationOfTime(</span><span class="s2">this</span><span class="s0">.getJDate() + t)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">Z = fixhour(</span><span class="s3">12 </span><span class="s0">- T)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">Z</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// compute time for a given angle G</span>
+    <span class="s2">private double </span><span class="s0">computeTime(</span><span class="s2">double </span><span class="s0">G</span><span class="s2">, double </span><span class="s0">t) {</span>
+
+        <span class="s2">double </span><span class="s0">D = sunDeclination(</span><span class="s2">this</span><span class="s0">.getJDate() + t)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">Z = computeMidDay(t)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">Beg = -dsin(G) - dsin(D) * dsin(</span><span class="s2">this</span><span class="s0">.getLat())</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">Mid = dcos(D) * dcos(</span><span class="s2">this</span><span class="s0">.getLat())</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">V = darccos(Beg/Mid)/</span><span class="s3">15.0</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">Z + (G &gt; </span><span class="s3">90 </span><span class="s0">? -V : V)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// compute the time of Asr</span>
+    <span class="s1">// Shafii: step=1, Hanafi: step=2</span>
+    <span class="s2">private double </span><span class="s0">computeAsr(</span><span class="s2">double </span><span class="s0">step</span><span class="s2">, double </span><span class="s0">t) {</span>
+        <span class="s2">double </span><span class="s0">D = sunDeclination(</span><span class="s2">this</span><span class="s0">.getJDate() + t)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">G = -darccot(step + dtan(Math.abs(</span><span class="s2">this</span><span class="s0">.getLat() - D)))</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">computeTime(G</span><span class="s2">, </span><span class="s0">t)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// ---------------------- Misc Functions -----------------------</span>
+    <span class="s1">// compute the difference between two times</span>
+    <span class="s2">private double </span><span class="s0">timeDiff(</span><span class="s2">double </span><span class="s0">time1</span><span class="s2">, double </span><span class="s0">time2) {</span>
+        <span class="s2">return </span><span class="s0">fixhour(time2 - time1)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// -------------------- Interface Functions --------------------</span>
+    <span class="s1">// return prayer times for a given date</span>
+    <span class="s2">protected </span><span class="s0">ArrayList&lt;String&gt; getDatePrayerTimes(</span><span class="s2">int </span><span class="s0">year</span><span class="s2">, int </span><span class="s0">month</span><span class="s2">, int </span><span class="s0">day</span><span class="s2">,</span>
+                                                   <span class="s2">double </span><span class="s0">latitude</span><span class="s2">, double </span><span class="s0">longitude</span><span class="s2">, double </span><span class="s0">tZone) {</span>
+        <span class="s2">this</span><span class="s0">.setLat(latitude)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setLng(longitude)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setTimeZone(tZone)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setJDate(julianDate(year</span><span class="s2">, </span><span class="s0">month</span><span class="s2">, </span><span class="s0">day))</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">lonDiff = longitude / (</span><span class="s3">15.0 </span><span class="s0">* </span><span class="s3">24.0</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s2">this</span><span class="s0">.setJDate(</span><span class="s2">this</span><span class="s0">.getJDate() - lonDiff)</span><span class="s2">;</span>
+        <span class="s2">return </span><span class="s0">computeDayTimes()</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// return prayer times for a given date</span>
+    <span class="s2">protected </span><span class="s0">ArrayList&lt;String&gt; getPrayerTimes(Calendar date</span><span class="s2">, double </span><span class="s0">latitude</span><span class="s2">,</span>
+                                               <span class="s2">double </span><span class="s0">longitude</span><span class="s2">, double </span><span class="s0">tZone) {</span>
+
+        <span class="s2">int </span><span class="s0">year = date.get(Calendar.YEAR)</span><span class="s2">;</span>
+        <span class="s2">int </span><span class="s0">month = date.get(Calendar.MONTH)</span><span class="s2">;</span>
+        <span class="s2">int </span><span class="s0">day = date.get(Calendar.DATE)</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">getDatePrayerTimes(year</span><span class="s2">, </span><span class="s0">month+</span><span class="s3">1</span><span class="s2">, </span><span class="s0">day</span><span class="s2">, </span><span class="s0">latitude</span><span class="s2">, </span><span class="s0">longitude</span><span class="s2">, </span><span class="s0">tZone)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// set custom values for calculation parameters</span>
+    <span class="s2">private void </span><span class="s0">setCustomParams(</span><span class="s2">double</span><span class="s0">[] params) {</span>
+
+        <span class="s2">for </span><span class="s0">(</span><span class="s2">int </span><span class="s0">i = </span><span class="s3">0</span><span class="s2">; </span><span class="s0">i &lt; </span><span class="s3">5</span><span class="s2">; </span><span class="s0">i++) {</span>
+            <span class="s2">if </span><span class="s0">(params[i] == -</span><span class="s3">1</span><span class="s0">) {</span>
+                <span class="s0">params[i] = methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[i]</span><span class="s2">;</span>
+                <span class="s0">methodParams.put(</span><span class="s2">this</span><span class="s0">.getCustom()</span><span class="s2">, </span><span class="s0">params)</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                <span class="s0">methodParams.get(</span><span class="s2">this</span><span class="s0">.getCustom())[i] = params[i]</span><span class="s2">;</span>
+            <span class="s0">}</span>
+        <span class="s0">}</span>
+        <span class="s2">this</span><span class="s0">.setCalcMethod(</span><span class="s2">this</span><span class="s0">.getCustom())</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// set the angle for calculating Fajr</span>
+    <span class="s2">public void </span><span class="s0">setFajrAngle(</span><span class="s2">double </span><span class="s0">angle) {</span>
+        <span class="s2">double</span><span class="s0">[] params = {angle</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">setCustomParams(params)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// set the angle for calculating Maghrib</span>
+    <span class="s2">public void </span><span class="s0">setMaghribAngle(</span><span class="s2">double </span><span class="s0">angle) {</span>
+        <span class="s2">double</span><span class="s0">[] params = {-</span><span class="s3">1</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s0">angle</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">setCustomParams(params)</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// set the angle for calculating Isha</span>
+    <span class="s2">public void </span><span class="s0">setIshaAngle(</span><span class="s2">double </span><span class="s0">angle) {</span>
+        <span class="s2">double</span><span class="s0">[] params = {-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s0">angle}</span><span class="s2">;</span>
+        <span class="s0">setCustomParams(params)</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// set the minutes after Sunset for calculating Maghrib</span>
+    <span class="s2">public void </span><span class="s0">setMaghribMinutes(</span><span class="s2">double </span><span class="s0">minutes) {</span>
+        <span class="s2">double</span><span class="s0">[] params = {-</span><span class="s3">1</span><span class="s2">, </span><span class="s3">1</span><span class="s2">, </span><span class="s0">minutes</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s0">}</span><span class="s2">;</span>
+        <span class="s0">setCustomParams(params)</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// set the minutes after Maghrib for calculating Isha</span>
+    <span class="s2">public void </span><span class="s0">setIshaMinutes(</span><span class="s2">double </span><span class="s0">minutes) {</span>
+        <span class="s2">double</span><span class="s0">[] params = {-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s0">-</span><span class="s3">1</span><span class="s2">, </span><span class="s3">1</span><span class="s2">, </span><span class="s0">minutes}</span><span class="s2">;</span>
+        <span class="s0">setCustomParams(params)</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// convert double hours to 24h format</span>
+    <span class="s2">public </span><span class="s0">String floatToTime24(</span><span class="s2">double </span><span class="s0">time) {</span>
+
+        <span class="s0">String result</span><span class="s2">;</span>
+
+        <span class="s2">if </span><span class="s0">(Double.isNaN(time)) {</span>
+            <span class="s2">return </span><span class="s0">InvalidTime</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s0">time = fixhour(time + </span><span class="s3">0.5 </span><span class="s0">/ </span><span class="s3">60.0</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// add 0.5 minutes to round</span>
+        <span class="s2">int </span><span class="s0">hours = (</span><span class="s2">int</span><span class="s0">)Math.floor(time)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">minutes = Math.floor((time - hours) * </span><span class="s3">60.0</span><span class="s0">)</span><span class="s2">;</span>
+
+        <span class="s2">if </span><span class="s0">((hours &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; hours &lt;= </span><span class="s3">9</span><span class="s0">) &amp;&amp; (minutes &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; minutes &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+            <span class="s0">result = </span><span class="s4">&quot;0&quot; </span><span class="s0">+ hours + </span><span class="s4">&quot;:0&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+        <span class="s0">} </span><span class="s2">else if </span><span class="s0">((hours &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; hours &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+            <span class="s0">result = </span><span class="s4">&quot;0&quot; </span><span class="s0">+ hours + </span><span class="s4">&quot;:&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+        <span class="s0">} </span><span class="s2">else if </span><span class="s0">((minutes &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; minutes &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+            <span class="s0">result = hours + </span><span class="s4">&quot;:0&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+        <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+            <span class="s0">result = hours + </span><span class="s4">&quot;:&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+        <span class="s0">}</span>
+        <span class="s2">return </span><span class="s0">result</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// convert double hours to 12h format</span>
+    <span class="s2">public </span><span class="s0">String floatToTime12(</span><span class="s2">double </span><span class="s0">time</span><span class="s2">, boolean </span><span class="s0">noSuffix) {</span>
+
+        <span class="s2">if </span><span class="s0">(Double.isNaN(time)) {</span>
+            <span class="s2">return </span><span class="s0">InvalidTime</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s0">time = fixhour(time + </span><span class="s3">0.5 </span><span class="s0">/ </span><span class="s3">60</span><span class="s0">)</span><span class="s2">; </span><span class="s1">// add 0.5 minutes to round</span>
+        <span class="s2">int </span><span class="s0">hours = (</span><span class="s2">int</span><span class="s0">)Math.floor(time)</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">minutes = Math.floor((time - hours) * </span><span class="s3">60</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s0">String suffix</span><span class="s2">, </span><span class="s0">result</span><span class="s2">;</span>
+        <span class="s2">if </span><span class="s0">(hours &gt;= </span><span class="s3">12</span><span class="s0">) {</span>
+            <span class="s0">suffix = </span><span class="s4">&quot;pm&quot;</span><span class="s2">;</span>
+        <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+            <span class="s0">suffix = </span><span class="s4">&quot;am&quot;</span><span class="s2">;</span>
+        <span class="s0">}</span>
+        <span class="s0">hours = ((((hours+ </span><span class="s3">12</span><span class="s0">) -</span><span class="s3">1</span><span class="s0">) % (</span><span class="s3">12</span><span class="s0">))+ </span><span class="s3">1</span><span class="s0">)</span><span class="s2">;</span>
+        <span class="s1">/*hours = (hours + 12) - 1; 
+        int hrs = (int) hours % 12; 
+        hrs += 1;*/</span>
+        <span class="s2">if </span><span class="s0">(noSuffix == </span><span class="s2">false</span><span class="s0">) {</span>
+            <span class="s2">if </span><span class="s0">((hours &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; hours &lt;= </span><span class="s3">9</span><span class="s0">) &amp;&amp; (minutes &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; minutes &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+                <span class="s0">result = </span><span class="s4">&quot;0&quot; </span><span class="s0">+ hours + </span><span class="s4">&quot;:0&quot; </span><span class="s0">+ Math.round(minutes) + </span><span class="s4">&quot; &quot;</span>
+                        <span class="s0">+ suffix</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else if </span><span class="s0">((hours &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; hours &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+                <span class="s0">result = </span><span class="s4">&quot;0&quot; </span><span class="s0">+ hours + </span><span class="s4">&quot;:&quot; </span><span class="s0">+ Math.round(minutes) + </span><span class="s4">&quot; &quot; </span><span class="s0">+ suffix</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else if </span><span class="s0">((minutes &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; minutes &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+                <span class="s0">result = hours + </span><span class="s4">&quot;:0&quot; </span><span class="s0">+ Math.round(minutes) + </span><span class="s4">&quot; &quot; </span><span class="s0">+ suffix</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                <span class="s0">result = hours + </span><span class="s4">&quot;:&quot; </span><span class="s0">+ Math.round(minutes) + </span><span class="s4">&quot; &quot; </span><span class="s0">+ suffix</span><span class="s2">;</span>
+            <span class="s0">}</span>
+
+        <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+            <span class="s2">if </span><span class="s0">((hours &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; hours &lt;= </span><span class="s3">9</span><span class="s0">) &amp;&amp; (minutes &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; minutes &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+                <span class="s0">result = </span><span class="s4">&quot;0&quot; </span><span class="s0">+ hours + </span><span class="s4">&quot;:0&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else if </span><span class="s0">((hours &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; hours &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+                <span class="s0">result = </span><span class="s4">&quot;0&quot; </span><span class="s0">+ hours + </span><span class="s4">&quot;:&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else if </span><span class="s0">((minutes &gt;= </span><span class="s3">0 </span><span class="s0">&amp;&amp; minutes &lt;= </span><span class="s3">9</span><span class="s0">)) {</span>
+                <span class="s0">result = hours + </span><span class="s4">&quot;:0&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                <span class="s0">result = hours + </span><span class="s4">&quot;:&quot; </span><span class="s0">+ Math.round(minutes)</span><span class="s2">;</span>
+            <span class="s0">}</span>
+        <span class="s0">}</span>
+        <span class="s2">return </span><span class="s0">result</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// convert double hours to 12h format with no suffix</span>
+    <span class="s2">public </span><span class="s0">String floatToTime12NS(</span><span class="s2">double </span><span class="s0">time) {</span>
+        <span class="s2">return </span><span class="s0">floatToTime12(time</span><span class="s2">, true</span><span class="s0">)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// ---------------------- Compute Prayer Times -----------------------</span>
+    <span class="s1">// compute prayer times at given julian date</span>
+    <span class="s2">private double</span><span class="s0">[] computeTimes(</span><span class="s2">double</span><span class="s0">[] times) {</span>
+
+        <span class="s2">double</span><span class="s0">[] t = dayPortion(times)</span><span class="s2">;</span>
+
+        <span class="s2">double </span><span class="s0">Fajr = </span><span class="s2">this</span><span class="s0">.computeTime(</span>
+                <span class="s3">180 </span><span class="s0">- methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">0</span><span class="s0">]</span><span class="s2">, </span><span class="s0">t[</span><span class="s3">0</span><span class="s0">])</span><span class="s2">;</span>
+
+        <span class="s2">double </span><span class="s0">Sunrise = </span><span class="s2">this</span><span class="s0">.computeTime(</span><span class="s3">180 </span><span class="s0">- </span><span class="s3">0.833</span><span class="s2">, </span><span class="s0">t[</span><span class="s3">1</span><span class="s0">])</span><span class="s2">;</span>
+
+        <span class="s2">double </span><span class="s0">Dhuhr = </span><span class="s2">this</span><span class="s0">.computeMidDay(t[</span><span class="s3">2</span><span class="s0">])</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">Asr = </span><span class="s2">this</span><span class="s0">.computeAsr(</span><span class="s3">1 </span><span class="s0">+ </span><span class="s2">this</span><span class="s0">.getAsrJuristic()</span><span class="s2">, </span><span class="s0">t[</span><span class="s3">3</span><span class="s0">])</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">Sunset = </span><span class="s2">this</span><span class="s0">.computeTime(</span><span class="s3">0.833</span><span class="s2">, </span><span class="s0">t[</span><span class="s3">4</span><span class="s0">])</span><span class="s2">;</span>
+
+        <span class="s2">double </span><span class="s0">Maghrib = </span><span class="s2">this</span><span class="s0">.computeTime(</span>
+                <span class="s0">methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">2</span><span class="s0">]</span><span class="s2">, </span><span class="s0">t[</span><span class="s3">5</span><span class="s0">])</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">Isha = </span><span class="s2">this</span><span class="s0">.computeTime(</span>
+                <span class="s0">methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">4</span><span class="s0">]</span><span class="s2">, </span><span class="s0">t[</span><span class="s3">6</span><span class="s0">])</span><span class="s2">;</span>
+
+        <span class="s2">double</span><span class="s0">[] CTimes = {Fajr</span><span class="s2">, </span><span class="s0">Sunrise</span><span class="s2">, </span><span class="s0">Dhuhr</span><span class="s2">, </span><span class="s0">Asr</span><span class="s2">, </span><span class="s0">Sunset</span><span class="s2">, </span><span class="s0">Maghrib</span><span class="s2">, </span><span class="s0">Isha}</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">CTimes</span><span class="s2">;</span>
+
+    <span class="s0">}</span>
+
+    <span class="s1">// compute prayer times at given julian date</span>
+    <span class="s2">private </span><span class="s0">ArrayList&lt;String&gt; computeDayTimes() {</span>
+        <span class="s2">double</span><span class="s0">[] times = {</span><span class="s3">5</span><span class="s2">, </span><span class="s3">6</span><span class="s2">, </span><span class="s3">12</span><span class="s2">, </span><span class="s3">13</span><span class="s2">, </span><span class="s3">18</span><span class="s2">, </span><span class="s3">18</span><span class="s2">, </span><span class="s3">18</span><span class="s0">}</span><span class="s2">; </span><span class="s1">// default times</span>
+
+        <span class="s2">for </span><span class="s0">(</span><span class="s2">int </span><span class="s0">i = </span><span class="s3">1</span><span class="s2">; </span><span class="s0">i &lt;= </span><span class="s2">this</span><span class="s0">.getNumIterations()</span><span class="s2">; </span><span class="s0">i++) {</span>
+            <span class="s0">times = computeTimes(times)</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s0">times = adjustTimes(times)</span><span class="s2">;</span>
+        <span class="s0">times = tuneTimes(times)</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">adjustTimesFormat(times)</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// adjust times in a prayer time array</span>
+    <span class="s2">private double</span><span class="s0">[] adjustTimes(</span><span class="s2">double</span><span class="s0">[] times) {</span>
+        <span class="s2">for </span><span class="s0">(</span><span class="s2">int </span><span class="s0">i = </span><span class="s3">0</span><span class="s2">; </span><span class="s0">i &lt; times.length</span><span class="s2">; </span><span class="s0">i++) {</span>
+            <span class="s0">times[i] += </span><span class="s2">this</span><span class="s0">.getTimeZone() - </span><span class="s2">this</span><span class="s0">.getLng() / </span><span class="s3">15</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s0">times[</span><span class="s3">2</span><span class="s0">] += </span><span class="s2">this</span><span class="s0">.getDhuhrMinutes() / </span><span class="s3">60</span><span class="s2">; </span><span class="s1">// Dhuhr</span>
+        <span class="s2">if </span><span class="s0">(methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">1</span><span class="s0">] == </span><span class="s3">1</span><span class="s0">) </span><span class="s1">// Maghrib</span>
+        <span class="s0">{</span>
+            <span class="s0">times[</span><span class="s3">5</span><span class="s0">] = times[</span><span class="s3">4</span><span class="s0">] + methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">2</span><span class="s0">]/ </span><span class="s3">60</span><span class="s2">;</span>
+        <span class="s0">}</span>
+        <span class="s2">if </span><span class="s0">(methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">3</span><span class="s0">] == </span><span class="s3">1</span><span class="s0">) </span><span class="s1">// Isha</span>
+        <span class="s0">{</span>
+            <span class="s0">times[</span><span class="s3">6</span><span class="s0">] = times[</span><span class="s3">5</span><span class="s0">] + methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">4</span><span class="s0">]/ </span><span class="s3">60</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s2">if </span><span class="s0">(</span><span class="s2">this</span><span class="s0">.getAdjustHighLats() != </span><span class="s2">this</span><span class="s0">.getNone()) {</span>
+            <span class="s0">times = adjustHighLatTimes(times)</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s2">return </span><span class="s0">times</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// convert times array to given time format</span>
+    <span class="s2">private </span><span class="s0">ArrayList&lt;String&gt; adjustTimesFormat(</span><span class="s2">double</span><span class="s0">[] times) {</span>
+
+        <span class="s0">ArrayList&lt;String&gt; result = </span><span class="s2">new </span><span class="s0">ArrayList&lt;String&gt;()</span><span class="s2">;</span>
+
+        <span class="s2">if </span><span class="s0">(</span><span class="s2">this</span><span class="s0">.getTimeFormat() == </span><span class="s2">this</span><span class="s0">.getFloating()) {</span>
+            <span class="s2">for </span><span class="s0">(</span><span class="s2">double </span><span class="s0">time : times) {</span>
+                <span class="s0">result.add(String.valueOf(time))</span><span class="s2">;</span>
+            <span class="s0">}</span>
+            <span class="s2">return </span><span class="s0">result</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s2">for </span><span class="s0">(</span><span class="s2">int </span><span class="s0">i = </span><span class="s3">0</span><span class="s2">; </span><span class="s0">i &lt; </span><span class="s3">7</span><span class="s2">; </span><span class="s0">i++) {</span>
+            <span class="s2">if </span><span class="s0">(</span><span class="s2">this</span><span class="s0">.getTimeFormat() == </span><span class="s2">this</span><span class="s0">.getTime12()) {</span>
+                <span class="s0">result.add(floatToTime12(times[i]</span><span class="s2">, false</span><span class="s0">))</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else if </span><span class="s0">(</span><span class="s2">this</span><span class="s0">.getTimeFormat() == </span><span class="s2">this</span><span class="s0">.getTime12NS()) {</span>
+                <span class="s0">result.add(floatToTime12(times[i]</span><span class="s2">, true</span><span class="s0">))</span><span class="s2">;</span>
+            <span class="s0">} </span><span class="s2">else </span><span class="s0">{</span>
+                <span class="s0">result.add(floatToTime24(times[i]))</span><span class="s2">;</span>
+            <span class="s0">}</span>
+        <span class="s0">}</span>
+        <span class="s2">return </span><span class="s0">result</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// adjust Fajr, Isha and Maghrib for locations in higher latitudes</span>
+    <span class="s2">private double</span><span class="s0">[] adjustHighLatTimes(</span><span class="s2">double</span><span class="s0">[] times) {</span>
+        <span class="s2">double </span><span class="s0">nightTime = timeDiff(times[</span><span class="s3">4</span><span class="s0">]</span><span class="s2">, </span><span class="s0">times[</span><span class="s3">1</span><span class="s0">])</span><span class="s2">; </span><span class="s1">// sunset to sunrise</span>
+
+        <span class="s1">// Adjust Fajr</span>
+        <span class="s2">double </span><span class="s0">FajrDiff = nightPortion(methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">0</span><span class="s0">]) * nightTime</span><span class="s2">;</span>
+
+        <span class="s2">if </span><span class="s0">(Double.isNaN(times[</span><span class="s3">0</span><span class="s0">]) || timeDiff(times[</span><span class="s3">0</span><span class="s0">]</span><span class="s2">, </span><span class="s0">times[</span><span class="s3">1</span><span class="s0">]) &gt; FajrDiff) {</span>
+            <span class="s0">times[</span><span class="s3">0</span><span class="s0">] = times[</span><span class="s3">1</span><span class="s0">] - FajrDiff</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s1">// Adjust Isha</span>
+        <span class="s2">double </span><span class="s0">IshaAngle = (methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">3</span><span class="s0">] == </span><span class="s3">0</span><span class="s0">) ? methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">4</span><span class="s0">] : </span><span class="s3">18</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">IshaDiff = </span><span class="s2">this</span><span class="s0">.nightPortion(IshaAngle) * nightTime</span><span class="s2">;</span>
+        <span class="s2">if </span><span class="s0">(Double.isNaN(times[</span><span class="s3">6</span><span class="s0">]) || </span><span class="s2">this</span><span class="s0">.timeDiff(times[</span><span class="s3">4</span><span class="s0">]</span><span class="s2">, </span><span class="s0">times[</span><span class="s3">6</span><span class="s0">]) &gt; IshaDiff) {</span>
+            <span class="s0">times[</span><span class="s3">6</span><span class="s0">] = times[</span><span class="s3">4</span><span class="s0">] + IshaDiff</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s1">// Adjust Maghrib</span>
+        <span class="s2">double </span><span class="s0">MaghribAngle = (methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">1</span><span class="s0">] == </span><span class="s3">0</span><span class="s0">) ? methodParams.get(</span><span class="s2">this</span><span class="s0">.getCalcMethod())[</span><span class="s3">2</span><span class="s0">] : </span><span class="s3">4</span><span class="s2">;</span>
+        <span class="s2">double </span><span class="s0">MaghribDiff = nightPortion(MaghribAngle) * nightTime</span><span class="s2">;</span>
+        <span class="s2">if </span><span class="s0">(Double.isNaN(times[</span><span class="s3">5</span><span class="s0">]) || </span><span class="s2">this</span><span class="s0">.timeDiff(times[</span><span class="s3">4</span><span class="s0">]</span><span class="s2">, </span><span class="s0">times[</span><span class="s3">5</span><span class="s0">]) &gt; MaghribDiff) {</span>
+            <span class="s0">times[</span><span class="s3">5</span><span class="s0">] = times[</span><span class="s3">4</span><span class="s0">] + MaghribDiff</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s2">return </span><span class="s0">times</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// the night portion used for adjusting times in higher latitudes</span>
+    <span class="s2">private double </span><span class="s0">nightPortion(</span><span class="s2">double </span><span class="s0">angle) {</span>
+        <span class="s2">double </span><span class="s0">calc = </span><span class="s3">0</span><span class="s2">;</span>
+
+        <span class="s2">if </span><span class="s0">(adjustHighLats == AngleBased)</span>
+            <span class="s0">calc = (angle)/</span><span class="s3">60.0</span><span class="s2">;</span>
+        <span class="s2">else if </span><span class="s0">(adjustHighLats == MidNight)</span>
+            <span class="s0">calc = </span><span class="s3">0.5</span><span class="s2">;</span>
+        <span class="s2">else if </span><span class="s0">(adjustHighLats == OneSeventh)</span>
+            <span class="s0">calc = </span><span class="s3">0.14286</span><span class="s2">;</span>
+
+        <span class="s2">return </span><span class="s0">calc</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// convert hours to day portions</span>
+    <span class="s2">private double</span><span class="s0">[] dayPortion(</span><span class="s2">double</span><span class="s0">[] times) {</span>
+        <span class="s2">for </span><span class="s0">(</span><span class="s2">int </span><span class="s0">i = </span><span class="s3">0</span><span class="s2">; </span><span class="s0">i &lt; </span><span class="s3">7</span><span class="s2">; </span><span class="s0">i++) {</span>
+            <span class="s0">times[i] /= </span><span class="s3">24</span><span class="s2">;</span>
+        <span class="s0">}</span>
+        <span class="s2">return </span><span class="s0">times</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s1">// Tune timings for adjustments</span>
+    <span class="s1">// Set time offsets</span>
+    <span class="s2">public void </span><span class="s0">tune(</span><span class="s2">int</span><span class="s0">[] offsetTimes) {</span>
+
+        <span class="s2">for </span><span class="s0">(</span><span class="s2">int </span><span class="s0">i = </span><span class="s3">0</span><span class="s2">; </span><span class="s0">i &lt; offsetTimes.length</span><span class="s2">; </span><span class="s0">i++) { </span><span class="s1">// offsetTimes length</span>
+            <span class="s1">// should be 7 in order</span>
+            <span class="s1">// of Fajr, Sunrise,</span>
+            <span class="s1">// Dhuhr, Asr, Sunset,</span>
+            <span class="s1">// Maghrib, Isha</span>
+            <span class="s2">this</span><span class="s0">.offsets[i] = offsetTimes[i]</span><span class="s2">;</span>
+        <span class="s0">}</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private double</span><span class="s0">[] tuneTimes(</span><span class="s2">double</span><span class="s0">[] times) {</span>
+        <span class="s2">for </span><span class="s0">(</span><span class="s2">int </span><span class="s0">i = </span><span class="s3">0</span><span class="s2">; </span><span class="s0">i &lt; times.length</span><span class="s2">; </span><span class="s0">i++) {</span>
+            <span class="s0">times[i] = times[i] + </span><span class="s2">this</span><span class="s0">.offsets[i] / </span><span class="s3">60.0</span><span class="s2">;</span>
+        <span class="s0">}</span>
+
+        <span class="s2">return </span><span class="s0">times</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+<span class="s1">//    /**</span>
+<span class="s1">//     * @param args</span>
+<span class="s1">////     */</span>
+<span class="s1">//    public static void main(String[] args) {</span>
+<span class="s1">//        double latitude = -37.823689;</span>
+<span class="s1">//        double longitude = 145.121597;</span>
+<span class="s1">//        double timezone = 10;</span>
+<span class="s1">//        // Test Prayer times here</span>
+<span class="s1">//        PrayTime prayers = new PrayTime();</span>
+<span class="s1">//</span>
+<span class="s1">//        prayers.setTimeFormat(prayers.Time12);</span>
+<span class="s1">//        prayers.setCalcMethod(prayers.Jafari);</span>
+<span class="s1">//        prayers.setAsrJuristic(prayers.Shafii);</span>
+<span class="s1">//        prayers.setAdjustHighLats(prayers.AngleBased);</span>
+<span class="s1">//        int[] offsets = {0, 0, 0, 0, 0, 0, 0}; // {Fajr,Sunrise,Dhuhr,Asr,Sunset,Maghrib,Isha}</span>
+<span class="s1">//        prayers.tune(offsets);</span>
+<span class="s1">//</span>
+<span class="s1">//        Date now = new Date();</span>
+<span class="s1">//        Calendar cal = Calendar.getInstance();</span>
+<span class="s1">//        cal.setTime(now);</span>
+<span class="s1">//</span>
+<span class="s1">//        ArrayList&lt;String&gt; prayerTimes = prayers.getPrayerTimes(cal,</span>
+<span class="s1">//                latitude, longitude, timezone);</span>
+<span class="s1">//        ArrayList&lt;String&gt; prayerNames = prayers.getTimeNames();</span>
+<span class="s1">//</span>
+<span class="s1">//        for (int i = 0; i &lt; prayerTimes.size(); i++) {</span>
+<span class="s1">//            System.out.println(prayerNames.get(i) + &quot; - &quot; + prayerTimes.get(i));</span>
+<span class="s1">//        }</span>
+
+  <span class="s1">//  }</span>
+
+    <span class="s2">public int </span><span class="s0">getCalcMethod() {</span>
+        <span class="s2">return </span><span class="s0">calcMethod</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setCalcMethod(</span><span class="s2">int </span><span class="s0">calcMethod) {</span>
+        <span class="s2">this</span><span class="s0">.calcMethod = calcMethod</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public int </span><span class="s0">getAsrJuristic() {</span>
+        <span class="s2">return </span><span class="s0">asrJuristic</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setAsrJuristic(</span><span class="s2">int </span><span class="s0">asrJuristic) {</span>
+        <span class="s2">this</span><span class="s0">.asrJuristic = asrJuristic</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public int </span><span class="s0">getDhuhrMinutes() {</span>
+        <span class="s2">return </span><span class="s0">dhuhrMinutes</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setDhuhrMinutes(</span><span class="s2">int </span><span class="s0">dhuhrMinutes) {</span>
+        <span class="s2">this</span><span class="s0">.dhuhrMinutes = dhuhrMinutes</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public int </span><span class="s0">getAdjustHighLats() {</span>
+        <span class="s2">return </span><span class="s0">adjustHighLats</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setAdjustHighLats(</span><span class="s2">int </span><span class="s0">adjustHighLats) {</span>
+        <span class="s2">this</span><span class="s0">.adjustHighLats = adjustHighLats</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public int </span><span class="s0">getTimeFormat() {</span>
+        <span class="s2">return </span><span class="s0">timeFormat</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setTimeFormat(</span><span class="s2">int </span><span class="s0">timeFormat) {</span>
+        <span class="s2">this</span><span class="s0">.timeFormat = timeFormat</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public double </span><span class="s0">getLat() {</span>
+        <span class="s2">return </span><span class="s0">lat</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setLat(</span><span class="s2">double </span><span class="s0">lat) {</span>
+        <span class="s2">this</span><span class="s0">.lat = lat</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public double </span><span class="s0">getLng() {</span>
+        <span class="s2">return </span><span class="s0">lng</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setLng(</span><span class="s2">double </span><span class="s0">lng) {</span>
+        <span class="s2">this</span><span class="s0">.lng = lng</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public double </span><span class="s0">getTimeZone() {</span>
+        <span class="s2">return </span><span class="s0">timeZone</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setTimeZone(</span><span class="s2">double </span><span class="s0">timeZone) {</span>
+        <span class="s2">this</span><span class="s0">.timeZone = timeZone</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public double </span><span class="s0">getJDate() {</span>
+        <span class="s2">return </span><span class="s0">JDate</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public void </span><span class="s0">setJDate(</span><span class="s2">double </span><span class="s0">jDate) {</span>
+        <span class="s0">JDate = jDate</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getJafari() {</span>
+        <span class="s2">return </span><span class="s0">Jafari</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setJafari(</span><span class="s2">int </span><span class="s0">jafari) {</span>
+        <span class="s0">Jafari = jafari</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getKarachi() {</span>
+        <span class="s2">return </span><span class="s0">Karachi</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setKarachi(</span><span class="s2">int </span><span class="s0">karachi) {</span>
+        <span class="s0">Karachi = karachi</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getISNA() {</span>
+        <span class="s2">return </span><span class="s0">ISNA</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setISNA(</span><span class="s2">int </span><span class="s0">iSNA) {</span>
+        <span class="s0">ISNA = iSNA</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getMWL() {</span>
+        <span class="s2">return </span><span class="s0">MWL</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setMWL(</span><span class="s2">int </span><span class="s0">mWL) {</span>
+        <span class="s0">MWL = mWL</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getMakkah() {</span>
+        <span class="s2">return </span><span class="s0">Makkah</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setMakkah(</span><span class="s2">int </span><span class="s0">makkah) {</span>
+        <span class="s0">Makkah = makkah</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getEgypt() {</span>
+        <span class="s2">return </span><span class="s0">Egypt</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setEgypt(</span><span class="s2">int </span><span class="s0">egypt) {</span>
+        <span class="s0">Egypt = egypt</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getCustom() {</span>
+        <span class="s2">return </span><span class="s0">Custom</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setCustom(</span><span class="s2">int </span><span class="s0">custom) { Custom = custom</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getTehran() {</span>
+        <span class="s2">return </span><span class="s0">Tehran</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setTehran(</span><span class="s2">int </span><span class="s0">tehran) {</span>
+        <span class="s0">Tehran = tehran</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getShafii() {</span>
+        <span class="s2">return </span><span class="s0">Shafii</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setShafii(</span><span class="s2">int </span><span class="s0">shafii) {</span>
+        <span class="s0">Shafii = shafii</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getHanafi() {</span>
+        <span class="s2">return </span><span class="s0">Hanafi</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setHanafi(</span><span class="s2">int </span><span class="s0">hanafi) {</span>
+        <span class="s0">Hanafi = hanafi</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getNone() {</span>
+        <span class="s2">return </span><span class="s0">None</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setNone(</span><span class="s2">int </span><span class="s0">none) {</span>
+        <span class="s0">None = none</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getMidNight() {</span>
+        <span class="s2">return </span><span class="s0">MidNight</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setMidNight(</span><span class="s2">int </span><span class="s0">midNight) {</span>
+        <span class="s0">MidNight = midNight</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getOneSeventh() {</span>
+        <span class="s2">return </span><span class="s0">OneSeventh</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setOneSeventh(</span><span class="s2">int </span><span class="s0">oneSeventh) {</span>
+        <span class="s0">OneSeventh = oneSeventh</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getAngleBased() {</span>
+        <span class="s2">return </span><span class="s0">AngleBased</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setAngleBased(</span><span class="s2">int </span><span class="s0">angleBased) {</span>
+        <span class="s0">AngleBased = angleBased</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getTime24() {</span>
+        <span class="s2">return </span><span class="s0">Time24</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setTime24(</span><span class="s2">int </span><span class="s0">time24) {</span>
+        <span class="s0">Time24 = time24</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getTime12() {</span>
+        <span class="s2">return </span><span class="s0">Time12</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setTime12(</span><span class="s2">int </span><span class="s0">time12) {</span>
+        <span class="s0">Time12 = time12</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getTime12NS() {</span>
+        <span class="s2">return </span><span class="s0">Time12NS</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setTime12NS(</span><span class="s2">int </span><span class="s0">time12ns) {</span>
+        <span class="s0">Time12NS = time12ns</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getFloating() {</span>
+        <span class="s2">return </span><span class="s0">Floating</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setFloating(</span><span class="s2">int </span><span class="s0">floating) {</span>
+        <span class="s0">Floating = floating</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private int </span><span class="s0">getNumIterations() {</span>
+        <span class="s2">return </span><span class="s0">numIterations</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">private void </span><span class="s0">setNumIterations(</span><span class="s2">int </span><span class="s0">numIterations) {</span>
+        <span class="s2">this</span><span class="s0">.numIterations = numIterations</span><span class="s2">;</span>
+    <span class="s0">}</span>
+
+    <span class="s2">public </span><span class="s0">ArrayList&lt;String&gt; getTimeNames() {</span>
+        <span class="s2">return </span><span class="s0">timeNames</span><span class="s2">;</span>
+    <span class="s0">}</span>
+<span class="s0">}</span>
+</pre>
+</body>
+</html>

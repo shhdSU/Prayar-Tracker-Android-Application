@@ -1,0 +1,580 @@
+<html>
+<head>
+<title>HomeScreenActivity.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #808080;}
+.s3 { color: #6897bb;}
+.s4 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+HomeScreenActivity.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.example.prayartracker</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.Manifest</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.annotation.SuppressLint</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.AlarmManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.Notification</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.app.PendingIntent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Context</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.Intent</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.SharedPreferences</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.content.pm.PackageManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.location.Location</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.location.LocationManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.media.AudioManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Build</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Bundle</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Looper</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.preference.PreferenceManager</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.provider.Settings</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.util.Log</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.view.View</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.TextView</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.widget.Toast</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.lang.reflect.Array</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.sql.Time</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.text.DateFormat</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.text.ParseException</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.text.SimpleDateFormat</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.Duration</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalDate</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalDateTime</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.LocalTime</span><span class="s0">;</span><span class="s2">//</span>
+<span class="s0">import </span><span class="s1">java.time.ZoneId</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.time.ZonedDateTime</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.ArrayList</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.annotation.NonNull</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.annotation.RequiresApi</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.appcompat.app.AppCompatActivity</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.core.app.ActivityCompat</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.core.app.NotificationCompat</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">androidx.core.app.NotificationManagerCompat</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">com.google.android.gms.location.FusedLocationProviderClient</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationCallback</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationRequest</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationResult</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.location.LocationServices</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.tasks.OnCompleteListener</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">com.google.android.gms.tasks.Task</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">java.util.Calendar</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Date</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.TimeZone</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.Timer</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.TimerTask</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">java.util.concurrent.TimeUnit</span><span class="s0">;</span>
+
+<span class="s0">import </span><span class="s1">android.os.CountDownTimer</span><span class="s0">;</span>
+<span class="s0">import </span><span class="s1">android.os.Handler</span><span class="s0">;</span>
+
+<span class="s0">public class </span><span class="s1">HomeScreenActivity </span><span class="s0">extends </span><span class="s1">AppCompatActivity {</span>
+    <span class="s0">static </span><span class="s1">TextView TimerTextView</span><span class="s0">;</span>
+    <span class="s2">// initializing</span>
+    <span class="s2">// FusedLocationProviderClient</span>
+    <span class="s2">// object</span>
+    <span class="s1">FusedLocationProviderClient mFusedLocationClient</span><span class="s0">;</span>
+    <span class="s0">public static </span><span class="s1">ArrayList&lt;String&gt; prayerTimes12</span><span class="s0">;</span>
+    <span class="s0">public static </span><span class="s1">ArrayList&lt;String&gt; prayerTimes24</span><span class="s0">;</span>
+    <span class="s0">static </span><span class="s1">PrayTime prayTime</span><span class="s0">;</span>
+    <span class="s0">static </span><span class="s1">Handler handler</span><span class="s0">;</span>
+    <span class="s0">static </span><span class="s1">Runnable runnable</span><span class="s0">;</span>
+    <span class="s0">static </span><span class="s1">String upcomingPrayer</span><span class="s0">;</span>
+    <span class="s0">static boolean </span><span class="s1">onFinish = </span><span class="s0">true;</span>
+    <span class="s0">static long </span><span class="s1">minValue</span><span class="s0">;</span>
+    <span class="s0">static long </span><span class="s1">[] PrayerDiff</span><span class="s0">;</span>
+    <span class="s0">static boolean </span><span class="s1">first = </span><span class="s0">true;</span>
+    <span class="s0">int </span><span class="s1">notificationId</span><span class="s0">;</span>
+    <span class="s1">SharedPreferences sp</span><span class="s0">;</span>
+    <span class="s2">// Initializing other items</span>
+    <span class="s2">// from layout file</span>
+    <span class="s1">TextView fajerTextView</span><span class="s0">,</span><span class="s1">dhuhrTextView</span><span class="s0">,</span><span class="s1">asrTextView</span><span class="s0">,</span><span class="s1">maghribTextView</span><span class="s0">,</span><span class="s1">IshaTextView</span><span class="s0">;</span>
+    <span class="s0">int </span><span class="s1">PERMISSION_ID = </span><span class="s3">44</span><span class="s0">;</span>
+    <span class="s0">static </span><span class="s1">Timer silentModeTimer</span><span class="s0">;</span>
+    <span class="s0">static </span><span class="s1">CountDownTimer countDownTimer</span><span class="s0">;</span>
+    <span class="s1">@Override</span>
+    <span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span><span class="s0">;</span>
+        <span class="s1">setContentView(R.layout.activity_home_screen)</span><span class="s0">;</span>
+        <span class="s1">handler = </span><span class="s0">new </span><span class="s1">Handler()</span><span class="s0">;</span>
+        <span class="s1">fajerTextView = findViewById(R.id.fajerTextView)</span><span class="s0">;</span>
+        <span class="s1">dhuhrTextView = findViewById(R.id.dhuhrTextView)</span><span class="s0">;</span>
+        <span class="s1">asrTextView = findViewById(R.id.asrTextView)</span><span class="s0">;</span>
+        <span class="s1">maghribTextView = findViewById(R.id.maghribTextView)</span><span class="s0">;</span>
+        <span class="s1">IshaTextView = findViewById(R.id.IshaTextView)</span><span class="s0">;</span>
+        <span class="s1">TimerTextView = findViewById(R.id.CountDownTextView)</span><span class="s0">;</span>
+        <span class="s1">notificationId= </span><span class="s3">0</span><span class="s0">;</span>
+
+        <span class="s1">mFusedLocationClient = LocationServices.getFusedLocationProviderClient(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s2">// method to get the location</span>
+        <span class="s1">getLastLocation()</span><span class="s0">;</span>
+        <span class="s1">android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">if </span><span class="s1">(!notificationManager.isNotificationPolicyAccessGranted()) {</span>
+            <span class="s1">Intent in = </span><span class="s0">new </span><span class="s1">Intent()</span><span class="s0">;</span>
+            <span class="s1">in.setAction(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)</span><span class="s0">;</span>
+            <span class="s1">startActivityForResult(in</span><span class="s0">, </span><span class="s3">1</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+
+    <span class="s1">@SuppressLint(</span><span class="s4">&quot;MissingPermission&quot;</span><span class="s1">)</span>
+    <span class="s0">private void </span><span class="s1">getLastLocation() {</span>
+        <span class="s2">// check if permissions are given</span>
+        <span class="s0">if </span><span class="s1">(checkPermissions()) {</span>
+
+            <span class="s2">// check if location is enabled</span>
+            <span class="s0">if </span><span class="s1">(isLocationEnabled()) {</span>
+
+                <span class="s1">mFusedLocationClient.getLastLocation().addOnCompleteListener(</span><span class="s0">new </span><span class="s1">OnCompleteListener&lt;Location&gt;() {</span>
+                    <span class="s1">@RequiresApi(api = Build.VERSION_CODES.O)</span>
+                    <span class="s1">@Override</span>
+                    <span class="s0">public void </span><span class="s1">onComplete(@NonNull Task&lt;Location&gt; task) {</span>
+                        <span class="s1">Location location = task.getResult()</span><span class="s0">;</span>
+                        <span class="s0">if </span><span class="s1">(location == </span><span class="s0">null</span><span class="s1">) {</span>
+                            <span class="s1">requestNewLocationData()</span><span class="s0">;</span>
+                        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                            <span class="s1">prayerTimes24 = </span><span class="s0">null;</span>
+                            <span class="s1">calculatePrayerTimes(location)</span><span class="s0">;</span>
+                            <span class="s1">schedulePrayersDaily(location)</span><span class="s0">;</span>
+                            <span class="s1">ArrayList&lt;String&gt; prayerTimes = </span><span class="s0">null;</span>
+                            <span class="s1">SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())</span><span class="s0">;</span>
+                            <span class="s0">if </span><span class="s1">(!preferences.getBoolean(</span><span class="s4">&quot;is24Hour&quot;</span><span class="s0">, true</span><span class="s1">)) {</span>
+                                <span class="s1">prayerTimes = prayerTimes12</span><span class="s0">;</span>
+                            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                                <span class="s1">prayerTimes = prayerTimes24</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">ArrayList&lt;String&gt; prayerTimesForCount24H = prayerTimes24</span><span class="s0">;</span>
+                            <span class="s0">for </span><span class="s1">(String prayer : prayerTimes) {</span>
+                                <span class="s1">Log.d(</span><span class="s4">&quot; &quot;</span><span class="s0">, </span><span class="s4">&quot;prayer&quot; </span><span class="s1">+ prayer)</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">fajerTextView.setText(prayerTimes.get(</span><span class="s3">0</span><span class="s1">))</span><span class="s0">;</span>
+                            <span class="s1">dhuhrTextView.setText(prayerTimes.get(</span><span class="s3">2</span><span class="s1">))</span><span class="s0">;</span>
+                            <span class="s1">asrTextView.setText(prayerTimes.get(</span><span class="s3">3</span><span class="s1">))</span><span class="s0">;</span>
+                            <span class="s1">maghribTextView.setText(prayerTimes.get(</span><span class="s3">5</span><span class="s1">))</span><span class="s0">;</span>
+                            <span class="s1">IshaTextView.setText(prayerTimes.get(</span><span class="s3">6</span><span class="s1">))</span><span class="s0">;</span>
+
+                            <span class="s1">getPrayerDiff(prayerTimesForCount24H)</span><span class="s0">;</span>
+                            <span class="s2">// loop to ensure from the result (only print)</span>
+                            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">j &lt; </span><span class="s3">7</span><span class="s0">; </span><span class="s1">j++) {</span>
+                                <span class="s1">String time = prayerTimesForCount24H.get(j) + </span><span class="s4">&quot;:00&quot;</span><span class="s0">; </span><span class="s2">// if the time format 12 hours we use .replaceAll(&quot; am&quot;,&quot;&quot;)</span>
+                                <span class="s1">LocalTime localTime = LocalTime.parse(time)</span><span class="s0">;</span>
+                                <span class="s1">Log.d(</span><span class="s4">&quot;Before sub&quot;</span><span class="s0">, </span><span class="s1">String.valueOf(localTime.toSecondOfDay() * </span><span class="s3">1000</span><span class="s1">))</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">j &lt; </span><span class="s3">7</span><span class="s0">; </span><span class="s1">j++) {</span>
+                                <span class="s1">Log.d(</span><span class="s4">&quot;Aftar sub&quot;</span><span class="s0">, </span><span class="s1">Long.toString(PrayerDiff[j]))</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">getMinValue()</span><span class="s0">;</span>
+                            <span class="s1">SharedPreferences.Editor pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit()</span><span class="s0">;</span>
+                            <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt; </span><span class="s3">7</span><span class="s0">; </span><span class="s1">i++) {</span>
+                                <span class="s0">if </span><span class="s1">(PrayerDiff[i] == minValue) {</span>
+                                    <span class="s0">switch </span><span class="s1">(i) {</span>
+                                        <span class="s0">case </span><span class="s3">0</span><span class="s1">:</span>
+                                            <span class="s1">upcomingPrayer = </span><span class="s4">&quot;الفجر&quot;</span><span class="s0">;</span>
+                                            <span class="s0">break;</span>
+                                        <span class="s0">case </span><span class="s3">2</span><span class="s1">:</span>
+                                            <span class="s1">upcomingPrayer = </span><span class="s4">&quot;الظهر&quot;</span><span class="s0">;</span>
+
+                                            <span class="s0">break;</span>
+
+                                        <span class="s0">case </span><span class="s3">3</span><span class="s1">:</span>
+                                            <span class="s1">upcomingPrayer = </span><span class="s4">&quot;العصر&quot;</span><span class="s0">;</span>
+                                            <span class="s0">break;</span>
+
+                                        <span class="s0">case </span><span class="s3">5</span><span class="s1">:</span>
+                                            <span class="s1">upcomingPrayer = </span><span class="s4">&quot;المغرب&quot;</span><span class="s0">;</span>
+                                            <span class="s0">break;</span>
+
+                                        <span class="s0">case </span><span class="s3">6</span><span class="s1">:</span>
+                                            <span class="s1">upcomingPrayer = </span><span class="s4">&quot;العشاء&quot;</span><span class="s0">;</span>
+                                            <span class="s0">break;</span>
+
+                                    <span class="s1">}</span>
+                                <span class="s1">}</span>
+                                <span class="s1">pref.putString(</span><span class="s4">&quot;upcomingPrayer&quot;</span><span class="s0">, </span><span class="s1">upcomingPrayer)</span><span class="s0">;</span>
+                                <span class="s1">pref.commit()</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">Log.d(</span><span class="s4">&quot;Minemum&quot;</span><span class="s0">, </span><span class="s1">Long.toString(minValue))</span><span class="s0">;</span>
+                            <span class="s1">Calendar cal = Calendar.getInstance()</span><span class="s0">;</span>
+                            <span class="s0">int </span><span class="s1">numMinutes = preferences.getInt(</span><span class="s4">&quot;Interval&quot;</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s0">if</span><span class="s1">(preferences.getBoolean(</span><span class="s4">&quot;SilentMode&quot;</span><span class="s0">,false</span><span class="s1">)){</span>
+                            <span class="s0">if </span><span class="s1">(silentModeTimer != </span><span class="s0">null</span><span class="s1">) {</span>
+                                <span class="s1">silentModeTimer.cancel()</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+                            <span class="s0">if</span><span class="s1">(notificationManager.isNotificationPolicyAccessGranted()) {</span>
+                                <span class="s1">silentModeTimer = </span><span class="s0">new </span><span class="s1">Timer()</span><span class="s0">;</span>
+                                <span class="s0">for </span><span class="s1">(String prayer : prayerTimes24) {</span>
+                                    <span class="s1">String[] time = prayer.split(</span><span class="s4">&quot;:&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                                    <span class="s0">int </span><span class="s1">hrs = Integer.parseInt(time[</span><span class="s3">0</span><span class="s1">].trim())</span><span class="s0">;</span>
+                                    <span class="s0">int </span><span class="s1">min = Integer.parseInt(time[</span><span class="s3">1</span><span class="s1">].trim())</span><span class="s0">;</span>
+                                    <span class="s1">LocalDateTime date1 = LocalDateTime.of(cal.getTime().getYear()</span><span class="s0">, </span><span class="s1">cal.getTime().getMonth()</span><span class="s0">, </span><span class="s1">cal.getTime().getDate()</span><span class="s0">, </span><span class="s1">cal.getTime().getHours()</span><span class="s0">, </span><span class="s1">cal.getTime().getMinutes()</span><span class="s0">, </span><span class="s1">cal.getTime().getSeconds())</span><span class="s0">;</span>
+                                    <span class="s1">LocalDateTime date2 = LocalDateTime.of(cal.getTime().getYear()</span><span class="s0">, </span><span class="s1">cal.getTime().getMonth()</span><span class="s0">, </span><span class="s1">cal.getTime().getDate()</span><span class="s0">, </span><span class="s1">hrs</span><span class="s0">, </span><span class="s1">min</span><span class="s0">, </span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+                                    <span class="s1">Log.d(</span><span class="s4">&quot;date1&quot;</span><span class="s0">, </span><span class="s1">date1 + </span><span class="s4">&quot;&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                                    <span class="s1">Log.d(</span><span class="s4">&quot;date2&quot;</span><span class="s0">, </span><span class="s1">date2 + </span><span class="s4">&quot;&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                                    <span class="s0">if </span><span class="s1">(date1.isBefore(date2)) {</span>
+                                        <span class="s0">int </span><span class="s1">hours = numMinutes / </span><span class="s3">60</span><span class="s0">;</span>
+                                        <span class="s0">int </span><span class="s1">minutes = numMinutes % </span><span class="s3">60</span><span class="s0">;</span>
+                                        <span class="s1">Log.d(</span><span class="s4">&quot;hi&quot;</span><span class="s0">, </span><span class="s4">&quot;inside prayer&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                                        <span class="s1">SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())</span><span class="s0">;</span>
+
+                                        <span class="s1">silentModeTimer.schedule(</span><span class="s0">new </span><span class="s1">TimerTask() {</span>
+                                            <span class="s1">@Override</span>
+                                            <span class="s0">public void </span><span class="s1">run() {</span>
+                                                <span class="s1">AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE)</span><span class="s0">;</span>
+                                                <span class="s1">audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT)</span><span class="s0">;</span>
+                                            <span class="s1">}</span>
+
+                                        <span class="s1">}</span><span class="s0">, new </span><span class="s1">Date(cal.getTime().getYear()</span><span class="s0">, </span><span class="s1">cal.getTime().getMonth()</span><span class="s0">, </span><span class="s1">cal.getTime().getDate()</span><span class="s0">, </span><span class="s1">hrs</span><span class="s0">, </span><span class="s1">min</span><span class="s0">, </span><span class="s3">0</span><span class="s1">))</span><span class="s0">;</span>
+                                        <span class="s1">silentModeTimer.schedule(</span><span class="s0">new </span><span class="s1">TimerTask() {</span>
+                                            <span class="s1">@Override</span>
+                                            <span class="s0">public void </span><span class="s1">run() {</span>
+                                                <span class="s1">AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE)</span><span class="s0">;</span>
+                                                <span class="s1">audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL)</span><span class="s0">;</span>
+                                            <span class="s1">}</span>
+
+
+                                        <span class="s1">}</span><span class="s0">, new </span><span class="s1">Date(cal.getTime().getYear()</span><span class="s0">, </span><span class="s1">cal.getTime().getMonth()</span><span class="s0">, </span><span class="s1">cal.getTime().getDate()</span><span class="s0">, </span><span class="s1">hrs + hours</span><span class="s0">, </span><span class="s1">min + minutes</span><span class="s0">, </span><span class="s3">0</span><span class="s1">))</span><span class="s0">;</span>
+
+                                    <span class="s1">}</span>
+                                <span class="s1">}</span>
+                            <span class="s1">}</span>
+                            <span class="s1">}</span>
+                            <span class="s0">if</span><span class="s1">(first) {</span>
+                                <span class="s1">first = </span><span class="s0">false;</span>
+                                <span class="s1">countDownTimer = </span><span class="s0">new </span><span class="s1">CountDownTimer(minValue</span><span class="s0">, </span><span class="s3">1000</span><span class="s1">) {</span>
+                                    <span class="s0">public void </span><span class="s1">onTick(</span><span class="s0">long </span><span class="s1">millisUntilFinished) {</span>
+                                        <span class="s0">long </span><span class="s1">secondsInMilli = </span><span class="s3">1000</span><span class="s0">;</span>
+                                        <span class="s0">long </span><span class="s1">minutesInMilli = secondsInMilli * </span><span class="s3">60</span><span class="s0">;</span>
+                                        <span class="s0">long </span><span class="s1">hoursInMilli = minutesInMilli * </span><span class="s3">60</span><span class="s0">;</span>
+
+                                        <span class="s0">long </span><span class="s1">elapsedHours = millisUntilFinished / hoursInMilli</span><span class="s0">;</span>
+                                        <span class="s1">millisUntilFinished = millisUntilFinished % hoursInMilli</span><span class="s0">;</span>
+
+                                        <span class="s0">long </span><span class="s1">elapsedMinutes = millisUntilFinished / minutesInMilli</span><span class="s0">;</span>
+                                        <span class="s1">millisUntilFinished = millisUntilFinished % minutesInMilli</span><span class="s0">;</span>
+
+                                        <span class="s0">long </span><span class="s1">elapsedSeconds = millisUntilFinished / secondsInMilli</span><span class="s0">;</span>
+
+                                        <span class="s1">String text = String.format(</span><span class="s4">&quot;%02d:%02d:%02d&quot;</span><span class="s0">, </span><span class="s1">elapsedHours</span><span class="s0">, </span><span class="s1">elapsedMinutes</span><span class="s0">, </span><span class="s1">elapsedSeconds)</span><span class="s0">;</span>
+                                        <span class="s1">TimerTextView.setText(text)</span><span class="s0">;</span>
+                                    <span class="s1">}</span>
+
+                                    <span class="s0">public void </span><span class="s1">onFinish() {</span>
+                                        <span class="s1">TimerTextView.setText(</span><span class="s4">&quot;00:00:00&quot;</span><span class="s1">)</span><span class="s0">; </span><span class="s2">// here i prefer to set the notification &quot;حان موعد صلاة ال... حسب توقيت مكة المكرمة&quot;</span>
+                                        <span class="s0">this</span><span class="s1">.cancel()</span><span class="s0">;</span>
+                                        <span class="s1">Log.d(</span><span class="s4">&quot;Minvalue&quot;</span><span class="s0">, </span><span class="s4">&quot;&quot; </span><span class="s1">+ minValue)</span><span class="s0">;</span>
+                                        <span class="s1">getMinValue()</span><span class="s0">;</span>
+                                        <span class="s1">Log.d(</span><span class="s4">&quot;Minvalue&quot;</span><span class="s0">, </span><span class="s4">&quot;&quot; </span><span class="s1">+ minValue)</span><span class="s0">;</span>
+                                        <span class="s0">this</span><span class="s1">.start()</span><span class="s0">;</span>
+                                    <span class="s1">}</span>
+                                <span class="s1">}</span><span class="s0">;</span>
+                                <span class="s1">countDownTimer.start()</span><span class="s0">;</span>
+                            <span class="s1">}</span>
+                            <span class="s1">handler.postDelayed(runnable = </span><span class="s0">new </span><span class="s1">Runnable() {</span>
+                                <span class="s0">public void </span><span class="s1">run() {</span>
+                                    <span class="s1">handler.postDelayed(runnable</span><span class="s0">, </span><span class="s1">minValue)</span><span class="s0">;</span>
+                                    <span class="s0">if </span><span class="s1">(countDownTimer != </span><span class="s0">null</span><span class="s1">) {</span>
+                                        <span class="s1">countDownTimer.cancel()</span><span class="s0">;</span>
+                                        <span class="s1">Log.d(</span><span class="s4">&quot;cancel&quot;</span><span class="s0">, </span><span class="s4">&quot;cancel&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                                    <span class="s1">}</span>
+                                    <span class="s1">getMinValue()</span><span class="s0">;</span>
+                                    <span class="s1">Log.d(</span><span class="s4">&quot;cancel&quot;</span><span class="s0">, </span><span class="s4">&quot;cancel&quot;</span><span class="s1">)</span><span class="s0">;</span>
+                                    <span class="s0">if </span><span class="s1">(onFinish) {</span>
+                                        <span class="s1">sendNotification()</span><span class="s0">;</span>
+                                        <span class="s2">//method to Count Down the time</span>
+                                        <span class="s1">countDownTimer = </span><span class="s0">new </span><span class="s1">CountDownTimer(minValue</span><span class="s0">, </span><span class="s3">1000</span><span class="s1">) {</span>
+                                            <span class="s0">public void </span><span class="s1">onTick(</span><span class="s0">long </span><span class="s1">millisUntilFinished) {</span>
+                                                <span class="s0">long </span><span class="s1">secondsInMilli = </span><span class="s3">1000</span><span class="s0">;</span>
+                                                <span class="s0">long </span><span class="s1">minutesInMilli = secondsInMilli * </span><span class="s3">60</span><span class="s0">;</span>
+                                                <span class="s0">long </span><span class="s1">hoursInMilli = minutesInMilli * </span><span class="s3">60</span><span class="s0">;</span>
+
+                                                <span class="s0">long </span><span class="s1">elapsedHours = millisUntilFinished / hoursInMilli</span><span class="s0">;</span>
+                                                <span class="s1">millisUntilFinished = millisUntilFinished % hoursInMilli</span><span class="s0">;</span>
+
+                                                <span class="s0">long </span><span class="s1">elapsedMinutes = millisUntilFinished / minutesInMilli</span><span class="s0">;</span>
+                                                <span class="s1">millisUntilFinished = millisUntilFinished % minutesInMilli</span><span class="s0">;</span>
+
+                                                <span class="s0">long </span><span class="s1">elapsedSeconds = millisUntilFinished / secondsInMilli</span><span class="s0">;</span>
+
+                                                <span class="s1">String text = String.format(</span><span class="s4">&quot;%02d:%02d:%02d&quot;</span><span class="s0">, </span><span class="s1">elapsedHours</span><span class="s0">, </span><span class="s1">elapsedMinutes</span><span class="s0">, </span><span class="s1">elapsedSeconds)</span><span class="s0">;</span>
+                                                <span class="s1">TimerTextView.setText(text)</span><span class="s0">;</span>
+                                            <span class="s1">}</span>
+
+                                            <span class="s0">public void </span><span class="s1">onFinish() {</span>
+                                                <span class="s1">TimerTextView.setText(</span><span class="s4">&quot;00:00:00&quot;</span><span class="s1">)</span><span class="s0">; </span><span class="s2">// here i prefer to set the notification &quot;حان موعد صلاة ال... حسب توقيت مكة المكرمة&quot;</span>
+                                                <span class="s0">this</span><span class="s1">.cancel()</span><span class="s0">;</span>
+                                                <span class="s1">Log.d(</span><span class="s4">&quot;Minvalue&quot;</span><span class="s0">, </span><span class="s4">&quot;&quot; </span><span class="s1">+ minValue)</span><span class="s0">;</span>
+                                                <span class="s1">getMinValue()</span><span class="s0">;</span>
+                                                <span class="s1">Log.d(</span><span class="s4">&quot;Minvalue&quot;</span><span class="s0">, </span><span class="s4">&quot;&quot; </span><span class="s1">+ minValue)</span><span class="s0">;</span>
+                                                <span class="s0">this</span><span class="s1">.start()</span><span class="s0">;</span>
+                                            <span class="s1">}</span>
+                                        <span class="s1">}</span><span class="s0">;</span>
+                                        <span class="s1">countDownTimer.start()</span><span class="s0">;</span>
+                                    <span class="s1">}</span>
+                                <span class="s1">}</span>
+
+                            <span class="s1">}</span><span class="s0">,</span><span class="s1">minValue)</span><span class="s0">;</span>
+
+                        <span class="s1">}</span>
+                            <span class="s1">}</span>
+
+                <span class="s1">})</span><span class="s0">;</span>
+            <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+                <span class="s1">Toast.makeText(</span><span class="s0">this, </span><span class="s4">&quot;لطفًا قم بتفعيل خاصية الموقع لهذا التطبيق&quot;</span><span class="s0">, </span><span class="s1">Toast.LENGTH_LONG).show()</span><span class="s0">;</span>
+                <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)</span><span class="s0">;</span>
+                <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">} </span><span class="s0">else </span><span class="s1">{</span>
+            <span class="s2">// if permissions aren't available,</span>
+            <span class="s2">// request for permissions</span>
+            <span class="s1">requestPermissions()</span><span class="s0">;</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@RequiresApi(api = Build.VERSION_CODES.O)</span>
+    <span class="s0">private void </span><span class="s1">getPrayerDiff(ArrayList&lt;String&gt; prayerTimesForCount24H) {</span>
+        <span class="s2">// Create an array for the difference between prayer time and the current time in ms.</span>
+        <span class="s1">PrayerDiff = </span><span class="s0">new long</span><span class="s1">[</span><span class="s3">7</span><span class="s1">]</span><span class="s0">;</span>
+        <span class="s2">// loop to fill the PrayerDiff array</span>
+        <span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i = </span><span class="s3">0</span><span class="s0">; </span><span class="s1">i &lt; </span><span class="s3">7</span><span class="s0">; </span><span class="s1">i++) {</span>
+            <span class="s1">DateFormat df = </span><span class="s0">new </span><span class="s1">SimpleDateFormat(</span><span class="s4">&quot;HH:mm:ss&quot;</span><span class="s1">)</span><span class="s0">; </span><span class="s2">// current time format</span>
+            <span class="s1">Calendar calobj = Calendar.getInstance()</span><span class="s0">; </span><span class="s2">// to get current time</span>
+            <span class="s1">String time</span><span class="s0">;</span>
+            <span class="s1">time = prayerTimesForCount24H.get(i)+ </span><span class="s4">&quot;:00&quot;</span><span class="s0">; </span><span class="s2">//  convert the prayer time format to HH:mm:ss format // if the time format 12 hours we use .replaceAll(&quot; am&quot;,&quot;&quot;)</span>
+            <span class="s1">LocalTime localTime = </span><span class="s0">null; </span><span class="s2">// convert from String to LocalTime</span>
+                <span class="s1">localTime = LocalTime.parse(time)</span><span class="s0">;</span>
+            <span class="s1">LocalTime CurrentTime = LocalTime.parse(df.format(calobj.getTime()))</span><span class="s0">;</span><span class="s2">// convert from String to LocalTime</span>
+            <span class="s0">if</span><span class="s1">(Math.abs(localTime.toSecondOfDay()*</span><span class="s3">1000 </span><span class="s1">- CurrentTime.toSecondOfDay()*</span><span class="s3">1000</span><span class="s1">) &gt;= </span><span class="s3">53940000</span><span class="s1">){ </span><span class="s2">// if the difference is grater or equal 8(20:00:00) then</span>
+            <span class="s0">long </span><span class="s1">diff = (localTime.toSecondOfDay()*</span><span class="s3">1000 </span><span class="s1">- CurrentTime.toSecondOfDay()*</span><span class="s3">1000</span><span class="s1">)+ </span><span class="s3">86400000</span><span class="s0">; </span><span class="s2">// add 24 hours to get the correct time.</span>
+            <span class="s0">long </span><span class="s1">diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) </span><span class="s0">; </span><span class="s2">// convert to ms</span>
+            <span class="s1">PrayerDiff[i] = diffSeconds</span><span class="s0">;</span><span class="s1">} </span><span class="s2">//assign</span>
+            <span class="s0">else</span><span class="s1">{</span>
+                <span class="s0">long </span><span class="s1">diff = (localTime.toSecondOfDay()*</span><span class="s3">1000 </span><span class="s1">- CurrentTime.toSecondOfDay()*</span><span class="s3">1000</span><span class="s1">)</span><span class="s0">; </span><span class="s2">// without adding 24 hours</span>
+                <span class="s0">long </span><span class="s1">diffSeconds = TimeUnit.MILLISECONDS.toMillis(diff) </span><span class="s0">;</span><span class="s2">// convert to ms</span>
+                <span class="s1">PrayerDiff[i] = diffSeconds</span><span class="s0">;</span><span class="s2">//assign</span>
+            <span class="s1">}</span>
+            <span class="s1">Log.d(</span><span class="s4">&quot;MY CUURENT TIME 2&quot;</span><span class="s0">, </span><span class="s1">String.valueOf(CurrentTime.toSecondOfDay()*</span><span class="s3">1000</span><span class="s1">))</span><span class="s0">;</span>
+
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@RequiresApi(api = Build.VERSION_CODES.O)</span>
+    <span class="s0">private void </span><span class="s1">getMinValue() {</span>
+        <span class="s1">getPrayerDiff(prayerTimes24)</span><span class="s0">;</span>
+        <span class="s2">// loop to find the minimum positive value ( the nearest prayer time == the smallest difference )</span>
+         <span class="s1">minValue = Integer.MAX_VALUE</span><span class="s0">;</span>
+        <span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">0</span><span class="s0">;</span><span class="s1">i&lt;</span><span class="s3">7</span><span class="s0">;</span><span class="s1">i++) {</span>
+            <span class="s0">if</span><span class="s1">(PrayerDiff[i] &gt; </span><span class="s3">0 </span><span class="s1">&amp;&amp; minValue &gt; PrayerDiff[i])</span>
+            <span class="s1">{</span>
+                <span class="s1">minValue = PrayerDiff[i]</span><span class="s0">;</span>
+            <span class="s1">}</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private void </span><span class="s1">schedulePrayersDaily(Location location){</span>
+        <span class="s1">calculatePrayerTimes(location)</span><span class="s0">;</span>
+        <span class="s1">Calendar cal = Calendar.getInstance()</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">today = cal.get(Calendar.DAY_OF_MONTH)</span><span class="s0">;</span>
+        <span class="s1">SharedPreferences settings = getSharedPreferences(</span><span class="s4">&quot;PREFS&quot;</span><span class="s0">,</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">int </span><span class="s1">yesterday = settings.getInt(</span><span class="s4">&quot;day&quot;</span><span class="s0">,</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+          <span class="s0">if</span><span class="s1">(yesterday!=today){</span>
+            <span class="s1">Log.d(</span><span class="s4">&quot;&quot;</span><span class="s0">,</span><span class="s4">&quot;first time today&quot;</span><span class="s1">)</span><span class="s0">;</span>
+            <span class="s1">SharedPreferences.Editor editor = settings.edit()</span><span class="s0">;</span>
+            <span class="s1">editor.putInt(</span><span class="s4">&quot;day&quot;</span><span class="s0">,</span><span class="s1">today)</span><span class="s0">;</span>
+            <span class="s1">editor.commit()</span><span class="s0">;</span>
+            <span class="s1">SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())</span><span class="s0">;</span>
+            <span class="s1">}</span>
+       <span class="s1">}</span>
+<span class="s0">private void </span><span class="s1">calculatePrayerTimes(Location location){</span>
+        <span class="s1">prayTime = </span><span class="s0">new </span><span class="s1">PrayTime()</span><span class="s0">;</span>
+    <span class="s1">TimeZone timeZone = TimeZone.getDefault()</span><span class="s0">;</span>
+    <span class="s1">String zone = TimeZone.getTimeZone(timeZone.getID()).getDisplayName(</span><span class="s0">false,</span>
+            <span class="s1">TimeZone.SHORT)</span><span class="s0">;</span>
+    <span class="s1">SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())</span><span class="s0">;</span>
+    <span class="s1">zone = zone.substring(</span><span class="s3">4</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">zone = zone.replaceAll(</span><span class="s4">&quot;:&quot;</span><span class="s0">,</span><span class="s4">&quot;.&quot;</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">Double tz = Double.parseDouble(zone)</span><span class="s0">;</span>
+    <span class="s0">switch </span><span class="s1">(preferences.getString(</span><span class="s4">&quot;CalcMethod&quot;</span><span class="s0">,</span><span class="s4">&quot;Makkah&quot;</span><span class="s1">)){</span>
+        <span class="s0">case </span><span class="s4">&quot;Makkah&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.Makkah)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+        <span class="s0">case </span><span class="s4">&quot;Tehran&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.Tehran)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;ISNA&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.ISNA)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;Egypt&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.Egypt)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;Custom&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.Custom)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;Karachi&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.Karachi)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;MWL&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.MWL)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;Jafari&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setCalcMethod(prayTime.Jafari)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+    <span class="s1">}</span>
+    <span class="s0">switch </span><span class="s1">(preferences.getString(</span><span class="s4">&quot;JuristicMethod&quot;</span><span class="s0">,</span><span class="s4">&quot;Shafii&quot;</span><span class="s1">)){</span>
+        <span class="s0">case </span><span class="s4">&quot;Shafii&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setAsrJuristic(prayTime.Shafii)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+        <span class="s0">case </span><span class="s4">&quot;Hanafi&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setAsrJuristic(prayTime.Hanafi)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">switch</span><span class="s1">(preferences.getString(</span><span class="s4">&quot;HighAltCalc&quot;</span><span class="s0">,</span><span class="s4">&quot;AngleBased&quot;</span><span class="s1">)){</span>
+        <span class="s0">case </span><span class="s4">&quot;AngleBased&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setAdjustHighLats(prayTime.AngleBased)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+        <span class="s0">case </span><span class="s4">&quot;None&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setAdjustHighLats(prayTime.None)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;Midnight&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setAdjustHighLats(prayTime.MidNight)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+
+        <span class="s0">case </span><span class="s4">&quot;OneSeventh&quot;</span><span class="s1">:</span>
+            <span class="s1">prayTime.setAdjustHighLats(prayTime.OneSeventh)</span><span class="s0">;</span>
+            <span class="s0">break;</span>
+    <span class="s1">}</span>
+    <span class="s0">int</span><span class="s1">[] offsets = {</span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s0">, </span><span class="s3">0</span><span class="s1">}</span><span class="s0">;</span>
+    <span class="s1">prayTime.tune(offsets)</span><span class="s0">;</span>
+    <span class="s1">Date now = </span><span class="s0">new </span><span class="s1">Date()</span><span class="s0">;</span>
+    <span class="s1">Calendar cal = Calendar.getInstance()</span><span class="s0">;</span>
+    <span class="s1">cal.setTime(now)</span><span class="s0">;</span>
+    <span class="s1">Log.d(</span><span class="s4">&quot;S&quot;</span><span class="s0">,</span><span class="s4">&quot;&quot;</span><span class="s1">+location.getLatitude())</span><span class="s0">;</span>
+    <span class="s1">Log.d(</span><span class="s4">&quot;S&quot;</span><span class="s0">,</span><span class="s4">&quot;&quot;</span><span class="s1">+location.getLongitude())</span><span class="s0">;</span>
+    <span class="s1">prayTime.setTimeFormat(prayTime.Time24)</span><span class="s0">;</span>
+    <span class="s1">prayerTimes24 = prayTime.getPrayerTimes(cal</span><span class="s0">,</span>
+            <span class="s1">location.getLatitude()</span><span class="s0">, </span><span class="s1">location.getLongitude()</span><span class="s0">, </span><span class="s3">3</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s1">prayTime.setTimeFormat(prayTime.Time12)</span><span class="s0">;</span>
+    <span class="s1">prayerTimes12 = prayTime.getPrayerTimes(cal</span><span class="s0">,</span>
+            <span class="s1">location.getLatitude()</span><span class="s0">, </span><span class="s1">location.getLongitude()</span><span class="s0">, </span><span class="s3">3</span><span class="s1">)</span><span class="s0">;</span>
+    <span class="s0">for </span><span class="s1">(String prayer: prayerTimes12</span>
+    <span class="s1">) {</span>
+        <span class="s1">Log.d(</span><span class="s4">&quot; &quot;</span><span class="s0">,</span><span class="s4">&quot;prayer&quot; </span><span class="s1">+ prayer)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">sendNotification(){</span>
+        <span class="s1">SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext())</span><span class="s0">;</span>
+        <span class="s0">boolean </span><span class="s1">isNotificationAllowed = pref.getBoolean(</span><span class="s4">&quot;isNotificationAllowed&quot;</span><span class="s0">,true</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s0">if</span><span class="s1">(!isNotificationAllowed)</span>
+            <span class="s0">return;</span>
+        <span class="s1">NotificationManagerCompat manager = NotificationManagerCompat.from(getApplicationContext())</span><span class="s0">;</span>
+        <span class="s1">Intent prayNowIntent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">HomeScreenActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span><span class="s2">//on tap go to home</span>
+        <span class="s1">String prayer =  pref.getString(</span><span class="s4">&quot;upcomingPrayer&quot;</span><span class="s0">,</span><span class="s4">&quot;ERROR CHECK UPCOMING PRAYER&quot;</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">prayNowIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK)</span><span class="s0">;</span>
+
+        <span class="s1">PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext()</span><span class="s0">,</span><span class="s1">notificationId++</span><span class="s0">,</span><span class="s1">prayNowIntent</span><span class="s0">,</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">NotificationCompat.Builder notifyBuilder =</span>
+                <span class="s0">new </span><span class="s1">NotificationCompat.Builder(getApplicationContext()</span><span class="s0">, </span><span class="s4">&quot;high_important_channel&quot;</span><span class="s1">)</span>
+                        <span class="s1">.setContentTitle(</span><span class="s4">&quot;عِمَـــــاد&quot;</span><span class="s1">)</span>
+                        <span class="s1">.setContentText(</span><span class="s4">&quot;حان الآن موعد صلاة &quot;</span><span class="s1">+prayer)</span>
+                        <span class="s1">.setSmallIcon(R.drawable.ic_logo)</span>
+                        <span class="s1">.setContentIntent(pendingIntent)</span>
+                        <span class="s1">.setAutoCancel(</span><span class="s0">true</span><span class="s1">)</span>
+                        <span class="s1">.setPriority(NotificationCompat.PRIORITY_HIGH)</span><span class="s0">;</span>
+
+        <span class="s1">manager.notify(</span><span class="s3">1</span><span class="s0">, </span><span class="s1">notifyBuilder.build())</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+
+    <span class="s1">@SuppressLint(</span><span class="s4">&quot;MissingPermission&quot;</span><span class="s1">)</span>
+    <span class="s0">private void </span><span class="s1">requestNewLocationData() {</span>
+
+        <span class="s2">// Initializing LocationRequest</span>
+        <span class="s2">// object with appropriate methods</span>
+        <span class="s1">LocationRequest mLocationRequest = </span><span class="s0">new </span><span class="s1">LocationRequest()</span><span class="s0">;</span>
+        <span class="s1">mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)</span><span class="s0">;</span>
+        <span class="s1">mLocationRequest.setInterval(</span><span class="s3">5</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">mLocationRequest.setFastestInterval(</span><span class="s3">0</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">mLocationRequest.setNumUpdates(</span><span class="s3">1</span><span class="s1">)</span><span class="s0">;</span>
+
+        <span class="s2">// setting LocationRequest</span>
+        <span class="s2">// on FusedLocationClient</span>
+        <span class="s1">mFusedLocationClient = LocationServices.getFusedLocationProviderClient(</span><span class="s0">this</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">mFusedLocationClient.requestLocationUpdates(mLocationRequest</span><span class="s0">, </span><span class="s1">mLocationCallback</span><span class="s0">, </span><span class="s1">Looper.myLooper())</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s0">private </span><span class="s1">LocationCallback mLocationCallback = </span><span class="s0">new </span><span class="s1">LocationCallback() {</span>
+
+        <span class="s1">@Override</span>
+        <span class="s0">public void </span><span class="s1">onLocationResult(LocationResult locationResult) {</span>
+            <span class="s1">Location mLastLocation = locationResult.getLastLocation()</span><span class="s0">;</span>
+            <span class="s2">//latitudeTextView.setText(&quot;Latitude: &quot; + mLastLocation.getLatitude() + &quot;&quot;);</span>
+           <span class="s2">// longitTextView.setText(&quot;Longitude: &quot; + mLastLocation.getLongitude() + &quot;&quot;);</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span><span class="s0">;</span>
+
+    <span class="s2">// method to check for permissions</span>
+    <span class="s0">private boolean </span><span class="s1">checkPermissions() {</span>
+        <span class="s0">return </span><span class="s1">ActivityCompat.checkSelfPermission(</span><span class="s0">this, </span><span class="s1">Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &amp;&amp; ActivityCompat.checkSelfPermission(</span><span class="s0">this, </span><span class="s1">Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED</span><span class="s0">;</span>
+
+        <span class="s2">// If we want background location</span>
+        <span class="s2">// on Android 10.0 and higher,</span>
+        <span class="s2">// use:</span>
+        <span class="s2">// ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED</span>
+    <span class="s1">}</span>
+
+    <span class="s2">// method to request for permissions</span>
+    <span class="s0">private void </span><span class="s1">requestPermissions() {</span>
+        <span class="s1">ActivityCompat.requestPermissions(</span><span class="s0">this, new </span><span class="s1">String[]{</span>
+                <span class="s1">Manifest.permission.ACCESS_COARSE_LOCATION</span><span class="s0">,</span>
+                <span class="s1">Manifest.permission.ACCESS_FINE_LOCATION}</span><span class="s0">, </span><span class="s3">101</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">getLastLocation()</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s2">// method to check</span>
+    <span class="s2">// if location is enabled</span>
+    <span class="s0">private boolean </span><span class="s1">isLocationEnabled() {</span>
+        <span class="s1">LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE)</span><span class="s0">;</span>
+        <span class="s0">return </span><span class="s1">locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+
+    <span class="s1">@SuppressLint(</span><span class="s4">&quot;MissingPermission&quot;</span><span class="s1">)</span>
+    <span class="s1">@Override</span>
+    <span class="s0">public void </span><span class="s1">onResume() {</span>
+        <span class="s0">super</span><span class="s1">.onResume()</span><span class="s0">;</span>
+            <span class="s1">getLastLocation()</span><span class="s0">;</span>
+
+    <span class="s1">}</span>
+
+    <span class="s0">public void </span><span class="s1">goToSetting(View view) {</span>
+        <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">SettingsActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+    <span class="s0">public void </span><span class="s1">signOut(View view){</span>
+        <span class="s2">//sp.edit().putBoolean(&quot;logged&quot;,false).apply(); //Please don't remove it</span>
+        <span class="s2">//Start your code HERE</span>
+        <span class="s1">Intent intent = </span><span class="s0">new </span><span class="s1">Intent(getApplicationContext()</span><span class="s0">, </span><span class="s1">LoginActivity.</span><span class="s0">class</span><span class="s1">)</span><span class="s0">;</span>
+        <span class="s1">startActivity(intent)</span><span class="s0">;</span>
+    <span class="s1">}</span>
+<span class="s1">}</span>
+
+</pre>
+</body>
+</html>
